@@ -341,6 +341,22 @@
           "build/net8.0/Microsoft.EntityFrameworkCore.Design.props": {}
         }
       },
+      "Microsoft.EntityFrameworkCore.InMemory/8.0.24": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore": "8.0.24"
+        },
+        "compile": {
+          "lib/net8.0/Microsoft.EntityFrameworkCore.InMemory.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.EntityFrameworkCore.InMemory.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Microsoft.EntityFrameworkCore.Relational/8.0.24": {
         "type": "package",
         "dependencies": {
@@ -1366,6 +1382,21 @@
         "microsoft.entityframeworkcore.design.nuspec"
       ]
     },
+    "Microsoft.EntityFrameworkCore.InMemory/8.0.24": {
+      "sha512": "M6Sfe0v3WxtMGLpK+yX3AFfoV9nNlgIADf4sQPc+BmOaPAHFrRCX5/8yF8u7LHqX+3TXqTInjU6rBhMRF5lI4A==",
+      "type": "package",
+      "path": "microsoft.entityframeworkcore.inmemory/8.0.24",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "PACKAGE.md",
+        "lib/net8.0/Microsoft.EntityFrameworkCore.InMemory.dll",
+        "lib/net8.0/Microsoft.EntityFrameworkCore.InMemory.xml",
+        "microsoft.entityframeworkcore.inmemory.8.0.24.nupkg.sha512",
+        "microsoft.entityframeworkcore.inmemory.nuspec"
+      ]
+    },
     "Microsoft.EntityFrameworkCore.Relational/8.0.24": {
       "sha512": "QMGORS3ltx2RWHBCUcBjadS0eNYGkTGXsOdZf3oSM6pZuNBBl16z6gThA3a+BF8T5HY3jThxVDFKaPHxmpueXA==",
       "type": "package",
@@ -2144,6 +2175,7 @@
     "net8.0": [
       "Microsoft.EntityFrameworkCore >= 8.0.24",
       "Microsoft.EntityFrameworkCore.Design >= 8.0.24",
+      "Microsoft.EntityFrameworkCore.InMemory >= 8.0.24",
       "Microsoft.EntityFrameworkCore.Tools >= 8.0.24",
       "Npgsql.EntityFrameworkCore.PostgreSQL >= 8.0.11"
     ]
@@ -2155,11 +2187,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\zenyl\\OneDrive\\Desktop\\мини проектики\\gh password\\GenPassword\\PasswordGenerator\\PasswordGenerator\\PasswordGenerator.csproj",
+      "projectUniqueName": "C:\\Users\\zenyl\\OneDrive\\Desktop\\мини проектики\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\PasswordGenerator.csproj",
       "projectName": "PasswordGenerator",
-      "projectPath": "C:\\Users\\zenyl\\OneDrive\\Desktop\\мини проектики\\gh password\\GenPassword\\PasswordGenerator\\PasswordGenerator\\PasswordGenerator.csproj",
+      "projectPath": "C:\\Users\\zenyl\\OneDrive\\Desktop\\мини проектики\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\PasswordGenerator.csproj",
       "packagesPath": "C:\\Users\\zenyl\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\zenyl\\OneDrive\\Desktop\\мини проектики\\gh password\\GenPassword\\PasswordGenerator\\PasswordGenerator\\obj\\",
+      "outputPath": "C:\\Users\\zenyl\\OneDrive\\Desktop\\мини проектики\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -2205,6 +2237,10 @@
           "Microsoft.EntityFrameworkCore.Design": {
             "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
             "suppressParent": "All",
+            "target": "Package",
+            "version": "[8.0.24, )"
+          },
+          "Microsoft.EntityFrameworkCore.InMemory": {
             "target": "Package",
             "version": "[8.0.24, )"
           },

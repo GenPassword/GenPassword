@@ -16,7 +16,7 @@ namespace PasswordGenerator.Controllers
             this.userService = userService;
         }
 
-        [HttpPost]
+        [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterUserRequest registerUserRequest)
         {
             if (!ModelState.IsValid)

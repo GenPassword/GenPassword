@@ -2,7 +2,7 @@
   {
     "ContainingType": "PasswordGenerator.Controllers.AuthController",
     "Method": "Register",
-    "RelativePath": "api/Auth",
+    "RelativePath": "api/Auth/register",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "CNxQOwPsDbA=",
+  "dgSpecHash": "LSRMUoYdh4Y=",
   "success": true,
-  "projectFilePath": "C:\\Users\\zenyl\\OneDrive\\Desktop\\мини проектики\\gh password\\GenPassword\\PasswordGenerator\\PasswordGenerator\\PasswordGenerator.csproj",
+  "projectFilePath": "C:\\Users\\zenyl\\OneDrive\\Desktop\\мини проектики\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\PasswordGenerator.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\zenyl\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\zenyl\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\6.0.0\\microsoft.bcl.asyncinterfaces.6.0.0.nupkg.sha512",
@@ -15,6 +15,7 @@
     "C:\\Users\\zenyl\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\8.0.24\\microsoft.entityframeworkcore.abstractions.8.0.24.nupkg.sha512",
     "C:\\Users\\zenyl\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\8.0.24\\microsoft.entityframeworkcore.analyzers.8.0.24.nupkg.sha512",
     "C:\\Users\\zenyl\\.nuget\\packages\\microsoft.entityframeworkcore.design\\8.0.24\\microsoft.entityframeworkcore.design.8.0.24.nupkg.sha512",
+    "C:\\Users\\zenyl\\.nuget\\packages\\microsoft.entityframeworkcore.inmemory\\8.0.24\\microsoft.entityframeworkcore.inmemory.8.0.24.nupkg.sha512",
     "C:\\Users\\zenyl\\.nuget\\packages\\microsoft.entityframeworkcore.relational\\8.0.24\\microsoft.entityframeworkcore.relational.8.0.24.nupkg.sha512",
     "C:\\Users\\zenyl\\.nuget\\packages\\microsoft.entityframeworkcore.tools\\8.0.24\\microsoft.entityframeworkcore.tools.8.0.24.nupkg.sha512",
     "C:\\Users\\zenyl\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\8.0.0\\microsoft.extensions.caching.abstractions.8.0.0.nupkg.sha512",

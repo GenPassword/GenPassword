@@ -20,6 +20,13 @@ namespace PasswordGenerator.Services
         {
             email = email.ToLower().Trim();
             var emailInBd = GetUserByEmail(email);
+
+            if (string.IsNullOrEmpty(email))
+                throw new ArgumentException("Email не может быть пустым", nameof(email));
+
+            if (string.IsNullOrEmpty(password))
+                throw new ArgumentException("Пароль не может быть пустым", nameof(password));
+
             if (! await emailInBd)
             {
                 var user = new User
