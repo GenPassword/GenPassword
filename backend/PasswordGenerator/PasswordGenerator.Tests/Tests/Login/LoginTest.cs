@@ -53,5 +53,34 @@ namespace PasswordGenerator.Tests.Tests.Login
             ClassicAssert.AreEqual("test@example1.com", email);
             ClassicAssert.AreEqual(dbContext.Users.First().Id, id);
         }
+
+        [Test]
+        public async Task Login_ShouldThrow_WhenUserDoesNotInBD()
+        {
+            await Assert.ThrowsAsync<AuthenticationException>(async () => await service.Login("NotInBase@example1.com", "123456"));
+        }
+
+        [Test]
+        public async Task Login_ShouldThrow_WhenEmailIsEmpty()
+        {
+            await Assert.ThrowsAsync<ArgumentException>(async () => await service.Login("", "123456"));
+            await Assert.ThrowsAsync<ArgumentException>(async () => await service.Login(null, "123456"));
+            await Assert.ThrowsAsync<ArgumentException>(async () => await service.Login(" ", "123456"));
+        }
+        [Test]
+        public async Task Login_ShouldThrow_WhenPasswordIsEmpty()
+        {
+            await service.RegisterUser("test@example1.com", "Password123!");
+            await Assert.ThrowsAsync<ArgumentException>(async () => await service.Login("test@example1.com", ""));
+            await Assert.ThrowsAsync<ArgumentException>(async () => await service.Login("test@example1.com", null));
+            await Assert.ThrowsAsync<ArgumentException>(async () => await service.Login("test@example1.com", " "));
+        }
+        [Test]
+        public async Task Login_ShouldReturnUser_WhenEmailHasDifferentCase()
+        {
+            await service.RegisterUser("test@example1.com", "Password123!");
+            var login = await service.Login("Test@Example1.com", "Password123!");
+            ClassicAssert.NotNull(login);
+        }
     }
 }

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PasswordGenerator.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+37cb4ec4cb1ad99829a30763d9841c1db7a80136")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c49337315cf78328988cbcd57ddded807c9dc3ed")]
 [assembly: System.Reflection.AssemblyProductAttribute("PasswordGenerator.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PasswordGenerator.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
