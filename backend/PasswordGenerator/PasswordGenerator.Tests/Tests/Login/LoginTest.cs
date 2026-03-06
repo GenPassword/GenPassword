@@ -16,8 +16,9 @@ namespace PasswordGenerator.Tests.Tests.Login
     [TestFixture]
     public class LoginTest
     {
-        private UserService service;
+        private AuthService service;
         private AppDbContext dbContext;
+        private UserService userService;
 
         [SetUp]
         public void Setup()
@@ -27,19 +28,20 @@ namespace PasswordGenerator.Tests.Tests.Login
                 .Options;
 
             dbContext = new AppDbContext(options);
-            service = new UserService(dbContext, new PasswordHasher<User>());
+            userService = new UserService(dbContext);
+            service = new AuthService(dbContext, new PasswordHasher<User>(), userService);
         }
         [Test]
         public async Task Login_ShouldThrow_WhenUserDoesNotExist()
         {
-            await Assert.ThrowsAsync<AuthenticationException>(async () => await service.Login("noemail@mail.com", "Password123!"));
+            Assert.ThrowsAsync<AuthenticationException>(async () => await service.Login("noemail@mail.com", "Password123!"));
         }
 
         [Test]
         public async Task Login_ShouldThrow_WhenPasswordIsIncorrect()
         {
             await service.RegisterUser("test@example1.com", "Password123!");
-            await Assert.ThrowsAsync<AuthenticationException>(async () => await service.Login("test@example1.com", "123456"));
+            Assert.ThrowsAsync<AuthenticationException>(async () => await service.Login("test@example1.com", "123456"));
         }
 
         [Test]
@@ -57,23 +59,23 @@ namespace PasswordGenerator.Tests.Tests.Login
         [Test]
         public async Task Login_ShouldThrow_WhenUserDoesNotInBD()
         {
-            await Assert.ThrowsAsync<AuthenticationException>(async () => await service.Login("NotInBase@example1.com", "123456"));
+            Assert.ThrowsAsync<AuthenticationException>(async () => await service.Login("NotInBase@example1.com", "123456"));
         }
 
         [Test]
         public async Task Login_ShouldThrow_WhenEmailIsEmpty()
         {
-            await Assert.ThrowsAsync<ArgumentException>(async () => await service.Login("", "123456"));
-            await Assert.ThrowsAsync<ArgumentException>(async () => await service.Login(null, "123456"));
-            await Assert.ThrowsAsync<ArgumentException>(async () => await service.Login(" ", "123456"));
+            Assert.ThrowsAsync<ArgumentException>(async() => await service.Login("", "123456"));
+            Assert.ThrowsAsync<ArgumentException>(async () => await service.Login(null, "123456"));
+            Assert.ThrowsAsync<ArgumentException>(async () => await service.Login(" ", "123456"));
         }
         [Test]
         public async Task Login_ShouldThrow_WhenPasswordIsEmpty()
         {
-            await service.RegisterUser("test@example1.com", "Password123!");
-            await Assert.ThrowsAsync<ArgumentException>(async () => await service.Login("test@example1.com", ""));
-            await Assert.ThrowsAsync<ArgumentException>(async () => await service.Login("test@example1.com", null));
-            await Assert.ThrowsAsync<ArgumentException>(async () => await service.Login("test@example1.com", " "));
+            service.RegisterUser("test@example1.com", "Password123!");
+            Assert.ThrowsAsync<ArgumentException>(async () => await service.Login("test@example1.com", ""));
+            Assert.ThrowsAsync<ArgumentException>(async () => await service.Login("test@example1.com", null));
+            Assert.ThrowsAsync<ArgumentException>(async () => await service.Login("test@example1.com", " "));
         }
         [Test]
         public async Task Login_ShouldReturnUser_WhenEmailHasDifferentCase()

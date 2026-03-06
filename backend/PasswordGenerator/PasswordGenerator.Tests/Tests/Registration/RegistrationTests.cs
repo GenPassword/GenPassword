@@ -13,10 +13,11 @@ using PasswordGenerator.Entities;
 namespace PasswordGenerator.Tests.Tests.Registration
 {
     [TestFixture]
-    public class UserServiceTests
+    public class RegistrationTests
     {
-        private UserService service;
+        private AuthService service;
         private AppDbContext dbContext;
+        private UserService userService;
 
         [SetUp]
         public void Setup()
@@ -26,7 +27,8 @@ namespace PasswordGenerator.Tests.Tests.Registration
                 .Options;
 
             dbContext = new AppDbContext(options);
-            service = new UserService(dbContext, new PasswordHasher<User>());
+            userService = new UserService(dbContext);
+            service = new AuthService(dbContext, new PasswordHasher<User>(), userService);
         }
 
         [Test]

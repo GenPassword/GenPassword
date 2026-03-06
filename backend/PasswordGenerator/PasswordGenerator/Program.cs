@@ -16,6 +16,7 @@ builder.Services.AddScoped<IPasswordAnalyzerService, PasswordAnalyzerService>();
 builder.Services.AddScoped<PasswordOptionsValidator>();
 builder.Services.AddScoped<IPasswordGeneratorService, PasswordGeneratorService>();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
 // Регистрация DbContext

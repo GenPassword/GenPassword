@@ -9,11 +9,11 @@ namespace PasswordGenerator.Controllers
     public class AuthController : ControllerBase
     {
         
-        private readonly UserService userService;
+        private readonly AuthService authService;
 
-        public AuthController(UserService userService)
+        public AuthController(AuthService authService)
         {
-            this.userService = userService;
+            this.authService = authService;
         }
 
         [HttpPost("register")]
@@ -25,10 +25,28 @@ namespace PasswordGenerator.Controllers
             }
             var email = registerUserRequest.Email;
             var password = registerUserRequest.Password;
-            var result = await userService.RegisterUser(email, password);
+            var result = await authService.RegisterUser(email, password);
             if(result)
-                return Ok();
+                return Ok(new { message = "User registered" });
             return BadRequest("Email уже существует");
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginUserRequest loginUserRequest)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var user = await authService.Login(loginUserRequest.Email, loginUserRequest.Password);
+                return Ok(new { user.Email, user.Id }); ;
+            }
+            catch
+            {
+                return BadRequest("Invalid credentials");
+            }
         }
     }
 }
