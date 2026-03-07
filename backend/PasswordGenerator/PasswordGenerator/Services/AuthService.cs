@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.IdentityModel.Tokens;
 using PasswordGenerator.Data;
 using PasswordGenerator.Entities;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Authentication;
+using System.Security.Claims;
+using System.Text;
 
 namespace PasswordGenerator.Services
 {
@@ -11,13 +15,13 @@ namespace PasswordGenerator.Services
         private readonly AppDbContext appDbContext;
         private readonly IPasswordHasher<User> passwordHasher;
         private readonly UserService userService;
-
         public AuthService(AppDbContext appDbContext, IPasswordHasher<User> passwordHasher, UserService userService)
         {
             this.appDbContext = appDbContext;
             this.passwordHasher = passwordHasher;
             this.userService = userService;
         }
+
 
         public async Task<bool> RegisterUser(string email, string password)
         {
@@ -72,6 +76,7 @@ namespace PasswordGenerator.Services
             {
                 userInBd.LastLogin = DateTime.UtcNow;
                 appDbContext.Update(userInBd);
+                await appDbContext.SaveChangesAsync();
                 return userInBd;
             }
         }

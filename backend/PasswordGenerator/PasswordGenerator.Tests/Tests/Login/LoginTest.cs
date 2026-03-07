@@ -10,6 +10,7 @@ using System.Linq;
 using System.Security.Authentication;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace PasswordGenerator.Tests.Tests.Login
 {

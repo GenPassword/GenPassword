@@ -1,14 +1,15 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using NUnit.Framework.Legacy;
 using PasswordGenerator.Data;
+using PasswordGenerator.Entities;
 using PasswordGenerator.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PasswordGenerator.Entities;
 
 namespace PasswordGenerator.Tests.Tests.Registration
 {
