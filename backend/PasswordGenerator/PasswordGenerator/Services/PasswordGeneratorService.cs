@@ -13,11 +13,18 @@ public class PasswordGeneratorService : IPasswordGeneratorService
 {
     private readonly IPasswordAnalyzerService _analyzer;
     private readonly PasswordOptionsValidator _validator;
+    private readonly IWordlistService wordlistService;
 
     public PasswordGeneratorService(IPasswordAnalyzerService analyzer, PasswordOptionsValidator validator)
     {
         _analyzer = analyzer;
         _validator = validator;
+    }
+    public PasswordGeneratorService(IPasswordAnalyzerService analyzer, PasswordOptionsValidator validator, IWordlistService wordlistService)
+    {
+        _analyzer = analyzer;
+        _validator = validator;
+        this.wordlistService = wordlistService;
     }
 
     public GeneratePasswordResponse Generate(GeneratePasswordRequest request)
