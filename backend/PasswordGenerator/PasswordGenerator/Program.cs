@@ -19,6 +19,8 @@ builder.Services.AddScoped<IPasswordGeneratorService, PasswordGeneratorService>(
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+builder.Services.AddSingleton<IWordlistService, WordlistService>();
+builder.Services.AddScoped<IPassphraseGeneratorService, PassphraseGeneratorService>();
 
 // Регистрация DbContext
 var connectionStr = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -71,8 +73,6 @@ app.UseRouting();
 
 // Используем CORS (важно — до маршрутов)
 app.UseCors("AllowAll");
-
-app.UseAuthorization();
 
 app.MapControllers(); // API: POST /api/password/generate
 

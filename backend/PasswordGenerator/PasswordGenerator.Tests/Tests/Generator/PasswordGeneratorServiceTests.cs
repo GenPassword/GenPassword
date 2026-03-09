@@ -1,9 +1,10 @@
-using System.Linq;
+using Moq;
 using NUnit.Framework;
 using PasswordGenerator.Domain;
 using PasswordGenerator.Models;
 using PasswordGenerator.Services;
 using PasswordGenerator.Validators;
+using System.Linq;
 
 namespace PasswordGenerator.Tests.Generator;
 
@@ -14,7 +15,8 @@ public class PasswordGeneratorServiceTests
     {
         var analyzer = new PasswordAnalyzerService();
         var validator = new PasswordOptionsValidator();
-        return new PasswordGeneratorService(analyzer, validator);
+        var mockPassphrase = new Mock<IPassphraseGeneratorService>();
+        return new PasswordGeneratorService(analyzer, validator, mockPassphrase.Object);
     }
 
     [TestCase(4)]

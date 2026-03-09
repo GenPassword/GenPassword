@@ -65,5 +65,40 @@
         "StatusCode": 400
       }
     ]
+  },
+  {
+    "ContainingType": "PasswordGenerator.Controllers.PasswordController",
+    "Method": "GenerateFromWords",
+    "RelativePath": "api/Password/generate-from-words",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "PasswordGenerator.Models.GeneratePasswordFromWordsRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "PasswordGenerator.Models.GeneratePasswordResponse",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 400
+      }
+    ]
   }
 ]

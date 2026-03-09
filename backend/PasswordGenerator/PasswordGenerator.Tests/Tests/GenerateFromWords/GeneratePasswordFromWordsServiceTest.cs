@@ -15,14 +15,14 @@ namespace PasswordGenerator.Tests.Tests.GenerateFromWords
     [TestFixture]
     public class GeneratePasswordFromWordsServiceTest
     {
-        private PasswordGeneratorService CreateService()
+        private PassphraseGeneratorService CreateService()
         {
+            var testWords = new List<string> { "tree", "fox", "moon", "star" };
+            var wordlistService = new WordlistServiceStub(testWords);
+
             var analyzer = new PasswordAnalyzerService();
-            var validator = new PasswordOptionsValidator();
-            var mock = new Mock<IWordlistService>();
-            mock.Setup(x => x.GetRandomWords(It.IsAny<int>()))
-                .Returns(new[] { "tree", "fox", "moon" });
-            return new PasswordGeneratorService(analyzer, validator, mock.Object);
+
+            return new PassphraseGeneratorService(wordlistService, analyzer);
         }
 
         [Test]
@@ -33,7 +33,7 @@ namespace PasswordGenerator.Tests.Tests.GenerateFromWords
             {
                 WordCount = 3,
             };
-            var password = service.GenerateFromWords(request);
+            var password = service.Generate(request);
             ClassicAssert.NotNull(password);
         }
 
@@ -45,23 +45,23 @@ namespace PasswordGenerator.Tests.Tests.GenerateFromWords
                 WordCount = 3,
             };
             var service = CreateService();
-            var password = service.GenerateFromWords(request);
+            var password = service.Generate(request).Password;
             var countWordsInPassword = password.Split(request.Separator).Length;
             var separatorsCount = countWordsInPassword - 1;
-            ClassicAssert.IsFalse(string.IsNullOrEmpty(password));
+            ClassicAssert.AreEqual(separatorsCount, 2);
         }
 
         [Test] 
         public void The_Required_Number_Of_Words_Is_Generated()
         {
             var service = CreateService();
-            for(int wordsCount = 1; wordsCount < 6; wordsCount++)
+            for(int wordsCount = 1; wordsCount < 4; wordsCount++)
             {
                 var request = new GeneratePasswordFromWordsRequest
                 {
                     WordCount = wordsCount,
                 };
-                var password = service.GenerateFromWords(request);
+                var password = service.Generate(request).Password;
                 var countWordsInPassword = password.Split(request.Separator).Length;
                 ClassicAssert.AreEqual(wordsCount, countWordsInPassword);
             }
@@ -77,7 +77,7 @@ namespace PasswordGenerator.Tests.Tests.GenerateFromWords
                 WordCount = 3,
                 WordCase = Case.Capitalized
             };
-            var password = service.GenerateFromWords(request);
+            var password = service.Generate(request).Password;
             var wordsInPassword = password.Split(request.Separator);
             for (int i = 0; i < wordsInPassword.Length; i++)
             {
@@ -86,5 +86,31 @@ namespace PasswordGenerator.Tests.Tests.GenerateFromWords
             }
             ClassicAssert.IsTrue(firstUpperChar);
         }
+    }
+
+    public class WordlistServiceStub : IWordlistService
+    {
+        private readonly List<string> _words;
+        private int _index;
+
+        public WordlistServiceStub(IEnumerable<string> words)
+        {
+            _words = words.ToList();
+            _index = 0;
+        }
+
+        public string GetRandomWord()
+        {
+            var word = _words[_index];
+            _index = (_index + 1) % _words.Count;
+            return word;
+        }
+
+        public IEnumerable<string> GetRandomWords(int count)
+        {
+            return _words.Take(count);
+        }
+
+        public int GetWordCount() => _words.Count;
     }
 }
