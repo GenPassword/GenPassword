@@ -1,14 +1,7 @@
 ﻿using NUnit.Framework.Legacy;
 using PasswordGenerator.Models;
 using PasswordGenerator.Services;
-using PasswordGenerator.Validators;
-using System;
-using Moq;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using PasswordGenerator.Tests.Tests.Stubs;
 
 namespace PasswordGenerator.Tests.Tests.GenerateFromWords
 {
@@ -33,7 +26,7 @@ namespace PasswordGenerator.Tests.Tests.GenerateFromWords
             {
                 WordCount = 3,
             };
-            var password = service.Generate(request);
+            var password = service.Generate(request).Password;
             ClassicAssert.NotNull(password);
         }
 
@@ -86,31 +79,135 @@ namespace PasswordGenerator.Tests.Tests.GenerateFromWords
             }
             ClassicAssert.IsTrue(firstUpperChar);
         }
-    }
 
-    public class WordlistServiceStub : IWordlistService
-    {
-        private readonly List<string> _words;
-        private int _index;
-
-        public WordlistServiceStub(IEnumerable<string> words)
+        [Test]
+        public void GenerateFromWords_LowerWords()
         {
-            _words = words.ToList();
-            _index = 0;
+            var service = CreateService();
+            var request = new GeneratePasswordFromWordsRequest
+            {
+                WordCount = 3,
+                WordCase = Case.Lower
+            };
+            var password = service.Generate(request).Password;
+            var lowerChar = CheckWords(password, request.Separator, char.IsLower);
+            
+            ClassicAssert.IsTrue(lowerChar);
         }
 
-        public string GetRandomWord()
+        [Test]
+        public void GenerateFromWords_UpperWords()
         {
-            var word = _words[_index];
-            _index = (_index + 1) % _words.Count;
-            return word;
+            var service = CreateService();
+            var request = new GeneratePasswordFromWordsRequest
+            {
+                WordCount = 3,
+                WordCase = Case.Upper
+            };
+            var password = service.Generate(request).Password;
+            var upperChar = CheckWords(password, request.Separator, char.IsUpper);
+
+            ClassicAssert.IsTrue(upperChar);
         }
 
-        public IEnumerable<string> GetRandomWords(int count)
+        private bool CheckWords(string password, char separator, Func<char, bool> charCheck)
         {
-            return _words.Take(count);
+            var words = password.Split(separator);
+            foreach(var word in words)
+            {
+                foreach(var c in word)
+                {
+                    if (!charCheck(c))
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
 
-        public int GetWordCount() => _words.Count;
+        [Test]
+        public void GenerateFromWords_UserSeparator()
+        {
+            var service = CreateService();
+            var request = new GeneratePasswordFromWordsRequest
+            {
+                WordCount = 3,
+                WordCase = Case.Upper,
+                Separator = ':'
+            };
+            var password = service.Generate(request).Password;
+            var words = password.Split(':');
+            var separatorInPass = password.Contains(":");
+            var wordCount = words.Count();
+            ClassicAssert.IsTrue(separatorInPass && wordCount == 3);
+        }
+
+        [Test]
+        public void GenerateFromWords_OneWordInPass()
+        {
+            var service = CreateService();
+            var request = new GeneratePasswordFromWordsRequest
+            {
+                WordCount = 1,
+                WordCase = Case.Upper,
+            };
+            var password = service.Generate(request).Password;
+            var words = password.Split(request.Separator);
+            var separatorInPass = password.Contains(request.Separator);
+            var wordCount = words.Count();
+            ClassicAssert.IsTrue(!separatorInPass && wordCount == 1);
+        }
+
+        [Test]
+        public void GenerateFromWords_ZeroWordInPass()
+        {
+            var service = CreateService();
+            var request = new GeneratePasswordFromWordsRequest
+            {
+                WordCount = 0,
+                WordCase = Case.Upper,
+            };
+            var password = service.Generate(request).Password;
+            ClassicAssert.IsEmpty(password);
+        }
+
+        [Test]
+        public void GenerateFromWords_EntropyMoreThanZero()
+        {
+            var service = CreateService();
+            var request1 = new GeneratePasswordFromWordsRequest
+            {
+                WordCount = 2,
+                WordCase = Case.Upper,
+            };
+            var request2 = new GeneratePasswordFromWordsRequest
+            {
+                WordCount = 4,
+                WordCase = Case.Upper,
+            };
+            var entropy1 = service.Generate(request1).Entropy;
+            var entropy2 = service.Generate(request2).Entropy;
+            ClassicAssert.IsTrue(entropy1 > 0 && entropy2 > 0);
+        }
+
+        [Test]
+        public void GenerateFromWords_EntropyMoreThanMoreWords()
+        {
+            var service = CreateService();
+            var request1 = new GeneratePasswordFromWordsRequest
+            {
+                WordCount = 2,
+                WordCase = Case.Upper,
+            };
+            var request2 = new GeneratePasswordFromWordsRequest
+            {
+                WordCount = 4,
+                WordCase = Case.Upper,
+            };
+            var entropy1 = service.Generate(request1).Entropy;
+            var entropy2 = service.Generate(request2).Entropy;
+            ClassicAssert.IsTrue(entropy2 > entropy1);
+        }
     }
 }
