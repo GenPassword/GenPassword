@@ -1,8 +1,10 @@
-﻿namespace PasswordGenerator.Services
+﻿using PasswordGenerator.Models;
+
+namespace PasswordGenerator.Services
 {
     public interface IUserSettingsService
     {
-        Task SaveSettings(int  userId, string generatorType, string settingsJson);
-        Task<string> GetSettings(int userId, string generatorType);
+        Task SaveSettings(int  userId, GeneratorType generatorType, string settingsJson);
+        Task<string> GetSettings(int userId, GeneratorType generatorType);
     }
 }

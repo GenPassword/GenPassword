@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using PasswordGenerator.Data;
 using PasswordGenerator.Entities;
+using PasswordGenerator.Models;
 
 namespace PasswordGenerator.Services
 {
@@ -15,7 +16,7 @@ namespace PasswordGenerator.Services
             this.appDbContext = appDbContext;
         }
 
-        public async Task<string> GetSettings(int userId, string generatorType)
+        public async Task<string> GetSettings(int userId, GeneratorType generatorType)
         {
             var settings = await appDbContext.UserSettings
                 .FirstOrDefaultAsync(s => s.UserId == userId && s.GeneratorType == generatorType);
@@ -27,7 +28,7 @@ namespace PasswordGenerator.Services
             return null;   
         }
 
-        public async Task SaveSettings(int userId, string generatorType, string settingsJson)
+        public async Task SaveSettings(int userId, GeneratorType generatorType, string settingsJson)
         {
             var setting = await appDbContext.UserSettings
                 .FirstOrDefaultAsync(s => s.UserId == userId && s.GeneratorType == generatorType);

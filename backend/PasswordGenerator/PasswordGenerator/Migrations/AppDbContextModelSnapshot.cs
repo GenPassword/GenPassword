@@ -71,9 +71,8 @@ namespace PasswordGenerator.Migrations
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("GeneratorType")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("GeneratorType")
+                        .HasColumnType("integer");
 
                     b.Property<string>("SettingJson")
                         .IsRequired()

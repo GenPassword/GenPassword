@@ -20,7 +20,7 @@ namespace PasswordGenerator.Controllers
         }
 
         [HttpGet("{generatorType}")]
-        public async Task<IActionResult> GetSettings(string generatorType)
+        public async Task<IActionResult> GetSettings(GeneratorType generatorType)
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             var settingsJson = await userSettingsService.GetSettings(userId, generatorType);

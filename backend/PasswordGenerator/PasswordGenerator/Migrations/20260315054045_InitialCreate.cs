@@ -7,11 +7,30 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace PasswordGenerator.Migrations
 {
     /// <inheritdoc />
-    public partial class AddUserSettings : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Username = table.Column<string>(type: "text", nullable: false),
+                    Email = table.Column<string>(type: "text", nullable: false),
+                    PasswordHash = table.Column<string>(type: "text", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    EmailConfirmed = table.Column<bool>(type: "boolean", nullable: false),
+                    LastLogin = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    Role = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "UserSettings",
                 columns: table => new
@@ -19,7 +38,7 @@ namespace PasswordGenerator.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserId = table.Column<int>(type: "integer", nullable: false),
-                    GeneratorType = table.Column<string>(type: "text", nullable: false),
+                    GeneratorType = table.Column<int>(type: "integer", nullable: false),
                     SettingJson = table.Column<string>(type: "text", nullable: false),
                     CreateAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdateAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
@@ -46,6 +65,9 @@ namespace PasswordGenerator.Migrations
         {
             migrationBuilder.DropTable(
                 name: "UserSettings");
+
+            migrationBuilder.DropTable(
+                name: "Users");
         }
     }
 }

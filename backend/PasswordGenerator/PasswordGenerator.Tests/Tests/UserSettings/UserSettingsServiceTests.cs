@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NUnit.Framework.Legacy;
 using PasswordGenerator.Data;
+using PasswordGenerator.Models;
 using PasswordGenerator.Services;
 using System;
 using System.Collections.Generic;
@@ -31,7 +32,7 @@ namespace PasswordGenerator.Tests.Tests.UserSettings
         public async Task SaveSettings_ShouldCreateNewSettings_WhenUserHasNoSettings()
         {
             int userId = 1;
-            string generatorType = "Random";
+            GeneratorType generatorType = GeneratorType.Random;
             string settingsJson = "{ \"length\": 12 }";
             await service.SaveSettings(userId, generatorType, settingsJson);
 
@@ -46,7 +47,7 @@ namespace PasswordGenerator.Tests.Tests.UserSettings
         public async Task SaveSettings_ShouldUpdateExistingSettings_WhenSettingsAlreadyExist()
         {
             int userId = 1;
-            string generatorType = "Random";
+            GeneratorType generatorType = GeneratorType.Random;
             string settingsJson1 = "{ \"length\": 12 }";
             await service.SaveSettings(userId, generatorType, settingsJson1);
 
@@ -62,7 +63,7 @@ namespace PasswordGenerator.Tests.Tests.UserSettings
         [Test]
         public async Task GetSettings_ShouldReturnNull_WhenSettingsDoNotExist()
         {
-            var getSetting = await service.GetSettings(1, "Random");
+            var getSetting = await service.GetSettings(1, GeneratorType.Random);
             ClassicAssert.IsNull(getSetting);
         }
 
@@ -70,11 +71,11 @@ namespace PasswordGenerator.Tests.Tests.UserSettings
         public async Task GetSettings_ShouldReturnSettingsJson_WhenSettingsExist()
         {
             int userId = 1;
-            string generatorType = "Random";
+            GeneratorType generatorType = GeneratorType.Random;
             string settingsJson = "{ \"length\": 12 }";
             await service.SaveSettings(userId, generatorType, settingsJson);
 
-            var getSetting = service.GetSettings(1, "Random");
+            var getSetting = service.GetSettings(1, GeneratorType.Random);
             ClassicAssert.IsNotNull(getSetting.Result);
             ClassicAssert.AreEqual(settingsJson, getSetting.Result);
         }
@@ -83,14 +84,14 @@ namespace PasswordGenerator.Tests.Tests.UserSettings
         public async Task GetSettings_ShouldReturnCorrectSettings_ForCorrectGeneratorType()
         {
             int userId = 1;
-            string generatorType1 = "Random";
-            string generatorType2 = "Words";
+            GeneratorType generatorType1 = GeneratorType.Random;
+            GeneratorType generatorType2 = GeneratorType.Words;
             string settingsJson1 = "{ \"length\": 12 }";
             string settingsJson2 = "{ \"length\": 3 }";
             await service.SaveSettings(userId, generatorType1, settingsJson1);
             await service.SaveSettings(userId, generatorType2, settingsJson2);
 
-            var getSetting = await service.GetSettings(1, "Words");
+            var getSetting = await service.GetSettings(1, GeneratorType.Words);
             ClassicAssert.AreEqual(settingsJson2, getSetting);
         }
     }

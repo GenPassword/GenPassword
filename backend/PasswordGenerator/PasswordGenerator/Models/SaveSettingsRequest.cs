@@ -2,7 +2,13 @@
 {
     public class SaveSettingsRequest
     {
-        public string GeneratorType { get; set; } = "";
+        public GeneratorType GeneratorType { get; set; }
         public string SettingsJson { get; set; } = "";
+    }
+
+    public enum GeneratorType
+    {
+        Random,
+        Words
     }
 }

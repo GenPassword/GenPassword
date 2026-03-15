@@ -12,8 +12,8 @@ using PasswordGenerator.Data;
 namespace PasswordGenerator.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260302132744_AddUserExtraFields")]
-    partial class AddUserExtraFields
+    [Migration("20260315054045_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -61,6 +61,48 @@ namespace PasswordGenerator.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("PasswordGenerator.Entities.UserSetting", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("GeneratorType")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("SettingJson")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdateAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserSettings");
+                });
+
+            modelBuilder.Entity("PasswordGenerator.Entities.UserSetting", b =>
+                {
+                    b.HasOne("PasswordGenerator.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }
