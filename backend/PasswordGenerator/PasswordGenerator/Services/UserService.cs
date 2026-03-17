@@ -5,7 +5,7 @@ using PasswordGenerator.Entities;
 
 namespace PasswordGenerator.Services
 {
-    public class UserService
+    public class UserService : IUserService
     {
         private readonly AppDbContext appDbContext;
 
