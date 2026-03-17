@@ -15,8 +15,7 @@ public class PasswordGeneratorServiceTests
     {
         var analyzer = new PasswordAnalyzerService();
         var validator = new PasswordOptionsValidator();
-        var mockPassphrase = new Mock<IPassphraseGeneratorService>();
-        return new PasswordGeneratorService(analyzer, validator, mockPassphrase.Object);
+        return new PasswordGeneratorService(analyzer, validator);
     }
 
     [TestCase(4)]
