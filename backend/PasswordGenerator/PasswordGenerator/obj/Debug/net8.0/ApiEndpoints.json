@@ -100,5 +100,37 @@
         "StatusCode": 400
       }
     ]
+  },
+  {
+    "ContainingType": "PasswordGenerator.Controllers.UserSettingsController",
+    "Method": "GetSettings",
+    "RelativePath": "api/UserSettings/{generatorType}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "generatorType",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PasswordGenerator.Controllers.UserSettingsController",
+    "Method": "SaveSettings",
+    "RelativePath": "api/UserSettings/save",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "saveSettingsRequest",
+        "Type": "PasswordGenerator.Models.SaveSettingsRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   }
 ]

@@ -2616,23 +2616,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\marin\\.nuget\\packages\\": {},
+    "C:\\Users\\zenyl\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\marin\\OneDrive\\Рабочий стол\\programs\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\PasswordGenerator.csproj",
+      "projectUniqueName": "C:\\Users\\zenyl\\OneDrive\\Desktop\\мини проектики\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\PasswordGenerator.csproj",
       "projectName": "PasswordGenerator",
-      "projectPath": "C:\\Users\\marin\\OneDrive\\Рабочий стол\\programs\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\PasswordGenerator.csproj",
-      "packagesPath": "C:\\Users\\marin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\marin\\OneDrive\\Рабочий стол\\programs\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\obj\\",
+      "projectPath": "C:\\Users\\zenyl\\OneDrive\\Desktop\\мини проектики\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\PasswordGenerator.csproj",
+      "packagesPath": "C:\\Users\\zenyl\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\zenyl\\OneDrive\\Desktop\\мини проектики\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\marin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\zenyl\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],

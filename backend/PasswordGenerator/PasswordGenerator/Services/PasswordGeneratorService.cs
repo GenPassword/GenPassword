@@ -13,16 +13,13 @@ public class PasswordGeneratorService : IPasswordGeneratorService
 {
     private readonly IPasswordAnalyzerService _analyzer;
     private readonly PasswordOptionsValidator _validator;
-    private readonly IPassphraseGeneratorService passphraseGeneratorService;
 
     public PasswordGeneratorService(
         IPasswordAnalyzerService analyzer,
-        PasswordOptionsValidator validator,
-        IPassphraseGeneratorService passphraseGenerator)
+        PasswordOptionsValidator validator)
     {
         _analyzer = analyzer;
         _validator = validator;
-        passphraseGeneratorService = passphraseGenerator;
     }
 
     public GeneratePasswordResponse Generate(GeneratePasswordRequest request)
@@ -147,9 +144,4 @@ public class PasswordGeneratorService : IPasswordGeneratorService
     }
 
     private record CharGroups(string Lower, string Upper, string Digits, string Special);
-
-    public GeneratePasswordResponse GenerateFromWords (GeneratePasswordFromWordsRequest request)
-    {
-        return passphraseGeneratorService.Generate(request);
-    }
 }
