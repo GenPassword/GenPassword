@@ -1,0 +1,66 @@
+<div class="container">
+    <div class="header">
+        <h1 class="title_Text">Генератор паролей</h1>
+        <button id="themeToggle" class="theme-toggle" title="Сменить тему">🌓</button>
+    </div>
+    
+    <div class="password-display">
+        <button class="copy-btn-small" id="copyBtn" title="Копировать">📋</button>
+        <div id="password" class="password-text">Gx7$kL!9mT2*</div>
+        <div class="strength-badge" id="strengthBadge">Надежный</div>
+    </div>
+
+    <div class="mode-tabs">
+        <button class="mode-tab active" data-mode="random">🎲 Случайный</button>
+        <button class="mode-tab" data-mode="words">📝 Из слов</button>
+    </div>
+
+    <div id="randomSettings" class="settings-section">
+        <div class="slider-container">
+            <div class="slider-label">
+                <span>Длина пароля</span>
+                <span id="lengthValue">12</span>
+            </div>
+            <input type="range" id="length" class="slider" min="4" max="64" value="12">
+        </div>
+
+        <div class="checkbox-list">
+            <label class="checkbox-item"><input type="checkbox" id="includeLowercase" checked> Строчные (a-z)</label>
+            <label class="checkbox-item"><input type="checkbox" id="includeUppercase" checked> Прописные (A-Z)</label>
+            <label class="checkbox-item"><input type="checkbox" id="includeDigits" checked> Цифры (0-9)</label>
+            <label class="checkbox-item"><input type="checkbox" id="includeSpecial" checked> Спецсимволы (!@#$%)</label>
+        </div>
+
+        <div class="additional-section">
+            <label class="checkbox-item"><input type="checkbox" id="excludeSimilar"> Исключить похожие (0Ol1I)</label>
+            <label class="checkbox-item"><input type="checkbox" id="noRepeats"> Без повторов</label>
+        </div>
+    </div>
+
+    <div id="wordsSettings" class="settings-section" style="display: none;">
+        <div class="form-row">
+            <label>Слов:</label>
+            <input type="number" id="wordCount" min="2" max="10" value="3">
+        </div>
+        <div class="form-row">
+            <label>Регистр:</label>
+            <select id="wordCase">
+                <option value="0">нижний</option>
+                <option value="1" selected>Заглавный</option>
+                <option value="2">ВЕРХНИЙ</option>
+            </select>
+        </div>
+        <div class="form-row">
+            <label>Разделитель:</label>
+            <select id="separator">
+                <option value="-">дефис (-)</option>
+                <option value="_">подчёркивание (_)</option>
+                <option value="">нет</option>
+            </select>
+        </div>
+    </div>
+
+    <button id="generateBtn" class="generate-btn">Сгенерировать пароль</button>
+    <div id="loading" class="loading">⏳ Генерация...</div>
+    <div id="error" class="error-message"></div>
+</div>

@@ -1,0 +1,409 @@
+/* ===== CSS Variables для тем ===== */
+:root {
+    --bg-body: #f5f7fa;
+    --bg-container: transparent;
+    --bg-input: #ffffff;
+    --text-primary: #2c3e50;
+    --text-secondary: #7f8c8d;
+    --shadow: none;
+    --accent: #3498db;
+    --accent-hover: #2980b9;
+    --badge: #2ecc71;
+    --error: #e74c3c;
+    --error-bg: #fdf2f2;
+}
+
+[data-theme="dark"] {
+    --bg-body: #1a1a2e;
+    --bg-container: transparent;
+    --bg-input: #0f3460;
+    --text-primary: #eaeaea;
+    --text-secondary: #b0b0b0;
+    --shadow: none;
+    --accent: #5dade2;
+    --accent-hover: #3498db;
+    --badge: #27ae60;
+    --error: #ff6b6b;
+    --error-bg: #2d1a1a;
+}
+
+/* ===== Базовые стили ===== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--bg-body);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 42px 20px;
+}
+
+#app {
+    width: 100%;
+    max-width: 965px;
+}
+
+.container {
+    background: transparent;
+    padding: 0;
+    max-width: 100%;
+}
+
+h1 {
+    font-size: 2em;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.title_Text {
+    color: #0B006B;
+    margin-bottom: 31px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 32px;
+    line-height: 100%;
+    letter-spacing: 0%;
+}
+
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--bg-input);
+    border: none;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    cursor: pointer;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    transition: all 0.3s;
+}
+
+.theme-toggle:hover {
+    transform: rotate(30deg) scale(1.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.password-block {
+    background: #CEFFF7;
+    border: 3px solid #00FFEA;
+    border-radius: 16px;
+    padding: 20px 25px;
+    margin-bottom: 38px;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0, 255, 234, 0.2);
+    height: 64px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.password-text {
+    font-family: 'Inter', monospace;
+    font-size: 24px;
+    font-weight: 400;
+    font-style: normal;
+    line-height: 100%;
+    letter-spacing: 0%;
+    color: #12215E;
+    word-break: break-all;
+    padding-right: 40px;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.copy-btn-small {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    opacity: 0.6;
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.copy-btn-small:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.strength-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+    padding: 0;
+    background: transparent;
+}
+
+.strength-bar {
+    flex: 1;
+    height: 17px;
+    background: #e0f2fe;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.strength-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    background: #2ecc71;
+    border-radius: 10px;
+    transition: width 0.3s, background 0.3s;
+}
+
+.strength-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: #0B006B;
+    min-width: 100px;
+    text-align: left;
+}
+
+.strength-container.weak .strength-bar::after { background: #e74c3c; width: 25%; }
+.strength-container.medium .strength-bar::after { background: #f39c12; width: 50%; }
+.strength-container.strong .strength-bar::after { background: #2ecc71; width: 75%; }
+.strength-container.very-strong .strength-bar::after { background: #27ae60; width: 100%; }
+
+.mode-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    background: var(--bg-input);
+    padding: 5px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.mode-tab {
+    flex: 1;
+    padding: 12px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.mode-tab.active {
+    background: var(--accent);
+    color: #fff;
+}
+
+/* ===== КАСТОМНЫЙ СЛАЙДЕР ===== */
+.custom-slider-wrapper {
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.custom-slider {
+    position: relative;
+    height: 40px;
+    cursor: pointer;
+    user-select: none;
+    margin-bottom: 28px;
+}
+
+.slider-track-bg {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 11px;
+    background: #aedbe5;
+    border-radius: 10px;
+    transform: translateY(-50%);
+}
+
+.slider-track-fill {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    height: 11px;
+    background: #013CFF;
+    border-radius: 10px;
+    transform: translateY(-50%);
+    width: 0%;
+    pointer-events: none;
+}
+
+.slider-thumb {
+    position: absolute;
+    top: 50%;
+    left: 0%;
+    width: 24px;
+    height: 24px;
+    background: #00FFEA;
+    border: 3px solid #013CFF;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 2px 8px rgba(1, 60, 255, 0.4);
+    cursor: grab;
+    transition: box-shadow 0.2s;
+    z-index: 2;
+}
+
+.slider-thumb.dragging {
+    cursor: grabbing;
+    box-shadow: 0 4px 16px rgba(52, 152, 219, 0.6);
+}
+
+.slider-value {
+    position: absolute;
+    top: 40px;
+    left: 0%;
+    transform: translateX(-50%);
+    color: #013CFF;
+    font-weight: 700;
+    font-size: 15px;
+    font-family: 'Inter', 'sans-serif';
+    font-weight: 400;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.slider-labels {
+    margin-top: -28px;
+    font-family: 'Inter', 'sans-serif';
+    font-weight: 400;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    display: flex;
+    justify-content: space-between;
+    color: #013CFF;
+}
+
+/* Сдвигаем "4" ещё левее */
+.slider-labels span:first-child {
+    margin-left: -5px; /* Подбери значение по вкусу */
+}
+
+/* Сдвигаем "64" ещё правее */
+.slider-labels span:last-child {
+    margin-right: -20px; /* Подбери значение по вкусу */
+}
+
+.checkbox-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: var(--bg-input);
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    color: var(--text-primary);
+    font-size: 15px;
+}
+
+.checkbox-item input {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--accent);
+}
+
+.additional-section {
+    background: var(--bg-input);
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.form-row label {
+    color: var(--text-primary);
+    font-size: 15px;
+}
+
+.form-row input,
+.form-row select {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 8px;
+    background: var(--bg-body);
+    color: var(--text-primary);
+    font-size: 14px;
+    width: 140px;
+}
+
+.generate-btn {
+    width: 100%;
+    padding: 16px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.generate-btn:hover {
+    background: var(--accent-hover);
+}
+
+.generate-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.error-message {
+    color: var(--error);
+    background: var(--error-bg);
+    border-radius: 12px;
+    padding: 15px;
+    margin-top: 20px;
+    text-align: center;
+    display: none;
+}
+
+.loading {
+    text-align: center;
+    color: var(--text-secondary);
+    margin: 20px 0;
+    display: none;
+}
