@@ -45,40 +45,40 @@ const html = `
         <div class="settings-with-counters">
             <div class="setting-item">
                 <label class="checkbox-item">
-                    <input type="checkbox" id="includeLowercase" checked>
+                    <input type="checkbox" id="includeLowercase">
                     <span>Строчные (a-z)</span>
                 </label>
             </div>
 
             <div class="setting-item">
                 <label class="checkbox-item">
-                    <input type="checkbox" id="includeUppercase" checked>
+                    <input type="checkbox" id="includeUppercase">
                     <span>Прописные (A-Z)</span>
                 </label>
             </div>
 
             <div class="setting-item with-counter">
                 <label class="checkbox-item">
-                    <input type="checkbox" id="includeDigits" checked>
+                    <input type="checkbox" id="includeDigits">
                     <span>Цифры (0-9)</span>
                 </label>
                 <div class="counter-control">
                     <span class="counter-label">Количество:</span>
                     <button class="counter-btn minus" data-target="digitsCount">-</button>
-                    <span class="counter-value" id="digitsCountValue">2</span>
+                    <span class="counter-value" id="digitsCountValue">0</span>
                     <button class="counter-btn plus" data-target="digitsCount">+</button>
                 </div>
             </div>
 
             <div class="setting-item with-counter">
                 <label class="checkbox-item">
-                    <input type="checkbox" id="includeSpecial" checked>
+                    <input type="checkbox" id="includeSpecial">
                     <span>Спецсимволы (!@#$%)</span>
                 </label>
                 <div class="counter-control">
                     <span class="counter-label">Количество:</span>
                     <button class="counter-btn minus" data-target="specialCount">-</button>
-                    <span class="counter-value" id="specialCountValue">2</span>
+                    <span class="counter-value" id="specialCountValue">0</span>
                     <button class="counter-btn plus" data-target="specialCount">+</button>
                 </div>
             </div>
@@ -184,7 +184,7 @@ function initApp() {
         };
     });
 
-    // ===== СЧЁТЧИКИ ДЛЯ ЦИФР И СПЕЦСИМВОЛОВ (объявляем ПЕРЕД слайдером!) =====
+    // ===== СЧЁТЧИКИ ДЛЯ ЦИФР И СПЕЦСИМВОЛОВ =====
     const counters = {
         digitsCount: 0,
         specialCount: 0
@@ -229,6 +229,7 @@ function initApp() {
     }
 
     function initCounters() {
+        // Обработчики кнопок +/-
         document.querySelectorAll('.counter-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const target = e.target.dataset.target;
@@ -250,26 +251,69 @@ function initApp() {
             });
         });
         
+        // Обработчики чекбоксов
         ['includeLowercase', 'includeUppercase', 'includeDigits', 'includeSpecial'].forEach(id => {
             const checkbox = $(id);
             if (checkbox) {
                 checkbox.addEventListener('change', () => {
                     const maxVal = getMaxCounterValue();
-                    const total = counters.digitsCount + counters.specialCount;
-                    if (total > maxVal) {
-                        counters.specialCount = Math.max(0, maxVal - counters.digitsCount);
+                    
+                    // Логика для спецсимволов: при включении ставим 1
+                    if (id === 'includeSpecial') {
+                        if (checkbox.checked) {
+                            if (counters.specialCount === 0) {
+                                if (counters.digitsCount + 1 <= maxVal) {
+                                    counters.specialCount = 1;
+                                } else if (counters.digitsCount > 0) {
+                                    counters.digitsCount--;
+                                    counters.specialCount = 1;
+                                }
+                            }
+                        } else {
+                            counters.specialCount = 0;
+                        }
                     }
+                    
+                    // Логика для цифр: при включении ставим 1
+                    if (id === 'includeDigits') {
+                        if (checkbox.checked) {
+                            if (counters.digitsCount === 0) {
+                                if (counters.specialCount + 1 <= maxVal) {
+                                    counters.digitsCount = 1;
+                                } else if (counters.specialCount > 0) {
+                                    counters.specialCount--;
+                                    counters.digitsCount = 1;
+                                }
+                            }
+                        } else {
+                            counters.digitsCount = 0;
+                        }
+                    }
+                    
+                    // Для букв: если сумма цифр+спец > нового лимита — вычитаем из БОЛЬШЕГО
+                    if (id === 'includeLowercase' || id === 'includeUppercase') {
+                        const total = counters.digitsCount + counters.specialCount;
+                        if (total > maxVal) {
+                            const excess = total - maxVal;
+                            if (counters.digitsCount >= counters.specialCount) {
+                                counters.digitsCount = Math.max(0, counters.digitsCount - excess);
+                            } else {
+                                counters.specialCount = Math.max(0, counters.specialCount - excess);
+                            }
+                        }
+                    }
+                    
                     updateCounterDisplay();
                 });
             }
         });
+        
         updateCounterDisplay();
     }
 
-    // Инициализируем счётчики СРАЗУ
     initCounters();
 
-    // ===== КАСТОМНЫЙ СЛАЙДЕР (теперь counters уже объявлен) =====
+    // ===== КАСТОМНЫЙ СЛАЙДЕР =====
     if (els.customSlider) {
         const MIN = 4;
         const MAX = 64;
@@ -292,7 +336,6 @@ function initApp() {
                 els.sliderValue.style.opacity = '1';
             }
             
-            // Обновляем счётчики при изменении длины
             updateCounterDisplay();
         };
 
@@ -355,8 +398,8 @@ function initApp() {
             includeSpecial: $('includeSpecial')?.checked || false,
             excludeSimilar: $('excludeSimilar')?.checked || false,
             noRepeats: $('noRepeats')?.checked || false,
-            digitsCount: counters.digitsCount || 2,
-            specialCount: counters.specialCount || 2,
+            digitsCount: counters.digitsCount || 0,
+            specialCount: counters.specialCount || 0,
             minDigits: counters.digitsCount || 0,
             minSpecial: counters.specialCount || 0
         };
