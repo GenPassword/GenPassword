@@ -3,6 +3,22 @@
   "WorkspaceRootPath": "C:\\Users\\zenyl\\OneDrive\\Desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\GenPassword\\backend\\PasswordGenerator\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{8F991483-84B5-4ECB-A2E0-BCAB498FC5F6}|PasswordGenerator.Tests\\PasswordGenerator.Tests.csproj|c:\\users\\zenyl\\onedrive\\desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\genpassword\\backend\\passwordgenerator\\passwordgenerator.tests\\tests\\generatefromwords\\generatepasswordfromwordsservicetest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F991483-84B5-4ECB-A2E0-BCAB498FC5F6}|PasswordGenerator.Tests\\PasswordGenerator.Tests.csproj|solutionrelative:passwordgenerator.tests\\tests\\generatefromwords\\generatepasswordfromwordsservicetest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E5D407F4-596D-47FD-A398-DDA136FAF081}|PasswordGenerator\\PasswordGenerator.csproj|c:\\users\\zenyl\\onedrive\\desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\genpassword\\backend\\passwordgenerator\\passwordgenerator\\controllers\\usersettingscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E5D407F4-596D-47FD-A398-DDA136FAF081}|PasswordGenerator\\PasswordGenerator.csproj|solutionrelative:passwordgenerator\\controllers\\usersettingscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E5D407F4-596D-47FD-A398-DDA136FAF081}|PasswordGenerator\\PasswordGenerator.csproj|c:\\users\\zenyl\\onedrive\\desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\genpassword\\backend\\passwordgenerator\\passwordgenerator\\services\\usersettingsservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E5D407F4-596D-47FD-A398-DDA136FAF081}|PasswordGenerator\\PasswordGenerator.csproj|solutionrelative:passwordgenerator\\services\\usersettingsservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E5D407F4-596D-47FD-A398-DDA136FAF081}|PasswordGenerator\\PasswordGenerator.csproj|c:\\users\\zenyl\\onedrive\\desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\genpassword\\backend\\passwordgenerator\\passwordgenerator\\models\\savesettingsrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E5D407F4-596D-47FD-A398-DDA136FAF081}|PasswordGenerator\\PasswordGenerator.csproj|solutionrelative:passwordgenerator\\models\\savesettingsrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{8F991483-84B5-4ECB-A2E0-BCAB498FC5F6}|PasswordGenerator.Tests\\PasswordGenerator.Tests.csproj|c:\\users\\zenyl\\onedrive\\desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\genpassword\\backend\\passwordgenerator\\passwordgenerator.tests\\tests\\generator\\passwordgeneratorservicetests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8F991483-84B5-4ECB-A2E0-BCAB498FC5F6}|PasswordGenerator.Tests\\PasswordGenerator.Tests.csproj|solutionrelative:passwordgenerator.tests\\tests\\generator\\passwordgeneratorservicetests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -27,10 +43,6 @@
       "RelativeMoniker": "D:0:0:{E5D407F4-596D-47FD-A398-DDA136FAF081}|PasswordGenerator\\PasswordGenerator.csproj|solutionrelative:passwordgenerator\\services\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E5D407F4-596D-47FD-A398-DDA136FAF081}|PasswordGenerator\\PasswordGenerator.csproj|c:\\users\\zenyl\\onedrive\\desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\genpassword\\backend\\passwordgenerator\\passwordgenerator\\services\\usersettingsservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E5D407F4-596D-47FD-A398-DDA136FAF081}|PasswordGenerator\\PasswordGenerator.csproj|solutionrelative:passwordgenerator\\services\\usersettingsservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{E5D407F4-596D-47FD-A398-DDA136FAF081}|PasswordGenerator\\PasswordGenerator.csproj|c:\\users\\zenyl\\onedrive\\desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\genpassword\\backend\\passwordgenerator\\passwordgenerator\\services\\wordlistservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E5D407F4-596D-47FD-A398-DDA136FAF081}|PasswordGenerator\\PasswordGenerator.csproj|solutionrelative:passwordgenerator\\services\\wordlistservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -47,14 +59,6 @@
       "RelativeMoniker": "D:0:0:{E5D407F4-596D-47FD-A398-DDA136FAF081}|PasswordGenerator\\PasswordGenerator.csproj|solutionrelative:passwordgenerator\\entities\\usersetting.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E5D407F4-596D-47FD-A398-DDA136FAF081}|PasswordGenerator\\PasswordGenerator.csproj|c:\\users\\zenyl\\onedrive\\desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\genpassword\\backend\\passwordgenerator\\passwordgenerator\\controllers\\usersettingscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E5D407F4-596D-47FD-A398-DDA136FAF081}|PasswordGenerator\\PasswordGenerator.csproj|solutionrelative:passwordgenerator\\controllers\\usersettingscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E5D407F4-596D-47FD-A398-DDA136FAF081}|PasswordGenerator\\PasswordGenerator.csproj|c:\\users\\zenyl\\onedrive\\desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\genpassword\\backend\\passwordgenerator\\passwordgenerator\\models\\savesettingsrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E5D407F4-596D-47FD-A398-DDA136FAF081}|PasswordGenerator\\PasswordGenerator.csproj|solutionrelative:passwordgenerator\\models\\savesettingsrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{E5D407F4-596D-47FD-A398-DDA136FAF081}|PasswordGenerator\\PasswordGenerator.csproj|c:\\users\\zenyl\\onedrive\\desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\genpassword\\backend\\passwordgenerator\\passwordgenerator\\services\\iusersettingsservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E5D407F4-596D-47FD-A398-DDA136FAF081}|PasswordGenerator\\PasswordGenerator.csproj|solutionrelative:passwordgenerator\\services\\iusersettingsservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -69,10 +73,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{8F991483-84B5-4ECB-A2E0-BCAB498FC5F6}|PasswordGenerator.Tests\\PasswordGenerator.Tests.csproj|c:\\users\\zenyl\\onedrive\\desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\genpassword\\backend\\passwordgenerator\\passwordgenerator.tests\\tests\\registration\\registrationtests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8F991483-84B5-4ECB-A2E0-BCAB498FC5F6}|PasswordGenerator.Tests\\PasswordGenerator.Tests.csproj|solutionrelative:passwordgenerator.tests\\tests\\registration\\registrationtests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8F991483-84B5-4ECB-A2E0-BCAB498FC5F6}|PasswordGenerator.Tests\\PasswordGenerator.Tests.csproj|c:\\users\\zenyl\\onedrive\\desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\genpassword\\backend\\passwordgenerator\\passwordgenerator.tests\\tests\\generatefromwords\\generatepasswordfromwordsservicetest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F991483-84B5-4ECB-A2E0-BCAB498FC5F6}|PasswordGenerator.Tests\\PasswordGenerator.Tests.csproj|solutionrelative:passwordgenerator.tests\\tests\\generatefromwords\\generatepasswordfromwordsservicetest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{E5D407F4-596D-47FD-A398-DDA136FAF081}|PasswordGenerator\\PasswordGenerator.csproj|c:\\users\\zenyl\\onedrive\\desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\genpassword\\backend\\passwordgenerator\\passwordgenerator\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -138,11 +138,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 12,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 2,
               "Title": "UserSettingsService.cs",
               "DocumentMoniker": "C:\\Users\\zenyl\\OneDrive\\Desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\Services\\UserSettingsService.cs",
               "RelativeDocumentMoniker": "PasswordGenerator\\Services\\UserSettingsService.cs",
@@ -154,19 +154,19 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 3,
               "Title": "SaveSettingsRequest.cs",
               "DocumentMoniker": "C:\\Users\\zenyl\\OneDrive\\Desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\Models\\SaveSettingsRequest.cs",
               "RelativeDocumentMoniker": "PasswordGenerator\\Models\\SaveSettingsRequest.cs",
               "ToolTip": "C:\\Users\\zenyl\\OneDrive\\Desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\Models\\SaveSettingsRequest.cs",
               "RelativeToolTip": "PasswordGenerator\\Models\\SaveSettingsRequest.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAgAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-14T13:17:31.393Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 16,
               "Title": "RegisterUserRequest.cs",
               "DocumentMoniker": "C:\\Users\\zenyl\\OneDrive\\Desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\Models\\RegisterUserRequest.cs",
               "RelativeDocumentMoniker": "PasswordGenerator\\Models\\RegisterUserRequest.cs",
@@ -178,27 +178,29 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 1,
               "Title": "UserSettingsController.cs",
               "DocumentMoniker": "C:\\Users\\zenyl\\OneDrive\\Desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\Controllers\\UserSettingsController.cs",
               "RelativeDocumentMoniker": "PasswordGenerator\\Controllers\\UserSettingsController.cs",
               "ToolTip": "C:\\Users\\zenyl\\OneDrive\\Desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\Controllers\\UserSettingsController.cs",
               "RelativeToolTip": "PasswordGenerator\\Controllers\\UserSettingsController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAAaAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-14T12:56:19.242Z"
+              "WhenOpened": "2026-03-14T12:56:19.242Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 0,
               "Title": "GeneratePasswordFromWordsServiceTest.cs",
               "DocumentMoniker": "C:\\Users\\zenyl\\OneDrive\\Desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator.Tests\\Tests\\GenerateFromWords\\GeneratePasswordFromWordsServiceTest.cs",
               "RelativeDocumentMoniker": "PasswordGenerator.Tests\\Tests\\GenerateFromWords\\GeneratePasswordFromWordsServiceTest.cs",
-              "ToolTip": "C:\\Users\\zenyl\\OneDrive\\Desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator.Tests\\Tests\\GenerateFromWords\\GeneratePasswordFromWordsServiceTest.cs",
-              "RelativeToolTip": "PasswordGenerator.Tests\\Tests\\GenerateFromWords\\GeneratePasswordFromWordsServiceTest.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAA6AAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\zenyl\\OneDrive\\Desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator.Tests\\Tests\\GenerateFromWords\\GeneratePasswordFromWordsServiceTest.cs*",
+              "RelativeToolTip": "PasswordGenerator.Tests\\Tests\\GenerateFromWords\\GeneratePasswordFromWordsServiceTest.cs*",
+              "ViewState": "AgIAAHEAAAAAAAAAAAAAwI0AAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-08T12:04:17.832Z"
+              "WhenOpened": "2026-03-08T12:04:17.832Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -226,7 +228,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 5,
               "Title": "PasswordController.cs",
               "DocumentMoniker": "C:\\Users\\zenyl\\OneDrive\\Desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\Controllers\\PasswordController.cs",
               "RelativeDocumentMoniker": "PasswordGenerator\\Controllers\\PasswordController.cs",
@@ -234,12 +236,11 @@
               "RelativeToolTip": "PasswordGenerator\\Controllers\\PasswordController.cs",
               "ViewState": "AgIAAAEAAAAAAAAAAAAQwCcAAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-28T12:53:30.562Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-28T12:53:30.562Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 7,
               "Title": "PassphraseGeneratorService.cs",
               "DocumentMoniker": "C:\\Users\\zenyl\\OneDrive\\Desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\Services\\PassphraseGeneratorService.cs",
               "RelativeDocumentMoniker": "PasswordGenerator\\Services\\PassphraseGeneratorService.cs",
@@ -247,12 +248,11 @@
               "RelativeToolTip": "PasswordGenerator\\Services\\PassphraseGeneratorService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAPAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-08T17:31:25.022Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-08T17:31:25.022Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 6,
               "Title": "PasswordGeneratorService.cs",
               "DocumentMoniker": "C:\\Users\\zenyl\\OneDrive\\Desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\Services\\PasswordGeneratorService.cs",
               "RelativeDocumentMoniker": "PasswordGenerator\\Services\\PasswordGeneratorService.cs",
@@ -260,12 +260,11 @@
               "RelativeToolTip": "PasswordGenerator\\Services\\PasswordGeneratorService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAABEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-08T08:18:40.75Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-08T08:18:40.75Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 10,
               "Title": "WordlistService.cs",
               "DocumentMoniker": "C:\\Users\\zenyl\\OneDrive\\Desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\Services\\WordlistService.cs",
               "RelativeDocumentMoniker": "PasswordGenerator\\Services\\WordlistService.cs",
@@ -277,7 +276,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 8,
               "Title": "UserService.cs",
               "DocumentMoniker": "C:\\Users\\zenyl\\OneDrive\\Desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\Services\\UserService.cs",
               "RelativeDocumentMoniker": "PasswordGenerator\\Services\\UserService.cs",
@@ -285,25 +284,23 @@
               "RelativeToolTip": "PasswordGenerator\\Services\\UserService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAB8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-02T11:44:55.746Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-02T11:44:55.746Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
               "Title": "PasswordGeneratorServiceTests.cs",
               "DocumentMoniker": "C:\\Users\\zenyl\\OneDrive\\Desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator.Tests\\Tests\\Generator\\PasswordGeneratorServiceTests.cs",
               "RelativeDocumentMoniker": "PasswordGenerator.Tests\\Tests\\Generator\\PasswordGeneratorServiceTests.cs",
-              "ToolTip": "C:\\Users\\zenyl\\OneDrive\\Desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator.Tests\\Tests\\Generator\\PasswordGeneratorServiceTests.cs*",
-              "RelativeToolTip": "PasswordGenerator.Tests\\Tests\\Generator\\PasswordGeneratorServiceTests.cs*",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAA/AAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\zenyl\\OneDrive\\Desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator.Tests\\Tests\\Generator\\PasswordGeneratorServiceTests.cs",
+              "RelativeToolTip": "PasswordGenerator.Tests\\Tests\\Generator\\PasswordGeneratorServiceTests.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-08T17:48:33.998Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-08T17:48:33.998Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 9,
               "Title": "IUserService.cs",
               "DocumentMoniker": "C:\\Users\\zenyl\\OneDrive\\Desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\Services\\IUserService.cs",
               "RelativeDocumentMoniker": "PasswordGenerator\\Services\\IUserService.cs",
@@ -315,7 +312,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 17,
               "Title": "RegistrationTests.cs",
               "DocumentMoniker": "C:\\Users\\zenyl\\OneDrive\\Desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator.Tests\\Tests\\Registration\\RegistrationTests.cs",
               "RelativeDocumentMoniker": "PasswordGenerator.Tests\\Tests\\Registration\\RegistrationTests.cs",
@@ -327,7 +324,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 15,
               "Title": "LoginTest.cs",
               "DocumentMoniker": "C:\\Users\\zenyl\\OneDrive\\Desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator.Tests\\Tests\\Login\\LoginTest.cs",
               "RelativeDocumentMoniker": "PasswordGenerator.Tests\\Tests\\Login\\LoginTest.cs",
@@ -339,7 +336,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 12,
               "Title": "UserSettingsServiceTests.cs",
               "DocumentMoniker": "C:\\Users\\zenyl\\OneDrive\\Desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator.Tests\\Tests\\UserSettings\\UserSettingsServiceTests.cs",
               "RelativeDocumentMoniker": "PasswordGenerator.Tests\\Tests\\UserSettings\\UserSettingsServiceTests.cs",
@@ -363,7 +360,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 11,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\zenyl\\OneDrive\\Desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\appsettings.json",
               "RelativeDocumentMoniker": "PasswordGenerator\\appsettings.json",
@@ -375,7 +372,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 14,
               "Title": "IUserSettingsService.cs",
               "DocumentMoniker": "C:\\Users\\zenyl\\OneDrive\\Desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\Services\\IUserSettingsService.cs",
               "RelativeDocumentMoniker": "PasswordGenerator\\Services\\IUserSettingsService.cs",
@@ -387,7 +384,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 13,
               "Title": "UserSetting.cs",
               "DocumentMoniker": "C:\\Users\\zenyl\\OneDrive\\Desktop\\\u043C\u0438\u043D\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u043A\u0438\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\Entities\\UserSetting.cs",
               "RelativeDocumentMoniker": "PasswordGenerator\\Entities\\UserSetting.cs",

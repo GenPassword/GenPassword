@@ -53,8 +53,9 @@ namespace PasswordGenerator.Tests.Tests.Login
             var email = login.Email;
             var id = login.Id;
             ClassicAssert.NotNull(login);
-            ClassicAssert.AreEqual("test@example1.com", email);
-            ClassicAssert.AreEqual(dbContext.Users.First().Id, id);
+            Assert.That(login, Is.Not.Null);
+            Assert.That("test@example1.com", Is.EqualTo(email));
+            Assert.That(dbContext.Users.First().Id, Is.EqualTo(id));
         }
 
         [Test]
@@ -83,7 +84,7 @@ namespace PasswordGenerator.Tests.Tests.Login
         {
             await service.RegisterUser("test@example1.com", "Password123!");
             var login = await service.Login("Test@Example1.com", "Password123!");
-            ClassicAssert.NotNull(login);
+            Assert.That(login, Is.Not.Null);
         }
     }
 }

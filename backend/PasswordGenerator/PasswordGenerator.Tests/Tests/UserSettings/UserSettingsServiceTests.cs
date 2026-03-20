@@ -39,8 +39,8 @@ namespace PasswordGenerator.Tests.Tests.UserSettings
             var saved = await appDbContext.UserSettings
                 .FirstOrDefaultAsync(x => x.UserId == userId && x.GeneratorType == generatorType);
 
-            ClassicAssert.IsNotNull(saved);
-            ClassicAssert.AreEqual(settingsJson, saved.SettingJson);
+            Assert.That(saved, Is.Not.Null);
+            Assert.That(settingsJson, Is.EqualTo(saved.SettingJson));
         }
 
         [Test]
@@ -56,15 +56,15 @@ namespace PasswordGenerator.Tests.Tests.UserSettings
 
             var saved = await appDbContext.UserSettings
                 .FirstOrDefaultAsync(x => x.UserId == userId && x.GeneratorType == generatorType);
-            ClassicAssert.IsNotNull(saved);
-            ClassicAssert.AreEqual(settingsJson2, saved.SettingJson);
+            Assert.That(saved, Is.Not.Null);
+            Assert.That(settingsJson2, Is.EqualTo(saved.SettingJson));
         }
 
         [Test]
         public async Task GetSettings_ShouldReturnNull_WhenSettingsDoNotExist()
         {
             var getSetting = await service.GetSettings(1, GeneratorType.Random);
-            ClassicAssert.IsNull(getSetting);
+            Assert.That(getSetting, Is.Null);
         }
 
         [Test]
@@ -76,8 +76,9 @@ namespace PasswordGenerator.Tests.Tests.UserSettings
             await service.SaveSettings(userId, generatorType, settingsJson);
 
             var getSetting = service.GetSettings(1, GeneratorType.Random);
-            ClassicAssert.IsNotNull(getSetting.Result);
-            ClassicAssert.AreEqual(settingsJson, getSetting.Result);
+            Assert.That(getSetting.Result, Is.Not.Null);
+            Assert.That(settingsJson, Is.EqualTo(getSetting.Result));
+
         }
 
         [Test]
@@ -92,7 +93,7 @@ namespace PasswordGenerator.Tests.Tests.UserSettings
             await service.SaveSettings(userId, generatorType2, settingsJson2);
 
             var getSetting = await service.GetSettings(1, GeneratorType.Words);
-            ClassicAssert.AreEqual(settingsJson2, getSetting);
+            Assert.That(settingsJson2, Is.EqualTo(getSetting));
         }
     }
 }

@@ -36,8 +36,8 @@ namespace PasswordGenerator.Tests.Tests.Registration
         public async Task RegisterUser_ShouldAddUser_WhenEmailIsUnique()
         {
             var result = await service.RegisterUser("test@example.com", "Password123!");
-            ClassicAssert.IsTrue(result);
-            ClassicAssert.AreEqual(1, dbContext.Users.Count());
+            Assert.That(result, Is.True);
+            Assert.That(dbContext.Users.Count(), Is.EqualTo(1));
         }
 
         [Test]
@@ -45,21 +45,21 @@ namespace PasswordGenerator.Tests.Tests.Registration
         {
             dbContext.Users.Add(new Entities.User { Email = "test@example.com" });
             dbContext.SaveChanges();
-            ClassicAssert.IsFalse(await service.RegisterUser("test@example.com", "Password123!"));
+            Assert.That(await service.RegisterUser("test@example.com", "Password123!"), Is.False);
         }
         [Test]
         public async Task RegisterUser_ShouldThrow_WhenEmailLowerAndUpper()
         {
             dbContext.Users.Add(new Entities.User { Email = "test@example.com" });
             dbContext.SaveChanges();
-            ClassicAssert.IsFalse(await service.RegisterUser("TEST@EXAMPLE.COM", "Password123!"));
+            Assert.That(await service.RegisterUser("TEST@EXAMPLE.COM", "Password123!"), Is.False);
         }
         [Test]
         public async Task RegisterUser_ShouldThrow_WhenEmailHaveSpace()
         {
             dbContext.Users.Add(new Entities.User { Email = "test@example.com" });
             dbContext.SaveChanges();
-            ClassicAssert.IsFalse(await service.RegisterUser("    test@example.com    ", "Password123!"));
+            Assert.That(await service.RegisterUser("    test@example.com    ", "Password123!"), Is.False);
         }
         [Test]
         public async Task RegisterUser_CheckHashPassword()
@@ -67,7 +67,7 @@ namespace PasswordGenerator.Tests.Tests.Registration
             await service.RegisterUser("test@example1.com", "Password123!");
             var user = dbContext.Users.First();
             var passwordHash = user.PasswordHash;
-            ClassicAssert.IsFalse(passwordHash == "Password123!");
+            Assert.That(passwordHash == "Password123!", Is.False);
         }
         [Test]
         public async Task RegisterUser_ShouldThrow_WhenEmailOrPasswordIsEmpty()
