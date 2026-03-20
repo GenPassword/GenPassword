@@ -98,6 +98,7 @@ h1 {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
+/* ===== Блок пароля ===== */
 .password-block {
     background: #CEFFF7;
     border: 3px solid #00FFEA;
@@ -145,6 +146,7 @@ h1 {
     transform: scale(1.1);
 }
 
+/* ===== Индикатор надежности ===== */
 .strength-container {
     display: flex;
     align-items: center;
@@ -189,6 +191,7 @@ h1 {
 .strength-container.strong .strength-bar::after { background: #2ecc71; width: 75%; }
 .strength-container.very-strong .strength-bar::after { background: #27ae60; width: 100%; }
 
+/* ===== Вкладки режимов ===== */
 .mode-tabs {
     display: flex;
     gap: 10px;
@@ -281,20 +284,15 @@ h1 {
     transform: translateX(-50%);
     color: #013CFF;
     font-weight: 700;
-    font-size: 15px;
-    font-family: 'Inter', 'sans-serif';
-    font-weight: 400;
-    font-style: normal;
     font-size: 20px;
-    line-height: 100%;
-    letter-spacing: 0%;
+    font-family: 'Inter', sans-serif;
     pointer-events: none;
     white-space: nowrap;
 }
 
 .slider-labels {
     margin-top: -28px;
-    font-family: 'Inter', 'sans-serif';
+    font-family: 'Inter', sans-serif;
     font-weight: 400;
     font-style: normal;
     font-size: 20px;
@@ -305,24 +303,39 @@ h1 {
     color: #013CFF;
 }
 
-/* Сдвигаем "4" ещё левее */
 .slider-labels span:first-child {
-    margin-left: -5px; /* Подбери значение по вкусу */
+    margin-left: -5px;
 }
 
-/* Сдвигаем "64" ещё правее */
 .slider-labels span:last-child {
-    margin-right: -20px; /* Подбери значение по вкусу */
+    margin-right: -20px;
 }
 
-.checkbox-list {
+/* ===== Настройки со счетчиками ===== */
+.settings-with-counters {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    background: var(--bg-input);
-    padding: 20px;
-    border-radius: 12px;
     margin-bottom: 15px;
+}
+
+.setting-item {
+    background: #e0f7ff;
+    border: 2px solid #00ffea;
+    border-radius: 10px;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.setting-item.with-counter {
+    flex-wrap: wrap;
+}
+
+.setting-item.no-counter {
+    flex-wrap: nowrap;
 }
 
 .checkbox-item {
@@ -332,20 +345,122 @@ h1 {
     cursor: pointer;
     color: var(--text-primary);
     font-size: 15px;
+    flex: 1;
 }
 
 .checkbox-item input {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
     accent-color: var(--accent);
+    cursor: pointer;
 }
 
+/* Счетчик */
+.counter-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(52, 152, 219, 0.15);
+    padding: 6px 12px;
+    border-radius: 8px;
+}
+
+.counter-label {
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.counter-btn {
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    user-select: none;
+}
+
+.counter-btn:hover:not(:disabled) {
+    background: var(--accent-hover);
+    transform: scale(1.1);
+}
+
+.counter-btn:active:not(:disabled) {
+    transform: scale(0.95);
+}
+
+.counter-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.counter-value {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--accent);
+    min-width: 24px;
+    text-align: center;
+    font-family: 'Inter', monospace;
+}
+
+/* Индикатор суммы */
+.counter-summary {
+    background: rgba(52, 152, 219, 0.1);
+    border: 2px dashed var(--accent);
+    border-radius: 10px;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-top: 10px;
+}
+
+.counter-summary .total-value {
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 16px;
+}
+
+.counter-summary .max-value {
+    font-weight: 700;
+    color: var(--text-primary);
+    font-size: 16px;
+}
+
+.counter-summary.warning {
+    border-color: #f39c12;
+    background: rgba(243, 156, 18, 0.1);
+}
+
+.counter-summary.error {
+    border-color: #e74c3c;
+    background: rgba(231, 76, 60, 0.1);
+}
+
+/* Дополнительные опции в том же стиле */
 .additional-section {
-    background: var(--bg-input);
-    padding: 20px;
-    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 0;
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
 }
 
+/* ===== Форма (режим слов) ===== */
 .form-row {
     display: flex;
     justify-content: space-between;
@@ -369,6 +484,7 @@ h1 {
     width: 140px;
 }
 
+/* ===== Кнопка генерации ===== */
 .generate-btn {
     width: 100%;
     padding: 16px;
@@ -391,6 +507,7 @@ h1 {
     cursor: not-allowed;
 }
 
+/* ===== Сообщения ===== */
 .error-message {
     color: var(--error);
     background: var(--error-bg);
@@ -407,3 +524,105 @@ h1 {
     margin: 20px 0;
     display: none;
 }
+
+/* Адаптивность */
+@media (max-width: 600px) {
+    .setting-item.with-counter {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .counter-control {
+        margin-left: 34px;
+    }
+}
+/* ===== Настройки со счетчиками ===== */
+.settings-with-counters {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.setting-item {
+    background: #e0f7ff;
+    border: 2px solid #00ffea;
+    border-radius: 10px;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.setting-item.with-counter {
+    flex-wrap: wrap;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    color: var(--text-primary);
+    font-size: 15px;
+    flex: 1;
+}
+
+.checkbox-item input {
+    width: 22px;
+    height: 22px;
+    accent-color: var(--accent);
+    cursor: pointer;
+}
+
+/* Счетчик */
+.counter-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(52, 152, 219, 0.15);
+    padding: 6px 12px;
+    border-radius: 8px;
+}
+
+.counter-label {
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.counter-btn {
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    user-select: none;
+}
+
+.counter-btn:hover {
+    background: var(--accent-hover);
+    transform: scale(1.1);
+}
+
+.counter-btn:active {
+    transform: scale(0.95);
+}
+
+.counter-value {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--accent);
+    min-width: 24px;
+    text-align: center;
+    font-family: 'Inter', monospace;
+}
+

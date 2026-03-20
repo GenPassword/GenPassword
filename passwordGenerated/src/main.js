@@ -41,15 +41,63 @@ const html = `
             <input type="hidden" id="length" value="12" min="4" max="64">
         </div>
         
-        <div class="checkbox-list">
-            <label class="checkbox-item"><input type="checkbox" id="includeLowercase" checked> Строчные (a-z)</label>
-            <label class="checkbox-item"><input type="checkbox" id="includeUppercase" checked> Прописные (A-Z)</label>
-            <label class="checkbox-item"><input type="checkbox" id="includeDigits" checked> Цифры (0-9)</label>
-            <label class="checkbox-item"><input type="checkbox" id="includeSpecial" checked> Спецсимволы (!@#$%)</label>
+        <!-- Настройки с счетчиками -->
+        <div class="settings-with-counters">
+            <div class="setting-item">
+                <label class="checkbox-item">
+                    <input type="checkbox" id="includeLowercase" checked>
+                    <span>Строчные (a-z)</span>
+                </label>
+            </div>
+
+            <div class="setting-item">
+                <label class="checkbox-item">
+                    <input type="checkbox" id="includeUppercase" checked>
+                    <span>Прописные (A-Z)</span>
+                </label>
+            </div>
+
+            <div class="setting-item with-counter">
+                <label class="checkbox-item">
+                    <input type="checkbox" id="includeDigits" checked>
+                    <span>Цифры (0-9)</span>
+                </label>
+                <div class="counter-control">
+                    <span class="counter-label">Количество:</span>
+                    <button class="counter-btn minus" data-target="digitsCount">-</button>
+                    <span class="counter-value" id="digitsCountValue">2</span>
+                    <button class="counter-btn plus" data-target="digitsCount">+</button>
+                </div>
+            </div>
+
+            <div class="setting-item with-counter">
+                <label class="checkbox-item">
+                    <input type="checkbox" id="includeSpecial" checked>
+                    <span>Спецсимволы (!@#$%)</span>
+                </label>
+                <div class="counter-control">
+                    <span class="counter-label">Количество:</span>
+                    <button class="counter-btn minus" data-target="specialCount">-</button>
+                    <span class="counter-value" id="specialCountValue">2</span>
+                    <button class="counter-btn plus" data-target="specialCount">+</button>
+                </div>
+            </div>
         </div>
+        
+        <!-- Дополнительные опции -->
         <div class="additional-section">
-            <label class="checkbox-item"><input type="checkbox" id="excludeSimilar"> Исключить похожие (0Ol1I)</label>
-            <label class="checkbox-item"><input type="checkbox" id="noRepeats"> Без повторов</label>
+            <div class="setting-item no-counter">
+                <label class="checkbox-item">
+                    <input type="checkbox" id="excludeSimilar">
+                    <span>Исключить похожие (0Ol1I)</span>
+                </label>
+            </div>
+            <div class="setting-item no-counter">
+                <label class="checkbox-item">
+                    <input type="checkbox" id="noRepeats">
+                    <span>Без повторов</span>
+                </label>
+            </div>
         </div>
     </div>
 
@@ -112,6 +160,7 @@ function initApp() {
     if (!els.generate) return;
     let mode = 'random';
 
+    // ===== Тема =====
     if (localStorage.getItem('theme') === 'dark') {
         document.documentElement.setAttribute('data-theme', 'dark');
     }
@@ -124,6 +173,7 @@ function initApp() {
         };
     }
 
+    // ===== Переключение режимов =====
     els.tabs.forEach(tab => {
         tab.onclick = () => {
             els.tabs.forEach(t => t.classList.remove('active'));
@@ -134,7 +184,92 @@ function initApp() {
         };
     });
 
-    // ===== КАСТОМНЫЙ СЛАЙДЕР =====
+    // ===== СЧЁТЧИКИ ДЛЯ ЦИФР И СПЕЦСИМВОЛОВ (объявляем ПЕРЕД слайдером!) =====
+    const counters = {
+        digitsCount: 0,
+        specialCount: 0
+    };
+
+    function getPasswordLength() {
+        return parseInt(els.length?.value) || 12;
+    }
+
+    function getMaxCounterValue() {
+        const length = getPasswordLength();
+        let minRequired = 0;
+        if ($('includeLowercase')?.checked) minRequired++;
+        if ($('includeUppercase')?.checked) minRequired++;
+        return Math.max(0, length - minRequired);
+    }
+
+    function updateCounterDisplay() {
+        const digitsValue = document.getElementById('digitsCountValue');
+        const specialValue = document.getElementById('specialCountValue');
+        const maxVal = getMaxCounterValue();
+        
+        if (digitsValue) digitsValue.textContent = counters.digitsCount;
+        if (specialValue) specialValue.textContent = counters.specialCount;
+        
+        const digitsMinus = document.querySelector('[data-target="digitsCount"].minus');
+        const digitsPlus = document.querySelector('[data-target="digitsCount"].plus');
+        const specialMinus = document.querySelector('[data-target="specialCount"].minus');
+        const specialPlus = document.querySelector('[data-target="specialCount"].plus');
+        
+        if (digitsMinus) digitsMinus.disabled = counters.digitsCount <= 0;
+        if (specialMinus) specialMinus.disabled = counters.specialCount <= 0;
+        
+        if (digitsPlus) {
+            const newTotal = counters.digitsCount + 1 + counters.specialCount;
+            digitsPlus.disabled = newTotal > maxVal || !$('includeDigits')?.checked;
+        }
+        if (specialPlus) {
+            const newTotal = counters.digitsCount + counters.specialCount + 1;
+            specialPlus.disabled = newTotal > maxVal || !$('includeSpecial')?.checked;
+        }
+    }
+
+    function initCounters() {
+        document.querySelectorAll('.counter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const target = e.target.dataset.target;
+                const isPlus = e.target.classList.contains('plus');
+                const maxVal = getMaxCounterValue();
+                let currentValue = counters[target];
+                
+                if (isPlus) {
+                    const otherCounter = target === 'digitsCount' ? counters.specialCount : counters.digitsCount;
+                    const newTotal = currentValue + 1 + otherCounter;
+                    if (newTotal <= maxVal) {
+                        currentValue++;
+                    }
+                } else {
+                    if (currentValue > 0) currentValue--;
+                }
+                counters[target] = currentValue;
+                updateCounterDisplay();
+            });
+        });
+        
+        ['includeLowercase', 'includeUppercase', 'includeDigits', 'includeSpecial'].forEach(id => {
+            const checkbox = $(id);
+            if (checkbox) {
+                checkbox.addEventListener('change', () => {
+                    const maxVal = getMaxCounterValue();
+                    const total = counters.digitsCount + counters.specialCount;
+                    if (total > maxVal) {
+                        counters.specialCount = Math.max(0, maxVal - counters.digitsCount);
+                    }
+                    updateCounterDisplay();
+                });
+            }
+        });
+        updateCounterDisplay();
+    }
+
+    // Инициализируем счётчики СРАЗУ
+    initCounters();
+
+    // ===== КАСТОМНЫЙ СЛАЙДЕР (теперь counters уже объявлен) =====
     if (els.customSlider) {
         const MIN = 4;
         const MAX = 64;
@@ -146,22 +281,19 @@ function initApp() {
 
             const percentage = ((value - MIN) / (MAX - MIN)) * 100;
             
-            // Двигаем кружок
             els.sliderThumb.style.left = percentage + '%';
-            
-            // Заполняем шкалу
             els.sliderFill.style.width = percentage + '%';
-            
-            // Двигаем цифру
             els.sliderValue.style.left = percentage + '%';
             els.sliderValue.textContent = value;
             
-            // 🔥 СКРЫВАЕМ цифру на краях, чтобы не было дублей "4" и "64"
             if (value === MIN || value === MAX) {
                 els.sliderValue.style.opacity = '0';
             } else {
                 els.sliderValue.style.opacity = '1';
             }
+            
+            // Обновляем счётчики при изменении длины
+            updateCounterDisplay();
         };
 
         const getPosition = (clientX) => {
@@ -190,20 +322,17 @@ function initApp() {
             els.sliderThumb.classList.remove('dragging');
         };
 
-        // Мышь
         els.customSlider.addEventListener('mousedown', handleStart);
         document.addEventListener('mousemove', handleMove);
         document.addEventListener('mouseup', handleEnd);
-        
-        // Тач
         els.customSlider.addEventListener('touchstart', handleStart);
         document.addEventListener('touchmove', handleMove);
         document.addEventListener('touchend', handleEnd);
 
-        // Инициализация
         updateSlider(12);
     }
 
+    // ===== Копирование =====
     if (els.copy) {
         els.copy.onclick = async () => {
             const text = els.password.textContent;
@@ -216,6 +345,7 @@ function initApp() {
         };
     }
 
+    // ===== Сбор данных =====
     function getRandData() {
         return {
             length: +els.length.value || 12,
@@ -225,8 +355,10 @@ function initApp() {
             includeSpecial: $('includeSpecial')?.checked || false,
             excludeSimilar: $('excludeSimilar')?.checked || false,
             noRepeats: $('noRepeats')?.checked || false,
-            minDigits: 0,
-            minSpecial: 0
+            digitsCount: counters.digitsCount || 2,
+            specialCount: counters.specialCount || 2,
+            minDigits: counters.digitsCount || 0,
+            minSpecial: counters.specialCount || 0
         };
     }
 
@@ -238,6 +370,7 @@ function initApp() {
         };
     }
 
+    // ===== Индикатор надежности =====
     function updateStrengthIndicator(entropy) {
         const container = document.querySelector('.strength-container');
         if (!container || !els.strengthText) return;
@@ -259,6 +392,7 @@ function initApp() {
         if (els.strengthText) els.strengthText.textContent = '-';
     }
 
+    // ===== Генерация пароля =====
     async function generate() {
         resetStrengthIndicator();
         if (els.error) els.error.style.display = 'none';
