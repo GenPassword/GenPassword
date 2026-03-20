@@ -27,7 +27,7 @@ namespace PasswordGenerator.Tests.Tests.GenerateFromWords
                 WordCount = 3,
             };
             var password = service.Generate(request).Password;
-            ClassicAssert.NotNull(password);
+            Assert.That(password, Is.Not.Null);
         }
 
         [Test]
@@ -41,7 +41,7 @@ namespace PasswordGenerator.Tests.Tests.GenerateFromWords
             var password = service.Generate(request).Password;
             var countWordsInPassword = password.Split(request.Separator).Length;
             var separatorsCount = countWordsInPassword - 1;
-            ClassicAssert.AreEqual(separatorsCount, 2);
+            Assert.That(separatorsCount, Is.EqualTo(2));
         }
 
         [Test] 
@@ -56,7 +56,7 @@ namespace PasswordGenerator.Tests.Tests.GenerateFromWords
                 };
                 var password = service.Generate(request).Password;
                 var countWordsInPassword = password.Split(request.Separator).Length;
-                ClassicAssert.AreEqual(wordsCount, countWordsInPassword);
+                Assert.That(wordsCount, Is.EqualTo(countWordsInPassword));
             }
         }
 
@@ -77,7 +77,7 @@ namespace PasswordGenerator.Tests.Tests.GenerateFromWords
                 if (!char.IsUpper(wordsInPassword[i][0]))
                     firstUpperChar = false;
             }
-            ClassicAssert.IsTrue(firstUpperChar);
+            Assert.That(firstUpperChar, Is.True);
         }
 
         [Test]
@@ -92,7 +92,7 @@ namespace PasswordGenerator.Tests.Tests.GenerateFromWords
             var password = service.Generate(request).Password;
             var lowerChar = CheckWords(password, request.Separator, char.IsLower);
             
-            ClassicAssert.IsTrue(lowerChar);
+            Assert.That(lowerChar, Is.True);
         }
 
         [Test]
@@ -107,7 +107,7 @@ namespace PasswordGenerator.Tests.Tests.GenerateFromWords
             var password = service.Generate(request).Password;
             var upperChar = CheckWords(password, request.Separator, char.IsUpper);
 
-            ClassicAssert.IsTrue(upperChar);
+            Assert.That(upperChar, Is.True);
         }
 
         private bool CheckWords(string password, char separator, Func<char, bool> charCheck)
@@ -140,7 +140,7 @@ namespace PasswordGenerator.Tests.Tests.GenerateFromWords
             var words = password.Split(':');
             var separatorInPass = password.Contains(":");
             var wordCount = words.Count();
-            ClassicAssert.IsTrue(separatorInPass && wordCount == 3);
+            Assert.That(separatorInPass && wordCount == 3, Is.True);
         }
 
         [Test]
@@ -156,7 +156,7 @@ namespace PasswordGenerator.Tests.Tests.GenerateFromWords
             var words = password.Split(request.Separator);
             var separatorInPass = password.Contains(request.Separator);
             var wordCount = words.Count();
-            ClassicAssert.IsTrue(!separatorInPass && wordCount == 1);
+            Assert.That(!separatorInPass && wordCount == 1, Is.True);
         }
 
         [Test]
@@ -169,7 +169,7 @@ namespace PasswordGenerator.Tests.Tests.GenerateFromWords
                 WordCase = Case.Upper,
             };
             var password = service.Generate(request).Password;
-            ClassicAssert.IsEmpty(password);
+            Assert.That(password, Is.Empty);
         }
 
         [Test]
@@ -188,7 +188,8 @@ namespace PasswordGenerator.Tests.Tests.GenerateFromWords
             };
             var entropy1 = service.Generate(request1).Entropy;
             var entropy2 = service.Generate(request2).Entropy;
-            ClassicAssert.IsTrue(entropy1 > 0 && entropy2 > 0);
+            Assert.That(entropy1 > 0 && entropy2 > 0, Is.True);
+
         }
 
         [Test]
@@ -207,7 +208,9 @@ namespace PasswordGenerator.Tests.Tests.GenerateFromWords
             };
             var entropy1 = service.Generate(request1).Entropy;
             var entropy2 = service.Generate(request2).Entropy;
-            ClassicAssert.IsTrue(entropy2 > entropy1);
+
+            Assert.That(entropy2 > entropy1, Is.True);
+
         }
     }
 }
