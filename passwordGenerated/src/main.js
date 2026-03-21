@@ -464,9 +464,30 @@ function initApp() {
             });
             clearTimeout(timeout);
 
+            // ✅ Надёжная обработка ошибок
             if (!res.ok) {
-                const txt = await res.text().catch(() => '');
-                throw new Error('Ошибка ' + res.status + ': ' + (txt || res.statusText));
+                const text = await res.text();
+                let errorMsg = text;
+                
+                try {
+                    const json = JSON.parse(text);
+                    if (json && typeof json === 'object') {
+                        errorMsg = json.message || json.error || json.msg || text;
+                    }
+                } catch (e) {}
+                
+                // Дополнительная попытка, если текст содержит "Ошибка 400: {...}"
+                if (errorMsg.startsWith('Ошибка 400:')) {
+                    const jsonStart = errorMsg.indexOf('{');
+                    if (jsonStart !== -1) {
+                        try {
+                            const json = JSON.parse(errorMsg.slice(jsonStart));
+                            if (json.message) errorMsg = json.message;
+                        } catch (e) {}
+                    }
+                }
+                
+                throw new Error(errorMsg);
             }
 
             const json = await res.json();
@@ -476,10 +497,20 @@ function initApp() {
         } catch (err) {
             console.error(err);
             let msg = 'Не удалось сгенерировать пароль';
-            if (err.name === 'AbortError') msg = 'Таймаут сервера';
-            else if (err.message.includes('fetch')) msg = 'Нет связи с сервером. Проверьте CORS';
-            else msg = 'Ошибка: ' + err.message;
-            if (els.error) { els.error.textContent = msg; els.error.style.display = 'block'; }
+            
+            if (err.name === 'AbortError') {
+                msg = 'Таймаут сервера';
+            } else if (err.message.includes('fetch')) {
+                msg = 'Нет связи с сервером';
+            } else {
+                // ✅ Показываем чистое сообщение
+                msg = err.message;
+            }
+            
+            if (els.error) {
+                els.error.textContent = msg;
+                els.error.style.display = 'block';
+            }
             resetStrengthIndicator();
         } finally {
             if (els.loading) els.loading.style.display = 'none';
@@ -488,8 +519,4 @@ function initApp() {
     }
 
     if (els.generate) els.generate.onclick = generate;
-}// deploy trigger
-// trigger deploy2
-// triggger deploy
-// deployy triggeer
-// deployy triggeer
+}

@@ -36,6 +36,7 @@ namespace PasswordGenerator.Tests.Tests.GenerateFromWords
             var request = new GeneratePasswordFromWordsRequest
             {
                 WordCount = 3,
+                Separator = "-"
             };
             var service = CreateService();
             var password = service.Generate(request).Password;
@@ -53,6 +54,7 @@ namespace PasswordGenerator.Tests.Tests.GenerateFromWords
                 var request = new GeneratePasswordFromWordsRequest
                 {
                     WordCount = wordsCount,
+                    Separator = "-"
                 };
                 var password = service.Generate(request).Password;
                 var countWordsInPassword = password.Split(request.Separator).Length;
@@ -110,7 +112,7 @@ namespace PasswordGenerator.Tests.Tests.GenerateFromWords
             Assert.That(upperChar, Is.True);
         }
 
-        private bool CheckWords(string password, char separator, Func<char, bool> charCheck)
+        private bool CheckWords(string password, string separator, Func<char, bool> charCheck)
         {
             var words = password.Split(separator);
             foreach(var word in words)
@@ -134,7 +136,7 @@ namespace PasswordGenerator.Tests.Tests.GenerateFromWords
             {
                 WordCount = 3,
                 WordCase = Case.Upper,
-                Separator = ':'
+                Separator = ":"
             };
             var password = service.Generate(request).Password;
             var words = password.Split(':');
@@ -151,6 +153,7 @@ namespace PasswordGenerator.Tests.Tests.GenerateFromWords
             {
                 WordCount = 1,
                 WordCase = Case.Upper,
+                Separator = "-"
             };
             var password = service.Generate(request).Password;
             var words = password.Split(request.Separator);
