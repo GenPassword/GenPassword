@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\PasswordGenerator\\GenPassword\\backend\\PasswordGenerator\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{8F991483-84B5-4ECB-A2E0-BCAB498FC5F6}|PasswordGenerator.Tests\\PasswordGenerator.Tests.csproj|c:\\passwordgenerator\\genpassword\\backend\\passwordgenerator\\passwordgenerator.tests\\tests\\generatefromwords\\generatepasswordfromwordsservicetest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F991483-84B5-4ECB-A2E0-BCAB498FC5F6}|PasswordGenerator.Tests\\PasswordGenerator.Tests.csproj|solutionrelative:passwordgenerator.tests\\tests\\generatefromwords\\generatepasswordfromwordsservicetest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{E5D407F4-596D-47FD-A398-DDA136FAF081}|PasswordGenerator\\PasswordGenerator.csproj|c:\\passwordgenerator\\genpassword\\backend\\passwordgenerator\\passwordgenerator\\services\\passwordgeneratorservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E5D407F4-596D-47FD-A398-DDA136FAF081}|PasswordGenerator\\PasswordGenerator.csproj|solutionrelative:passwordgenerator\\services\\passwordgeneratorservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -33,10 +37,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{E5D407F4-596D-47FD-A398-DDA136FAF081}|PasswordGenerator\\PasswordGenerator.csproj|c:\\passwordgenerator\\genpassword\\backend\\passwordgenerator\\passwordgenerator\\services\\cryptorandomhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E5D407F4-596D-47FD-A398-DDA136FAF081}|PasswordGenerator\\PasswordGenerator.csproj|solutionrelative:passwordgenerator\\services\\cryptorandomhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8F991483-84B5-4ECB-A2E0-BCAB498FC5F6}|PasswordGenerator.Tests\\PasswordGenerator.Tests.csproj|c:\\passwordgenerator\\genpassword\\backend\\passwordgenerator\\passwordgenerator.tests\\tests\\generatefromwords\\generatepasswordfromwordsservicetest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F991483-84B5-4ECB-A2E0-BCAB498FC5F6}|PasswordGenerator.Tests\\PasswordGenerator.Tests.csproj|solutionrelative:passwordgenerator.tests\\tests\\generatefromwords\\generatepasswordfromwordsservicetest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{8F991483-84B5-4ECB-A2E0-BCAB498FC5F6}|PasswordGenerator.Tests\\PasswordGenerator.Tests.csproj|c:\\passwordgenerator\\genpassword\\backend\\passwordgenerator\\passwordgenerator.tests\\tests\\stubs\\wordlistservicestub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -86,24 +86,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "UserSettingsService.cs",
-              "DocumentMoniker": "C:\\PasswordGenerator\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\Services\\UserSettingsService.cs",
-              "RelativeDocumentMoniker": "PasswordGenerator\\Services\\UserSettingsService.cs",
-              "ToolTip": "C:\\PasswordGenerator\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\Services\\UserSettingsService.cs",
-              "RelativeToolTip": "PasswordGenerator\\Services\\UserSettingsService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-21T10:21:14.216Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "UserService.cs",
               "DocumentMoniker": "C:\\PasswordGenerator\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\Services\\UserService.cs",
               "RelativeDocumentMoniker": "PasswordGenerator\\Services\\UserService.cs",
@@ -111,12 +98,11 @@
               "RelativeToolTip": "PasswordGenerator\\Services\\UserService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-21T10:21:00.192Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-21T10:21:00.192Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "AuthService.cs",
               "DocumentMoniker": "C:\\PasswordGenerator\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\Services\\AuthService.cs",
               "RelativeDocumentMoniker": "PasswordGenerator\\Services\\AuthService.cs",
@@ -124,12 +110,36 @@
               "RelativeToolTip": "PasswordGenerator\\Services\\AuthService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-06T13:30:50.849Z",
+              "WhenOpened": "2026-03-06T13:30:50.849Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "GeneratePasswordFromWordsServiceTest.cs",
+              "DocumentMoniker": "C:\\PasswordGenerator\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator.Tests\\Tests\\GenerateFromWords\\GeneratePasswordFromWordsServiceTest.cs",
+              "RelativeDocumentMoniker": "PasswordGenerator.Tests\\Tests\\GenerateFromWords\\GeneratePasswordFromWordsServiceTest.cs",
+              "ToolTip": "C:\\PasswordGenerator\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator.Tests\\Tests\\GenerateFromWords\\GeneratePasswordFromWordsServiceTest.cs",
+              "RelativeToolTip": "PasswordGenerator.Tests\\Tests\\GenerateFromWords\\GeneratePasswordFromWordsServiceTest.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAACEAAAA1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-08T12:04:17.832Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
+              "Title": "UserSettingsService.cs",
+              "DocumentMoniker": "C:\\PasswordGenerator\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\Services\\UserSettingsService.cs",
+              "RelativeDocumentMoniker": "PasswordGenerator\\Services\\UserSettingsService.cs",
+              "ToolTip": "C:\\PasswordGenerator\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\Services\\UserSettingsService.cs",
+              "RelativeToolTip": "PasswordGenerator\\Services\\UserSettingsService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-21T10:21:14.216Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "CharacterSetHelper.cs",
               "DocumentMoniker": "C:\\PasswordGenerator\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\Services\\CharacterSetHelper.cs",
               "RelativeDocumentMoniker": "PasswordGenerator\\Services\\CharacterSetHelper.cs",
@@ -137,25 +147,24 @@
               "RelativeToolTip": "PasswordGenerator\\Services\\CharacterSetHelper.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-21T10:16:59.897Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-21T10:16:59.897Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "PasswordGeneratorService.cs",
               "DocumentMoniker": "C:\\PasswordGenerator\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\Services\\PasswordGeneratorService.cs",
               "RelativeDocumentMoniker": "PasswordGenerator\\Services\\PasswordGeneratorService.cs",
               "ToolTip": "C:\\PasswordGenerator\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\Services\\PasswordGeneratorService.cs",
               "RelativeToolTip": "PasswordGenerator\\Services\\PasswordGeneratorService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAdAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-08T08:18:40.75Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "IWordlistService.cs",
               "DocumentMoniker": "C:\\PasswordGenerator\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\Services\\IWordlistService.cs",
               "RelativeDocumentMoniker": "PasswordGenerator\\Services\\IWordlistService.cs",
@@ -163,12 +172,11 @@
               "RelativeToolTip": "PasswordGenerator\\Services\\IWordlistService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-08T11:48:09.253Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-08T11:48:09.253Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "IPassphraseGeneratorService.cs",
               "DocumentMoniker": "C:\\PasswordGenerator\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\Services\\IPassphraseGeneratorService.cs",
               "RelativeDocumentMoniker": "PasswordGenerator\\Services\\IPassphraseGeneratorService.cs",
@@ -176,12 +184,11 @@
               "RelativeToolTip": "PasswordGenerator\\Services\\IPassphraseGeneratorService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-08T17:32:26.519Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-08T17:32:26.519Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "CryptoRandomHelper.cs",
               "DocumentMoniker": "C:\\PasswordGenerator\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\Services\\CryptoRandomHelper.cs",
               "RelativeDocumentMoniker": "PasswordGenerator\\Services\\CryptoRandomHelper.cs",
@@ -189,8 +196,7 @@
               "RelativeToolTip": "PasswordGenerator\\Services\\CryptoRandomHelper.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAACkAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-21T10:10:47.678Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-21T10:10:47.678Z"
             },
             {
               "$type": "Document",
@@ -215,18 +221,6 @@
               "ViewState": "AgIAABcAAAAAAAAAAAAAwEUAAABCAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-03T10:16:19.053Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "GeneratePasswordFromWordsServiceTest.cs",
-              "DocumentMoniker": "C:\\PasswordGenerator\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator.Tests\\Tests\\GenerateFromWords\\GeneratePasswordFromWordsServiceTest.cs",
-              "RelativeDocumentMoniker": "PasswordGenerator.Tests\\Tests\\GenerateFromWords\\GeneratePasswordFromWordsServiceTest.cs",
-              "ToolTip": "C:\\PasswordGenerator\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator.Tests\\Tests\\GenerateFromWords\\GeneratePasswordFromWordsServiceTest.cs",
-              "RelativeToolTip": "PasswordGenerator.Tests\\Tests\\GenerateFromWords\\GeneratePasswordFromWordsServiceTest.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAABQAAAAOAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-08T12:04:17.832Z"
             },
             {
               "$type": "Document",
