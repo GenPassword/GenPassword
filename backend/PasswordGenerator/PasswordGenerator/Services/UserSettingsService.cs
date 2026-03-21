@@ -1,5 +1,4 @@
-﻿
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using PasswordGenerator.Data;
 using PasswordGenerator.Entities;
 using PasswordGenerator.Models;
