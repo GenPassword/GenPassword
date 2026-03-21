@@ -24,19 +24,22 @@ public class PasswordGeneratorService : IPasswordGeneratorService
 
     public GeneratePasswordResponse Generate(GeneratePasswordRequest request)
     {
-        var validation = _validator.Validate(request);
+        var validation = _validator.Validate(request); // Проверяет, валиден ли запрос
         if (!validation.IsValid)
             return new GeneratePasswordResponse
             {
                 Password = string.Empty,
                 Entropy = 0,
                 StrengthLevel = StrengthLevel.VeryWeak,
-                Message = string.Join(" ", validation.Errors)
+                Message = string.Join(" ", validation.Errors) // Если не валиден, отправляет ошибку и делает сброс
             };
 
         var (charsByGroup, allChars) = BuildCharacterSets(request);
         var passwordChars = new char[request.Length];
-        var usedChars = request.NoRepeats ? new List<char>() : null;
+
+        var usedChars = request.NoRepeats // Если запрошен пароль с уникальными символами, символы будут проверяться на повтор
+            ? new List<char>() 
+            : null;
 
         // 1. Добавляем обязательные символы
         var position = 0;
@@ -44,14 +47,20 @@ public class PasswordGeneratorService : IPasswordGeneratorService
         var digits = charsByGroup.Digits;
         for (var i = 0; i < request.MinDigits && i < digits.Length; i++)
         {
-            var c = request.NoRepeats ? PickAndRemove(digits, usedChars!) : GetRandomChar(digits);
+            var c = request.NoRepeats
+                ? PickAndRemove(digits, usedChars!)
+                : GetRandomChar(digits);
+
             passwordChars[position++] = c;
         }
 
         var special = charsByGroup.Special;
         for (var i = 0; i < request.MinSpecial && i < special.Length; i++)
         {
-            var c = request.NoRepeats ? PickAndRemove(special, usedChars!) : GetRandomChar(special);
+            var c = request.NoRepeats
+                ? PickAndRemove(special, usedChars!)
+                : GetRandomChar(special);
+
             passwordChars[position++] = c;
         }
 
@@ -91,18 +100,25 @@ public class PasswordGeneratorService : IPasswordGeneratorService
 
     private (CharGroups chars, string all) BuildCharacterSets(GeneratePasswordRequest request)
     {
-        var lower = request.IncludeLowercase ? CharacterSets.FilterSimilar(CharacterSets.Lowercase, request.ExcludeSimilar) : "";
-        var upper = request.IncludeUppercase ? CharacterSets.FilterSimilar(CharacterSets.Uppercase, request.ExcludeSimilar) : "";
-        var digits = request.IncludeDigits ? CharacterSets.FilterSimilar(CharacterSets.Digits, request.ExcludeSimilar) : "";
-        var special = request.IncludeSpecial ? CharacterSets.FilterSimilar(CharacterSets.Special, request.ExcludeSimilar) : "";
+        string GetFilteredSet(string charset, bool isEnabled) => isEnabled
+            ? CharacterSets.FilterSimilar(charset, request.ExcludeSimilar)
+            : string.Empty;
+
+        var lower = GetFilteredSet(CharacterSets.Lowercase, request.IncludeLowercase);
+        var upper = GetFilteredSet(CharacterSets.Uppercase, request.IncludeUppercase);
+        var digits = GetFilteredSet(CharacterSets.Digits, request.IncludeDigits);
+        var special = GetFilteredSet(CharacterSets.Special, request.IncludeSpecial);
 
         var all = lower + upper + digits + special;
+
         return (new CharGroups(lower, upper, digits, special), all);
     }
 
     private static char GetRandomChar(string chars)
     {
-        if (chars.Length == 0) throw new InvalidOperationException("Пустой набор символов");
+        if (chars.Length == 0) 
+            throw new InvalidOperationException("Пустой набор символов");
+
         return chars[GetRandomIndex(chars.Length)];
     }
 
@@ -112,9 +128,13 @@ public class PasswordGeneratorService : IPasswordGeneratorService
     private static char PickAndRemove(string chars, List<char> used)
     {
         var available = chars.Except(used).ToList();
-        if (available.Count == 0) throw new InvalidOperationException("Недостаточно уникальных символов для NoRepeats");
+
+        if (available.Count == 0) 
+            throw new InvalidOperationException("Недостаточно уникальных символов для NoRepeats");
+
         var c = available[GetRandomIndex(available.Count)];
         used.Add(c);
+
         return c;
     }
 
@@ -123,7 +143,9 @@ public class PasswordGeneratorService : IPasswordGeneratorService
     /// </summary>
     private static int GetRandomIndex(int maxExclusive)
     {
-        if (maxExclusive <= 0) return 0;
+        if (maxExclusive <= 1) // !!!
+            return 0;
+
         return (int)(GetRandomUInt32() % (uint)maxExclusive);
     }
 
@@ -131,6 +153,7 @@ public class PasswordGeneratorService : IPasswordGeneratorService
     {
         var bytes = new byte[4];
         RandomNumberGenerator.Fill(bytes);
+
         return BitConverter.ToUInt32(bytes, 0);
     }
 

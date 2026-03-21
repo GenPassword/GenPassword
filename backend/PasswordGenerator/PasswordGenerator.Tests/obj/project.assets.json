@@ -2826,23 +2826,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\zenyl\\.nuget\\packages\\": {},
+    "C:\\Users\\waban\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\zenyl\\OneDrive\\Desktop\\мини проектики\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator.Tests\\PasswordGenerator.Tests.csproj",
+      "projectUniqueName": "C:\\PasswordGenerator\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator.Tests\\PasswordGenerator.Tests.csproj",
       "projectName": "PasswordGenerator.Tests",
-      "projectPath": "C:\\Users\\zenyl\\OneDrive\\Desktop\\мини проектики\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator.Tests\\PasswordGenerator.Tests.csproj",
-      "packagesPath": "C:\\Users\\zenyl\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\zenyl\\OneDrive\\Desktop\\мини проектики\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator.Tests\\obj\\",
+      "projectPath": "C:\\PasswordGenerator\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator.Tests\\PasswordGenerator.Tests.csproj",
+      "packagesPath": "C:\\Users\\waban\\.nuget\\packages\\",
+      "outputPath": "C:\\PasswordGenerator\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator.Tests\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\zenyl\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\waban\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -2857,8 +2857,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\zenyl\\OneDrive\\Desktop\\мини проектики\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\PasswordGenerator.csproj": {
-              "projectPath": "C:\\Users\\zenyl\\OneDrive\\Desktop\\мини проектики\\gh password\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\PasswordGenerator.csproj"
+            "C:\\PasswordGenerator\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\PasswordGenerator.csproj": {
+              "projectPath": "C:\\PasswordGenerator\\GenPassword\\backend\\PasswordGenerator\\PasswordGenerator\\PasswordGenerator.csproj"
             }
           }
         }
@@ -2912,7 +2912,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.302/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
