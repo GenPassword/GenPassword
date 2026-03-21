@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "homepage": "https://Danilpervik.github.io/GenPassword/",
+  "homepage": "https://3zenyl3.github.io/GenPassword/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
