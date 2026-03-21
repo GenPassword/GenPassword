@@ -32,17 +32,21 @@ jobs:
         run: npm run build
         working-directory: ./passwordGenerated
       
-      # 🔍 НОВЫЙ ШАГ: ОТЛАДКА
-      - name: Debug: Check files
-        run: |
-          echo "=== Checking root directory ==="
-          ls -la
-          echo "=== Checking passwordGenerated directory ==="
-          ls -la ./passwordGenerated/
-          echo "=== Checking dist directory ==="
-          ls -la ./passwordGenerated/dist/
-          echo "=== Checking assets directory ==="
-          ls -la ./passwordGenerated/dist/assets/
+      # 🔍 Отладка: проверяем корень
+      - name: Debug 1: List root
+        run: ls -la
+      
+      # 🔍 Отладка: проверяем папку фронтенда
+      - name: Debug 2: List passwordGenerated
+        run: ls -la ./passwordGenerated/
+      
+      # 🔍 Отладка: проверяем dist
+      - name: Debug 3: List dist
+        run: ls -la ./passwordGenerated/dist/
+      
+      # 🔍 Отладка: проверяем assets
+      - name: Debug 4: List assets
+        run: ls -la ./passwordGenerated/dist/assets/
       
       - name: Setup Pages
         uses: actions/configure-pages@v4
