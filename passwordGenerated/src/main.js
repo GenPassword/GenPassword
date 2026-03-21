@@ -464,9 +464,19 @@ function initApp() {
             });
             clearTimeout(timeout);
 
+            // ✅ Обработка ошибок с парсингом JSON и извлечением чистого сообщения
             if (!res.ok) {
-                const txt = await res.text().catch(() => '');
-                throw new Error('Ошибка ' + res.status + ': ' + (txt || res.statusText));
+                try {
+                    const json = await res.json();
+                    const error = new Error(json.message || 'Ошибка сервера');
+                    error.apiMessage = json.message;
+                    throw error;
+                } catch (e) {
+                    const txt = await res.text().catch(() => '');
+                    const error = new Error('Ошибка ' + res.status + ': ' + (txt || res.statusText));
+                    error.apiMessage = txt;
+                    throw error;
+                }
             }
 
             const json = await res.json();
@@ -476,10 +486,22 @@ function initApp() {
         } catch (err) {
             console.error(err);
             let msg = 'Не удалось сгенерировать пароль';
-            if (err.name === 'AbortError') msg = 'Таймаут сервера';
-            else if (err.message.includes('fetch')) msg = 'Нет связи с сервером. Проверьте CORS';
-            else msg = 'Ошибка: ' + err.message;
-            if (els.error) { els.error.textContent = msg; els.error.style.display = 'block'; }
+            
+            if (err.name === 'AbortError') {
+                msg = 'Таймаут сервера';
+            } else if (err.message.includes('fetch')) {
+                msg = 'Нет связи с сервером. Проверьте CORS';
+            } else if (err.apiMessage) {
+                // ✅ Чистое сообщение от API
+                msg = err.apiMessage;
+            } else {
+                msg = 'Ошибка: ' + err.message;
+            }
+            
+            if (els.error) {
+                els.error.textContent = msg;
+                els.error.style.display = 'block';
+            }
             resetStrengthIndicator();
         } finally {
             if (els.loading) els.loading.style.display = 'none';
@@ -488,8 +510,4 @@ function initApp() {
     }
 
     if (els.generate) els.generate.onclick = generate;
-}// deploy trigger
-// trigger deploy2
-// triggger deploy
-// deployy triggeer
-// deployy triggeer
+}
