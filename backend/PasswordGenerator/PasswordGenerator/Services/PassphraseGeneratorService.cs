@@ -18,8 +18,8 @@ namespace PasswordGenerator.Services
         {
             var words = wordlistService.GetRandomWords(request.WordCount);
             var processedWord = words.Select(x => ApplyCase(x, request.WordCase)).ToList();
-
-            var password = string.Join(request.Separator, processedWord);
+            var separator = request.Separator ?? "";
+            var password = string.Join(separator, processedWord);
             var entropy = analyzer.CalculateEntropy(password, wordlistService.GetWordCount());
             var strengt = analyzer.GetStrengthLevel(entropy);
 
