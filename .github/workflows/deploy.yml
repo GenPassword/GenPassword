@@ -14,9 +14,7 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./passwordGenerated
+    # ← УБРАЛИ defaults.run.working-directory
     steps:
       - uses: actions/checkout@v4
       
@@ -29,9 +27,11 @@ jobs:
       
       - name: Install dependencies
         run: npm ci
+        working-directory: ./passwordGenerated  # ← Указываем для каждой команды
       
       - name: Build
         run: npm run build
+        working-directory: ./passwordGenerated  # ← Указываем для каждой команды
       
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -39,7 +39,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist  # ← ✅ ИСПРАВЛЕНО: просто ./dist
+          path: ./passwordGenerated/dist  # ← Теперь это ПРАВИЛЬНО!
       
       - name: Deploy to GitHub Pages
         id: deployment
