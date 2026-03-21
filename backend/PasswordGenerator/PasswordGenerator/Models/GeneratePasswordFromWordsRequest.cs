@@ -4,7 +4,7 @@
     {
         public int WordCount { get; set; }
         public Case WordCase { get; set; } = Case.Lower;
-        public char Separator { get; set; } = '-';
+        public string Separator { get; set; } = "";
     }
 
     public enum Case
