@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
     paths:
       - 'passwordGenerated/**'
 
@@ -16,46 +16,32 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: '20'
           cache: 'npm'
           cache-dependency-path: passwordGenerated/package-lock.json
-      
+
       - name: Install dependencies
         run: npm ci
         working-directory: ./passwordGenerated
-      
+
       - name: Build
         run: npm run build
         working-directory: ./passwordGenerated
-      
-      # 🔍 Отладка: проверяем корень
-      - name: Debug 1: List root
-        run: ls -la
-      
-      # 🔍 Отладка: проверяем папку фронтенда
-      - name: Debug 2: List passwordGenerated
-        run: ls -la ./passwordGenerated/
-      
-      # 🔍 Отладка: проверяем dist
-      - name: Debug 3: List dist
-        run: ls -la ./passwordGenerated/dist/
-      
-      # 🔍 Отладка: проверяем assets
-      - name: Debug 4: List assets
-        run: ls -la ./passwordGenerated/dist/assets/
-      
+
+      - name: Debug dist
+        run: ls -R ./passwordGenerated/dist/
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
-      
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./passwordGenerated/dist
-      
+
       - name: Deploy to GitHub Pages
-        id: deployment
         uses: actions/deploy-pages@v4
