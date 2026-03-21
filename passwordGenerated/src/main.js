@@ -1,10 +1,12 @@
 import './style.css'
 
+// ✅ API URLs без пробелов в конце
 const API_RANDOM = 'https://myproject24.ru/api/password/generate';
 const API_WORDS = 'https://myproject24.ru/api/password/generate-from-words';
 
 const $ = (id) => document.getElementById(id);
 
+// ✅ HTML-шаблон приложения
 const html = `
 <div class="container">
     <button id="themeToggle" class="theme-toggle" title="Сменить тему">🌓</button>
@@ -130,10 +132,15 @@ const html = `
 </div>
 `;
 
+// ✅ Отрисовка интерфейса
 document.getElementById('app').innerHTML = html;
 
-document.addEventListener('DOMContentLoaded', initApp);
-initApp();
+// ✅ Запуск только после готовности DOM (без дублей!)
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initApp);
+} else {
+    initApp();
+}
 
 function initApp() {
     const els = {
@@ -157,7 +164,12 @@ function initApp() {
         separator: $('separator')
     };
 
-    if (!els.generate) return;
+    // ✅ Если кнопки генерации нет — выходим (защита)
+    if (!els.generate) {
+        console.warn('⚠️ generateBtn not found, app not initialized');
+        return;
+    }
+
     let mode = 'random';
 
     // ===== Тема =====
@@ -464,7 +476,7 @@ function initApp() {
             });
             clearTimeout(timeout);
 
-            // ✅ Надёжная обработка ошибок
+            // ✅ Надёжная обработка ошибок: читаем текст, потом парсим JSON
             if (!res.ok) {
                 const text = await res.text();
                 let errorMsg = text;
@@ -476,7 +488,7 @@ function initApp() {
                     }
                 } catch (e) {}
                 
-                // Дополнительная попытка, если текст содержит "Ошибка 400: {...}"
+                // Если текст начинается с "Ошибка 400: {...}", пробуем вытащить JSON
                 if (errorMsg.startsWith('Ошибка 400:')) {
                     const jsonStart = errorMsg.indexOf('{');
                     if (jsonStart !== -1) {
@@ -500,11 +512,11 @@ function initApp() {
             
             if (err.name === 'AbortError') {
                 msg = 'Таймаут сервера';
-            } else if (err.message.includes('fetch')) {
+            } else if (err.message && err.message.includes('fetch')) {
                 msg = 'Нет связи с сервером';
             } else {
-                // ✅ Показываем чистое сообщение
-                msg = err.message;
+                // ✅ Показываем чистое сообщение от ошибки
+                msg = err.message || msg;
             }
             
             if (els.error) {
