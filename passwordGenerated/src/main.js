@@ -420,7 +420,7 @@ function initApp() {
     function getWordsData() {
         return {
             WordCount: +els.wordCount.value || 3,
-            wordCase: +els.wordCase.value || 1,
+            wordCase: +els.wordCase.value,
             separator: els.separator.value
         };
     }
