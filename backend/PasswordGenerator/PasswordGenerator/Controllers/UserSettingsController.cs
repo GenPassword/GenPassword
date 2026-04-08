@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using PasswordGenerator.Data;
 using PasswordGenerator.Entities;
 using PasswordGenerator.Models;
-using PasswordGenerator.Services;
+using PasswordGenerator.Services.Users;
 using System.Security.Claims;
 
 namespace PasswordGenerator.Controllers

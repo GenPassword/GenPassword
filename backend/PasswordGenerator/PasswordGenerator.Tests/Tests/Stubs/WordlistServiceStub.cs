@@ -1,9 +1,5 @@
-﻿using PasswordGenerator.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using PasswordGenerator.Services.Wordlist;
+
 
 namespace PasswordGenerator.Tests.Tests.Stubs
 {

@@ -2,7 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using PasswordGenerator.Entities;
 using PasswordGenerator.Models;
-using PasswordGenerator.Services;
+using PasswordGenerator.Services.Auth;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;

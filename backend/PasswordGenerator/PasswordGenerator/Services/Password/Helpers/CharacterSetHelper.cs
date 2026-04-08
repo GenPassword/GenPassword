@@ -1,4 +1,4 @@
-﻿namespace PasswordGenerator.Services;
+﻿namespace PasswordGenerator.Services.Password.Helpers;
 
 /// <summary>
 /// Вспомогательные методы для выбора символов из набора.

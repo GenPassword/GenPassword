@@ -1,5 +1,8 @@
 using PasswordGenerator.Domain;
 using PasswordGenerator.Models;
+using PasswordGenerator.Services.Password.Analysis;
+using PasswordGenerator.Services.Password.Generation;
+using PasswordGenerator.Services.Password.Helpers;
 using PasswordGenerator.Validators;
 
 namespace PasswordGenerator.Services;

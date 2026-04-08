@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
 
-namespace PasswordGenerator.Services;
+namespace PasswordGenerator.Services.Password.Helpers;
 
 /// <summary>
 /// Криптографически стойкие вспомогательные методы для работы со случайными числами.

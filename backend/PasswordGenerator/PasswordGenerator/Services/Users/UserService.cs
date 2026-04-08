@@ -2,7 +2,7 @@
 using PasswordGenerator.Data;
 using PasswordGenerator.Entities;
 
-namespace PasswordGenerator.Services
+namespace PasswordGenerator.Services.Users
 {
     public class UserService : IUserService
     {

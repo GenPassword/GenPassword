@@ -5,6 +5,11 @@ using Microsoft.IdentityModel.Tokens;
 using PasswordGenerator.Data;
 using PasswordGenerator.Entities;
 using PasswordGenerator.Services;
+using PasswordGenerator.Services.Auth;
+using PasswordGenerator.Services.Password.Analysis;
+using PasswordGenerator.Services.Password.Generation;
+using PasswordGenerator.Services.Users;
+using PasswordGenerator.Services.Wordlist;
 using PasswordGenerator.Validators;
 using System.Text;
 

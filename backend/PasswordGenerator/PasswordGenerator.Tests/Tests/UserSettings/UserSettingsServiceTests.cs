@@ -2,12 +2,8 @@
 using NUnit.Framework.Legacy;
 using PasswordGenerator.Data;
 using PasswordGenerator.Models;
-using PasswordGenerator.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using PasswordGenerator.Services.Users;
+
 
 namespace PasswordGenerator.Tests.Tests.UserSettings
 {

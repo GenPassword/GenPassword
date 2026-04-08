@@ -1,4 +1,4 @@
-namespace PasswordGenerator.Services;
+namespace PasswordGenerator.Services.Password.Analysis;
 
 public interface IPasswordAnalyzerService
 {

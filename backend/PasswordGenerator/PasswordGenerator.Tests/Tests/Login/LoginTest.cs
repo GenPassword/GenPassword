@@ -3,14 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using NUnit.Framework.Legacy;
 using PasswordGenerator.Data;
 using PasswordGenerator.Entities;
-using PasswordGenerator.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Authentication;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
+using PasswordGenerator.Services.Users;
+using PasswordGenerator.Services.Auth;
 
 namespace PasswordGenerator.Tests.Tests.Login
 {

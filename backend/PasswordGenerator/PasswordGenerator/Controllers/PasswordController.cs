@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PasswordGenerator.Models;
-using PasswordGenerator.Services;
+using PasswordGenerator.Services.Password.Generation;
 
 namespace PasswordGenerator.Controllers;
 

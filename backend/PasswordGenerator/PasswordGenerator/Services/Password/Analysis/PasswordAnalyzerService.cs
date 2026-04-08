@@ -1,6 +1,6 @@
 using PasswordGenerator.Models;
 
-namespace PasswordGenerator.Services;
+namespace PasswordGenerator.Services.Password.Analysis;
 
 /// <summary>
 /// Анализ пароля: энтропия и уровень стойкости.

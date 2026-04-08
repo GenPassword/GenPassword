@@ -1,6 +1,6 @@
-﻿using NUnit.Framework.Legacy;
-using PasswordGenerator.Models;
-using PasswordGenerator.Services;
+﻿using PasswordGenerator.Models;
+using PasswordGenerator.Services.Password.Analysis;
+using PasswordGenerator.Services.Password.Generation;
 using PasswordGenerator.Tests.Tests.Stubs;
 
 namespace PasswordGenerator.Tests.Tests.GenerateFromWords

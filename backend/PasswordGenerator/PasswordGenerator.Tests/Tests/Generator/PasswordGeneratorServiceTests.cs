@@ -1,10 +1,9 @@
-using Moq;
-using NUnit.Framework;
 using PasswordGenerator.Domain;
 using PasswordGenerator.Models;
 using PasswordGenerator.Services;
+using PasswordGenerator.Services.Password.Analysis;
 using PasswordGenerator.Validators;
-using System.Linq;
+
 
 namespace PasswordGenerator.Tests.Generator;
 

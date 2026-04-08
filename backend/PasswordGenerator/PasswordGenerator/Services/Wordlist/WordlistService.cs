@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Runtime.Versioning;
 
-namespace PasswordGenerator.Services
+namespace PasswordGenerator.Services.Wordlist
 {
     public class WordlistService : IWordlistService
     {

@@ -1,6 +1,8 @@
 ﻿using PasswordGenerator.Models;
+using PasswordGenerator.Services.Password.Analysis;
+using PasswordGenerator.Services.Wordlist;
 
-namespace PasswordGenerator.Services
+namespace PasswordGenerator.Services.Password.Generation
 {
     public class PassphraseGeneratorService : IPassphraseGeneratorService
     {
@@ -11,7 +13,7 @@ namespace PasswordGenerator.Services
             IPasswordAnalyzerService passwordAnalyzerService)
         {
             this.wordlistService = wordlistService;
-            this.analyzer = passwordAnalyzerService;
+            analyzer = passwordAnalyzerService;
         }
 
         public GeneratePasswordResponse Generate(GeneratePasswordFromWordsRequest request)
