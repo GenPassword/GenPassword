@@ -2,24 +2,34 @@
 
 namespace PasswordGenerator.Services.Password.Analysis
 {
-    public class SequentialPatternChecker
+    public class SequentialPatternChecker : ISequentialPatternChecker
     {
-        public static List<string> CheckPasswordToSequentialPattern(string password)
-        {
-            string[] sequentialPatterns = new[] {
+        private string[] sequentialPatterns = new[] {
                 "1234567890",
                 "qwertyuiop",
                 "asdfghjkl",
                 "zxcvbnm",
                 "abcdifghijklmopqrstuvwxyz"
             };
-
+        public List<string> CheckPasswordToSequentialPattern(string password)
+        {
             var parsPassword = ExtractionLetterAndNumberFromPass(password.ToLower());
 
             return sequentialPatterns
-                .SelectMany(pattern => CheckPassword(pattern, parsPassword.letters)
-                                        .Concat(CheckPassword(pattern, parsPassword.numbers)))
+                .SelectMany(pattern => FindSequentialPatterns(pattern, parsPassword.letters)
+                                        .Concat(FindSequentialPatterns(pattern, parsPassword.numbers)))
                 .ToList();
+        }
+
+        public bool CheckPasswordForBadPattern(string password)
+        {
+            var parsPassword = ExtractionLetterAndNumberFromPass(password.ToLower());
+
+            return sequentialPatterns
+                .Any(pattern =>
+                {
+                    return HasSequentialPattern(pattern, parsPassword.numbers) || HasSequentialPattern(pattern, parsPassword.letters);
+                });
         }
 
         private static (string numbers, string letters) ExtractionLetterAndNumberFromPass(string pass)
@@ -36,7 +46,7 @@ namespace PasswordGenerator.Services.Password.Analysis
             return (allNumberFromPass.ToString(), allLetterToPass.ToString());
         }
 
-        private static List<string> CheckPassword(string pattern, string pass)
+        private static List<string> FindSequentialPatterns(string pattern, string pass)
         {
             var repetitions = 1;
             var startPatterns = -1;
@@ -55,12 +65,17 @@ namespace PasswordGenerator.Services.Password.Analysis
                     repetitions = 1;
                 if (repetitions >= 4)
                 {
-                    repetitions = 1;
                     foundPatterns.Add(pass.Substring(startPatterns, repetitions));
+                    repetitions = 1;
                 }
                     
             }
             return foundPatterns;
+        }
+
+        private static bool HasSequentialPattern(string pattern, string pass)
+        {
+            return FindSequentialPatterns(pattern, pass).Any();
         }
     }
 }

@@ -27,6 +27,7 @@ builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddSingleton<IWordlistService, WordlistService>();
 builder.Services.AddScoped<IPassphraseGeneratorService, PassphraseGeneratorService>();
 builder.Services.AddScoped<IUserSettingsService, UserSettingsService>();
+builder.Services.AddScoped<ISequentialPatternChecker, SequentialPatternChecker>();
 
 // Регистрация DbContext
 var connectionStr = builder.Configuration.GetConnectionString("DefaultConnection");
