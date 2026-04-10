@@ -111,7 +111,7 @@ const html = `
         </div>
     </div>
 
-    <!-- Режим: PIN-код -->
+    <!-- Режим: PIN-код (максимум 8) -->
     <div id="pinSettings" class="settings-section" style="display: none;">
         <div class="pin-info">
             <p>Генерация безопасного PIN-кода только из цифр.</p>
@@ -125,9 +125,9 @@ const html = `
             </div>
             <div class="slider-labels">
                 <span>4</span>
-                <span>12</span>
+                <span>8</span>
             </div>
-            <input type="hidden" id="pinLength" value="4" min="4" max="12">
+            <input type="hidden" id="pinLength" value="4" min="4" max="8">
         </div>
         <div class="setting-item">
             <label class="checkbox-item">
@@ -137,7 +137,7 @@ const html = `
         </div>
     </div>
 
-    <!-- Режим: Из слов -->
+    <!-- Режим: Из слов (слайдер 2-8) -->
     <div id="wordsSettings" class="settings-section" style="display: none;">
         
         <!-- СЛАЙДЕР ДЛЯ КОЛИЧЕСТВА СЛОВ -->
@@ -462,9 +462,9 @@ function initApp() {
         updateSlider(12);
     }
 
-    // ===== КАСТОМНЫЙ СЛАЙДЕР (PIN) =====
+    // ===== КАСТОМНЫЙ СЛАЙДЕР (PIN) - МАКСИМУМ 8 =====
     if (els.pinSlider) {
-        const MIN = 4, MAX = 12;
+        const MIN = 4, MAX = 8;  // ✅ Максимум 8 вместо 12
         let isDragging = false;
 
         const updatePinSlider = (value) => {
@@ -506,7 +506,7 @@ function initApp() {
         updatePinSlider(4);
     }
 
-    // ===== КАСТОМНЫЙ СЛАЙДЕР (СЛОВА) =====
+    // ===== КАСТОМНЫЙ СЛАЙДЕР (СЛОВА) - 2 до 8 =====
     if (els.wordsSlider) {
         const MIN = 2, MAX = 8;
         let isDragging = false;
