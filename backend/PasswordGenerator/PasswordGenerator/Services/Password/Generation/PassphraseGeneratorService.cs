@@ -1,4 +1,5 @@
-﻿using PasswordGenerator.Models;
+﻿using PasswordGenerator.Domain;
+using PasswordGenerator.Models;
 using PasswordGenerator.Services.Password.Analysis;
 using PasswordGenerator.Services.Wordlist;
 
@@ -22,7 +23,10 @@ namespace PasswordGenerator.Services.Password.Generation
             var processedWord = words.Select(x => ApplyCase(x, request.WordCase)).ToList();
             var separator = request.Separator ?? "";
             var password = string.Join(separator, processedWord);
-            var entropy = analyzer.CalculateEntropy(password, wordlistService.GetWordCount());
+
+            var alphabetCount = CountCharacterSets(request);
+
+            var entropy = analyzer.CalculateEntropy(password, alphabetCount);
             var strengt = analyzer.GetStrengthLevel(entropy);
 
             var result = new GeneratePasswordResponse
@@ -44,6 +48,22 @@ namespace PasswordGenerator.Services.Password.Generation
                 return word.ToUpper();
             else
                 return char.ToUpper(word[0]) + word.Substring(1).ToLower();
+        }
+
+        private int CountCharacterSets(GeneratePasswordFromWordsRequest request)
+        {
+            var alphabet = string.Empty;
+            if (request.WordCase == Case.Lower)
+                alphabet += CharacterSets.Lowercase;
+            else if (request.WordCase == Case.Upper)
+                alphabet += CharacterSets.Uppercase;
+            else if (request.WordCase == Case.Capitalized)
+                alphabet += CharacterSets.Lowercase + CharacterSets.Uppercase;
+
+            if (request.Separator != null)
+                alphabet += request.Separator;
+
+            return alphabet.Length;
         }
     }
 }
