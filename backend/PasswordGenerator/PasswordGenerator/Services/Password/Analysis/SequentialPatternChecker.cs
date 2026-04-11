@@ -19,7 +19,7 @@ namespace PasswordGenerator.Services.Password.Analysis
             allPatterns = GetReversAndBasicPattern();
         }
 
-        public List<string> CheckPasswordToSequentialPattern(string password)
+        public List<string> FindSequentialPatternInPassword(string password)
         {
             var parsPassword = ExtractionLetterAndNumberFromPass(password.ToLower());
 

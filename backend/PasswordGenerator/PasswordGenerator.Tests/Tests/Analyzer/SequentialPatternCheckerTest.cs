@@ -40,7 +40,7 @@ namespace PasswordGenerator.Tests.Tests.Analyzer
         [Test]
         public void ShouldReturnFoundPatterns()
         {
-            var result = checker.CheckPasswordToSequentialPattern("xxabcdyy1234zz");
+            var result = checker.FindSequentialPatternInPassword("xxabcdyy1234zz");
 
             Assert.That(result, Does.Contain("abcd"));
             Assert.That(result, Does.Contain("1234"));

@@ -15,13 +15,16 @@ public partial class PasswordGeneratorService : IPasswordGeneratorService
 {
     private readonly IPasswordAnalyzerService _analyzer;
     private readonly PasswordOptionsValidator _validator;
+    private readonly ISequentialPatternChecker checker;
 
     public PasswordGeneratorService(
         IPasswordAnalyzerService analyzer,
-        PasswordOptionsValidator validator)
+        PasswordOptionsValidator validator,
+        ISequentialPatternChecker checker)
     {
         _analyzer = analyzer;
         _validator = validator;
+        this.checker = checker;
     }
 
     public GeneratePasswordResponse Generate(GeneratePasswordRequest request)
@@ -89,6 +92,16 @@ public partial class PasswordGeneratorService : IPasswordGeneratorService
         CryptoRandomHelper.Shuffle(passwordChars);
 
         var password = new string(passwordChars);
+        var isBadPassword = checker.CheckPasswordForBadPattern(password);
+        var repetitionsCount = 0;
+        while(isBadPassword && repetitionsCount < 3)
+        {
+            CryptoRandomHelper.Shuffle(passwordChars);
+            password = new string(passwordChars);
+            isBadPassword = checker.CheckPasswordForBadPattern(password);
+            repetitionsCount++;
+        }
+
         var entropy = _analyzer.CalculateEntropy(password, allChars.Length);
         var strength = _analyzer.GetStrengthLevel(entropy);
 

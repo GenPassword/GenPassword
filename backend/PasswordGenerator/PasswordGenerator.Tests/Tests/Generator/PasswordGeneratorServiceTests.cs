@@ -14,7 +14,8 @@ public class PasswordGeneratorServiceTests
     {
         var analyzer = new PasswordAnalyzerService();
         var validator = new PasswordOptionsValidator();
-        return new PasswordGeneratorService(analyzer, validator);
+        var checker = new SequentialPatternChecker();
+        return new PasswordGeneratorService(analyzer, validator, checker);
     }
 
     [TestCase(4)]

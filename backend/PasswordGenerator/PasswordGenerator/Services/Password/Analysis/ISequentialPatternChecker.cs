@@ -2,7 +2,7 @@
 {
     public interface ISequentialPatternChecker
     {
-        List<string> CheckPasswordToSequentialPattern(string password);
+        List<string> FindSequentialPatternInPassword(string password);
         bool CheckPasswordForBadPattern(string password);
     }
 }
