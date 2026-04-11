@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using Microsoft.EntityFrameworkCore.Query.Internal;
+using System.Text;
 
 namespace PasswordGenerator.Services.Password.Analysis
 {
@@ -9,13 +10,20 @@ namespace PasswordGenerator.Services.Password.Analysis
                 "qwertyuiop",
                 "asdfghjkl",
                 "zxcvbnm",
-                "abcdifghijklmopqrstuvwxyz"
+                "abcdefghijklmnopqrstuvwxyz"
             };
+        private string[] allPatterns;
+
+        public SequentialPatternChecker()
+        {
+            allPatterns = GetReversAndBasicPattern();
+        }
+
         public List<string> CheckPasswordToSequentialPattern(string password)
         {
             var parsPassword = ExtractionLetterAndNumberFromPass(password.ToLower());
 
-            return sequentialPatterns
+            return allPatterns
                 .SelectMany(pattern => FindSequentialPatterns(pattern, parsPassword.letters)
                                         .Concat(FindSequentialPatterns(pattern, parsPassword.numbers)))
                 .ToList();
@@ -25,11 +33,22 @@ namespace PasswordGenerator.Services.Password.Analysis
         {
             var parsPassword = ExtractionLetterAndNumberFromPass(password.ToLower());
 
-            return sequentialPatterns
+            return allPatterns
                 .Any(pattern =>
                 {
                     return HasSequentialPattern(pattern, parsPassword.numbers) || HasSequentialPattern(pattern, parsPassword.letters);
                 });
+        }
+
+        private string[] GetReversAndBasicPattern()
+        {
+            return sequentialPatterns
+                .SelectMany(pattern =>
+                {
+                    var reversPattern = new string(pattern.Reverse().ToArray());
+                    return new[] {pattern, reversPattern};
+                })
+                .ToArray();
         }
 
         private static (string numbers, string letters) ExtractionLetterAndNumberFromPass(string pass)
