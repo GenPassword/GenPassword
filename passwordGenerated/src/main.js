@@ -1,9 +1,13 @@
 import './style.css'
 
 // ✅ API URLs
-const API_RANDOM = 'https://myproject24.ru/api/password/generate';
-const API_WORDS = 'https://myproject24.ru/api/password/generate-from-words';
-const API_PIN = 'https://myproject24.ru/api/password/generate';
+// const API_RANDOM = 'https://myproject24.ru/api/password/generate';
+// const API_WORDS = 'https://myproject24.ru/api/password/generate-from-words';
+// const API_PIN = 'https://myproject24.ru/api/password/generate';
+
+const API_RANDOM = '/api/password/generate';
+const API_WORDS = '/api/password/generate-from-words';
+const API_PIN = '/api/password/generate';
 
 const $ = (id) => document.getElementById(id);
 
