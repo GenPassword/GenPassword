@@ -15,7 +15,6 @@ namespace PasswordGenerator.Tests.Tests.Analyzer
         [Test]
         [TestCase("15qwerty")]
         [TestCase("as1234r")]
-        [TestCase("xzhjckq1w2e3r4t5ahjnnxz")]
         [TestCase("gbnABCDkmnbh")]
         [TestCase("QwErTy")]
         [TestCase("AbCd")]

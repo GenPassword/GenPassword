@@ -1,100 +1,142 @@
-﻿using Microsoft.EntityFrameworkCore.Query.Internal;
-using System.Text;
+﻿using PasswordGenerator.Services.Password.Analysis;
 
-namespace PasswordGenerator.Services.Password.Analysis
+public class SequentialPatternChecker : ISequentialPatternChecker
 {
-    public class SequentialPatternChecker : ISequentialPatternChecker
+    private readonly string[] basePatterns = new[]
     {
-        private string[] sequentialPatterns = new[] {
-                "1234567890",
-                "qwertyuiop",
-                "asdfghjkl",
-                "zxcvbnm",
-                "abcdefghijklmnopqrstuvwxyz"
-            };
-        private string[] allPatterns;
+        "1234567890",
+        "abcdefghijklmnopqrstuvwxyz",
+        "qwertyuiop",
+        "asdfghjkl",
+        "zxcvbnm"
+    };
 
-        public SequentialPatternChecker()
+    private readonly List<Dictionary<char, int>> patternMaps;
+
+    public SequentialPatternChecker()
+    {
+        patternMaps = new List<Dictionary<char, int>>();
+
+        foreach (var pattern in basePatterns)
         {
-            allPatterns = GetReversAndBasicPattern();
+            AddPattern(pattern);
+            AddPattern(new string(pattern.Reverse().ToArray()));
+        }
+    }
+
+    private void AddPattern(string pattern)
+    {
+        var map = new Dictionary<char, int>();
+        for (int i = 0; i < pattern.Length; i++)
+            map[pattern[i]] = i;
+
+        patternMaps.Add(map);
+    }
+
+    public List<string> FindSequentialPatternInPassword(string password)
+    {
+        var pass = password.ToLower();
+        var result = new List<string>();
+
+        foreach (var map in patternMaps)
+        {
+            result.AddRange(FindInSinglePattern(pass, map));
         }
 
-        public List<string> FindSequentialPatternInPassword(string password)
-        {
-            var parsPassword = ExtractionLetterAndNumberFromPass(password.ToLower());
+        return result;
+    }
 
-            return allPatterns
-                .SelectMany(pattern => FindSequentialPatterns(pattern, parsPassword.letters)
-                                        .Concat(FindSequentialPatterns(pattern, parsPassword.numbers)))
-                .ToList();
+    public bool CheckPasswordForBadPattern(string password)
+    {
+        var pass = password.ToLower();
+
+        foreach (var map in patternMaps)
+        {
+            if (HasInSinglePattern(pass, map))
+                return true;
         }
 
-        public bool CheckPasswordForBadPattern(string password)
-        {
-            var parsPassword = ExtractionLetterAndNumberFromPass(password.ToLower());
+        return false;
+    }
 
-            return allPatterns
-                .Any(pattern =>
-                {
-                    return HasSequentialPattern(pattern, parsPassword.numbers) || HasSequentialPattern(pattern, parsPassword.letters);
-                });
-        }
+    private List<string> FindInSinglePattern(string pass, Dictionary<char, int> map)
+    {
+        var result = new List<string>();
 
-        private string[] GetReversAndBasicPattern()
-        {
-            return sequentialPatterns
-                .SelectMany(pattern =>
-                {
-                    var reversPattern = new string(pattern.Reverse().ToArray());
-                    return new[] {pattern, reversPattern};
-                })
-                .ToArray();
-        }
+        int start = -1;
+        int length = 1;
 
-        private static (string numbers, string letters) ExtractionLetterAndNumberFromPass(string pass)
+        for (int i = 0; i < pass.Length - 1; i++)
         {
-            var allNumberFromPass = new StringBuilder();
-            var allLetterToPass = new StringBuilder();
-            foreach (var symbol in pass)
+            char current = pass[i];
+            char next = pass[i + 1];
+
+            if (char.IsLetter(current) != char.IsLetter(next) &&
+                char.IsDigit(current) != char.IsDigit(next))
             {
-                if (char.IsDigit(symbol))
-                    allNumberFromPass.Append(symbol);
-                else if (char.IsLetter(symbol))
-                    allLetterToPass.Append(symbol);
+                TryAdd(pass, result, start, length);
+                length = 1;
+                continue;
             }
-            return (allNumberFromPass.ToString(), allLetterToPass.ToString());
-        }
 
-        private static List<string> FindSequentialPatterns(string pattern, string pass)
-        {
-            var repetitions = 1;
-            var startPatterns = -1;
-            var foundPatterns = new List<string>();
-            for (var i = 0; i < pass.Length - 1; i++)
+            if (map.TryGetValue(current, out int index1) &&
+                map.TryGetValue(next, out int index2) &&
+                index2 == index1 + 1)
             {
-                var index1 = pattern.IndexOf(pass[i]);
-                var index2 = pattern.IndexOf(pass[i + 1]);
-                if (index1 != -1 && index2 != -1 && index2 == index1 + 1)
-                {
-                    if (repetitions == 1)
-                        startPatterns = i;
-                    repetitions++;
-                }           
-                else
-                    repetitions = 1;
-                if (repetitions >= 4)
-                {
-                    foundPatterns.Add(pass.Substring(startPatterns, repetitions));
-                    repetitions = 1;
-                }
-                    
+                if (length == 1)
+                    start = i;
+
+                length++;
             }
-            return foundPatterns;
+            else
+            {
+                TryAdd(pass, result, start, length);
+                length = 1;
+            }
+        }
+        TryAdd(pass, result, start, length);
+
+        return result;
+    }
+
+    private bool HasInSinglePattern(string pass, Dictionary<char, int> map)
+    {
+        int length = 1;
+
+        for (int i = 0; i < pass.Length - 1; i++)
+        {
+            char current = pass[i];
+            char next = pass[i + 1];
+
+            if (char.IsLetter(current) != char.IsLetter(next) &&
+                char.IsDigit(current) != char.IsDigit(next))
+            {
+                length = 1;
+                continue;
+            }
+
+            if (map.TryGetValue(current, out int index1) &&
+                map.TryGetValue(next, out int index2) &&
+                index2 == index1 + 1)
+            {
+                length++;
+                if (length >= 4)
+                    return true;
+            }
+            else
+            {
+                length = 1;
+            }
         }
 
-        private static bool HasSequentialPattern(string pattern, string pass)
+        return false;
+    }
+
+    private void TryAdd(string pass, List<string> result, int start, int length)
+    {
+        if (length >= 4 && start != -1)
         {
-            return FindSequentialPatterns(pattern, pass).Any();
+            result.Add(pass.Substring(start, length));
         }
     }
 }
