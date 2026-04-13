@@ -1,7 +1,10 @@
+using Microsoft.Extensions.DependencyInjection;
 using PasswordGenerator.Domain;
 using PasswordGenerator.Models;
 using PasswordGenerator.Services;
 using PasswordGenerator.Services.Password.Analysis;
+using PasswordGenerator.Services.Password.Generation;
+using PasswordGenerator.Services.Password.Validator;
 using PasswordGenerator.Validators;
 
 
@@ -10,21 +13,37 @@ namespace PasswordGenerator.Tests.Generator;
 [TestFixture]
 public class PasswordGeneratorServiceTests
 {
-    private PasswordGeneratorService CreateService()
+    private ServiceProvider provider;
+
+    [SetUp]
+    public void Setup()
     {
-        var analyzer = new PasswordAnalyzerService();
-        var validator = new PasswordOptionsValidator();
-        var checker = new SequentialPatternChecker();
-        return new PasswordGeneratorService(analyzer, validator, checker);
+        var services = new ServiceCollection();
+
+        services.AddScoped<IPasswordAnalyzerService, PasswordAnalyzerService>();
+
+        services.AddScoped<ISequentialPatternChecker, SequentialPatternChecker>();
+        services.AddScoped<IRepetitionPatternChecker, RepetitionPatternChecker>();
+
+        services.AddScoped<IPasswordRule, SequentialRule>();
+        services.AddScoped<IPasswordRule, RepetitionRule>();
+
+        services.AddScoped<IPasswordValidator, PasswordValidator>();
+
+        services.AddScoped<PasswordOptionsValidator>();
+
+        services.AddScoped<IPasswordGeneratorService, PasswordGeneratorService>();
+
+        provider = services.BuildServiceProvider();
     }
+
 
     [TestCase(4)]
     [TestCase(16)]
     [TestCase(64)]
     public void Generate_ShouldReturnPassword_WithRequestedLength(int length)
     {
-        // Arrange
-        var service = CreateService();
+        var service = provider.GetRequiredService<IPasswordGeneratorService>();
         var request = new GeneratePasswordRequest
         {
             Length = length,
@@ -47,7 +66,7 @@ public class PasswordGeneratorServiceTests
     public void Generate_WithExcludeSimilar_ShouldNotContainSimilarCharacters()
     {
         // Arrange
-        var service = CreateService();
+        var service = provider.GetRequiredService<IPasswordGeneratorService>();
         var request = new GeneratePasswordRequest
         {
             Length = 32,
@@ -73,7 +92,7 @@ public class PasswordGeneratorServiceTests
     public void Generate_WithNoRepeats_ShouldProducePasswordWithoutDuplicateCharacters()
     {
         // Arrange
-        var service = CreateService();
+        var service = provider.GetRequiredService<IPasswordGeneratorService>();
         var request = new GeneratePasswordRequest
         {
             Length = 10,
@@ -97,7 +116,7 @@ public class PasswordGeneratorServiceTests
     public void Generate_WithNoRepeatsAndLengthGreaterThanAlphabet_ShouldReturnValidationError()
     {
         // Arrange
-        var service = CreateService();
+        var service = provider.GetRequiredService<IPasswordGeneratorService>();
         var length = CharacterSets.Lowercase.Length + 1;
 
         var request = new GeneratePasswordRequest
@@ -124,7 +143,7 @@ public class PasswordGeneratorServiceTests
     public void Generate_WithMinDigits_ShouldContainAtLeastSpecifiedNumberOfDigits()
     {
         // Arrange
-        var service = CreateService();
+        var service = provider.GetRequiredService<IPasswordGeneratorService>();
         const int minDigits = 3;
         var request = new GeneratePasswordRequest
         {
@@ -148,7 +167,7 @@ public class PasswordGeneratorServiceTests
     public void Generate_WithMinSpecial_ShouldContainAtLeastSpecifiedNumberOfSpecialCharacters()
     {
         // Arrange
-        var service = CreateService();
+        var service = provider.GetRequiredService<IPasswordGeneratorService>();
         const int minSpecial = 2;
         var request = new GeneratePasswordRequest
         {
@@ -172,7 +191,7 @@ public class PasswordGeneratorServiceTests
     public void Generate_WithInvalidLength_ShouldReturnErrorResult()
     {
         // Arrange
-        var service = CreateService();
+        var service = provider.GetRequiredService<IPasswordGeneratorService>();
         var request = new GeneratePasswordRequest
         {
             Length = 1,
@@ -193,7 +212,7 @@ public class PasswordGeneratorServiceTests
     public void Generate_WithSameSettings_ShouldProduceDifferentPasswords_MostOfTheTime()
     {
         // Arrange
-        var service = CreateService();
+        var service = provider.GetRequiredService<IPasswordGeneratorService>();
         var request = new GeneratePasswordRequest
         {
             Length = 16,

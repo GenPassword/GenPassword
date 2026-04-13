@@ -8,6 +8,7 @@ using PasswordGenerator.Services;
 using PasswordGenerator.Services.Auth;
 using PasswordGenerator.Services.Password.Analysis;
 using PasswordGenerator.Services.Password.Generation;
+using PasswordGenerator.Services.Password.Validator;
 using PasswordGenerator.Services.Users;
 using PasswordGenerator.Services.Wordlist;
 using PasswordGenerator.Validators;
@@ -28,6 +29,10 @@ builder.Services.AddSingleton<IWordlistService, WordlistService>();
 builder.Services.AddScoped<IPassphraseGeneratorService, PassphraseGeneratorService>();
 builder.Services.AddScoped<IUserSettingsService, UserSettingsService>();
 builder.Services.AddScoped<ISequentialPatternChecker, SequentialPatternChecker>();
+builder.Services.AddScoped<IRepetitionPatternChecker, RepetitionPatternChecker>();
+builder.Services.AddScoped<IPasswordRule, RepetitionRule>();
+builder.Services.AddScoped<IPasswordRule, SequentialRule>();
+builder.Services.AddScoped<IPasswordValidator, PasswordValidator>();
 
 // Регистрация DbContext
 var connectionStr = builder.Configuration.GetConnectionString("DefaultConnection");

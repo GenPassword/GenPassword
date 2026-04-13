@@ -1,4 +1,5 @@
 ﻿using PasswordGenerator.Services.Password.Analysis;
+using PasswordGenerator.Services.Password.Validator;
 
 public class SequentialPatternChecker : ISequentialPatternChecker
 {
@@ -63,13 +64,13 @@ public class SequentialPatternChecker : ISequentialPatternChecker
     {
         var result = new List<string>();
 
-        int start = -1;
-        int length = 1;
+        var start = -1;
+        var length = 1;
 
         for (int i = 0; i < pass.Length - 1; i++)
         {
-            char current = pass[i];
-            char next = pass[i + 1];
+            var current = pass[i];
+            var next = pass[i + 1];
 
             if (char.IsLetter(current) != char.IsLetter(next) &&
                 char.IsDigit(current) != char.IsDigit(next))
@@ -101,12 +102,12 @@ public class SequentialPatternChecker : ISequentialPatternChecker
 
     private bool HasInSinglePattern(string pass, Dictionary<char, int> map)
     {
-        int length = 1;
+        var length = 1;
 
         for (int i = 0; i < pass.Length - 1; i++)
         {
-            char current = pass[i];
-            char next = pass[i + 1];
+            var current = pass[i];
+            var next = pass[i + 1];
 
             if (char.IsLetter(current) != char.IsLetter(next) &&
                 char.IsDigit(current) != char.IsDigit(next))

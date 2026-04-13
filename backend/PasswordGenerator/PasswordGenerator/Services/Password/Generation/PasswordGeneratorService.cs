@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Identity;
 using PasswordGenerator.Domain;
 using PasswordGenerator.Models;
 using PasswordGenerator.Services.Password.Analysis;
 using PasswordGenerator.Services.Password.Generation;
 using PasswordGenerator.Services.Password.Helpers;
+using PasswordGenerator.Services.Password.Validator;
 using PasswordGenerator.Validators;
 
 namespace PasswordGenerator.Services;
@@ -14,22 +16,22 @@ namespace PasswordGenerator.Services;
 public partial class PasswordGeneratorService : IPasswordGeneratorService
 {
     private readonly IPasswordAnalyzerService _analyzer;
-    private readonly PasswordOptionsValidator _validator;
-    private readonly ISequentialPatternChecker checker;
+    private readonly PasswordOptionsValidator requestValidator;
+    private readonly IPasswordValidator passwordValidator;
 
     public PasswordGeneratorService(
         IPasswordAnalyzerService analyzer,
-        PasswordOptionsValidator validator,
-        ISequentialPatternChecker checker)
+        PasswordOptionsValidator requestValidator,
+        IPasswordValidator passwordValidator)
     {
         _analyzer = analyzer;
-        _validator = validator;
-        this.checker = checker;
+        this.requestValidator = requestValidator;
+        this.passwordValidator = passwordValidator;
     }
 
     public GeneratePasswordResponse Generate(GeneratePasswordRequest request)
     {
-        var validation = _validator.Validate(request); // Проверяет, валиден ли запрос
+        var validation = requestValidator.Validate(request); // Проверяет, валиден ли запрос
         if (!validation.IsValid)
             return new GeneratePasswordResponse
             {
@@ -92,13 +94,13 @@ public partial class PasswordGeneratorService : IPasswordGeneratorService
         CryptoRandomHelper.Shuffle(passwordChars);
 
         var password = new string(passwordChars);
-        var isBadPassword = checker.CheckPasswordForBadPattern(password);
+        var isInvalid = passwordValidator.IsInvalidPassword(password);
         var repetitionsCount = 0;
-        while(isBadPassword && repetitionsCount < 3)
+        while(isInvalid && repetitionsCount < 3)
         {
             CryptoRandomHelper.Shuffle(passwordChars);
             password = new string(passwordChars);
-            isBadPassword = checker.CheckPasswordForBadPattern(password);
+            isInvalid = passwordValidator.IsInvalidPassword(password);
             repetitionsCount++;
         }
 

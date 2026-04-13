@@ -1,4 +1,6 @@
-﻿using PasswordGenerator.Services.Password.Analysis;
+﻿using Microsoft.AspNetCore.Identity;
+using PasswordGenerator.Services.Password.Analysis;
+using PasswordGenerator.Services.Password.Validator;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +12,18 @@ namespace PasswordGenerator.Tests.Tests.Analyzer
     [TestFixture]
     public class SequentialPatternCheckerTest
     {
-        private readonly SequentialPatternChecker checker = new();
+        private IPasswordValidator passwordValidaror;
+
+        [SetUp]
+        public void Setup()
+        {
+            var checker = new SequentialPatternChecker();
+            var repeat = new RepetitionPatternChecker();
+            var patternRule = new SequentialRule(checker);
+            var repeatRule = new RepetitionRule(repeat);
+            var rules = new List<IPasswordRule>() { patternRule, repeatRule };
+            passwordValidaror = new PasswordValidator(rules);
+        }
 
         [Test]
         [TestCase("15qwerty")]
@@ -22,7 +35,7 @@ namespace PasswordGenerator.Tests.Tests.Analyzer
         [TestCase("dcba")]
         public void DetectBadPassword(string password)
         {
-            var isBadPassword = checker.CheckPasswordForBadPattern(password);
+            var isBadPassword = passwordValidaror.IsInvalidPassword(password);
             Assert.That(isBadPassword, Is.True);
         }
 
@@ -32,17 +45,18 @@ namespace PasswordGenerator.Tests.Tests.Analyzer
         [TestCase("M3@kLp9!zX")]
         public void DetectGoodPassword(string password)
         {
-            var isBadPassword = checker.CheckPasswordForBadPattern(password);
+            var isBadPassword = passwordValidaror.IsInvalidPassword(password);
             Assert.That(isBadPassword, Is.False);
         }
 
         [Test]
-        public void ShouldReturnFoundPatterns()
+        [TestCase("111DASN")]
+        [TestCase("nzxjkcAAAkasl")]
+        [TestCase("jk&&&ja")]
+        public void DetectRepeatInPassword(string password)
         {
-            var result = checker.FindSequentialPatternInPassword("xxabcdyy1234zz");
-
-            Assert.That(result, Does.Contain("abcd"));
-            Assert.That(result, Does.Contain("1234"));
+            var isBadPassword = passwordValidaror.IsInvalidPassword(password);
+            Assert.That(isBadPassword, Is.True);
         }
     }
 }
