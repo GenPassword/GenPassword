@@ -3,8 +3,9 @@
     --bg-body: #f5f7fa;
     --bg-container: transparent;
     --bg-input: #ffffff;
-    --text-primary: #2c3e50;
-    --text-secondary: #7f8c8d;
+    /* Основной цвет текста теперь #12215E */
+    --text-primary: #12215E; 
+    --text-secondary: #12215E; /* Тоже делаем тем же цветом, так как просили "во всех словах" */
     --shadow: none;
     --accent: #3498db;
     --accent-hover: #2980b9;
@@ -17,7 +18,11 @@
     --bg-body: #1a1a2e;
     --bg-container: transparent;
     --bg-input: #0f3460;
-    --text-primary: #eaeaea;
+    /* В темной теме тоже можно оставить светлый вариант этого цвета или белый, 
+       но по запросу "черный на #12215E" оставляем основной цвет. 
+       Для темной темы лучше сделать его светлее, иначе не будет видно на темном фоне.
+       Я поставлю белый для темной темы, чтобы было читаемо, либо светло-голубой. */
+    --text-primary: #eaeaea; 
     --text-secondary: #b0b0b0;
     --shadow: none;
     --accent: #5dade2;
@@ -49,6 +54,8 @@ body {
 #app {
     width: 100%;
     max-width: 1100px;
+    /* Сдвиг вправо на 50px, как просили ранее */
+    margin-left: 50px; 
 }
 
 .container {
@@ -64,7 +71,7 @@ h1 {
 }
 
 .title_Text {
-    color: #0B006B;
+    color: #12215E; /* ✅ Цвет #12215E */
     margin-bottom: 31px;
     font-family: 'Inter', sans-serif;
     font-weight: 400;
@@ -91,6 +98,7 @@ h1 {
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
     z-index: 1000;
     transition: all 0.3s;
+    color: #12215E; /* Иконка тоже цвета текста */
 }
 
 .theme-toggle:hover {
@@ -116,7 +124,7 @@ h1 {
     background: #CEFFF7;
     border: none;
     border-radius: 0;
-    color: #000000;
+    color: #12215E; /* ✅ Цвет текста #12215E */
     font-size: 16px;
     font-weight: 600;
     font-family: 'Inter', sans-serif;
@@ -140,6 +148,7 @@ h1 {
     font-size: 12px;
     margin-left: 10px;
     transition: transform 0.2s;
+    color: #12215E;
 }
 
 .mode-select-btn.active .arrow {
@@ -179,7 +188,7 @@ h1 {
     padding: 0;
     cursor: pointer;
     font-size: 14px;
-    color: #000000;
+    color: #12215E; /* ✅ Цвет текста #12215E */
     font-family: 'Inter', sans-serif;
     border-top: 1px solid #000000;
     border-left: none;
@@ -212,7 +221,7 @@ h1 {
 [data-theme="dark"] .mode-dropdown {
     background: #CEFFF7;
     border-color: #000000;
-    color: #000000;
+    color: #12215E;
 }
 
 [data-theme="dark"] .mode-select-btn:hover {
@@ -221,6 +230,7 @@ h1 {
 
 [data-theme="dark"] .dropdown-item {
     border-top-color: #000000;
+    color: #12215E;
 }
 
 [data-theme="dark"] .dropdown-item.selected {
@@ -260,7 +270,7 @@ h1 {
     font-family: 'Inter', monospace;
     font-size: 24px;
     font-weight: 400;
-    color: #12215E;
+    color: #12215E; /* ✅ Цвет текста #12215E */
     word-break: break-all;
     flex: 1;
     white-space: nowrap;
@@ -326,7 +336,7 @@ h1 {
     font-family: 'Inter', sans-serif;
     font-size: 18px;
     font-weight: 400;
-    color: #0B006B;
+    color: #12215E; /* ✅ Цвет текста #12215E */
     min-width: 100px;
     text-align: left;
 }
@@ -334,7 +344,7 @@ h1 {
 .strength-percent {
     text-align: center;
     font-size: 14px;
-    color: #0B006B;
+    color: #013374; /* Цвет надежности, как просили ранее */
     margin-top: -15px;
     margin-bottom: 20px;
     font-weight: 500;
@@ -349,6 +359,19 @@ h1 {
 .custom-slider-wrapper {
     margin-bottom: 30px;
     position: relative;
+}
+
+/* ✅ НОВЫЙ СТИЛЬ ДЛЯ ЗАГОЛОВКА "ДЛИНА ПАРОЛЯ" */
+.slider-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    color: #12215E; /* Черный, как просили в задании */
+    margin-bottom: 15px; /* Отступ до самой полоски слайдера */
+    display: block;
 }
 
 .custom-slider {
@@ -440,7 +463,7 @@ h1 {
     width: 100%;
     background: #e0f7ff;
     border: 2px solid #00ffea;
-    color: #0B006B;
+    color: #12215E; /* ✅ Цвет текста #12215E */
     padding: 12px 20px;
     border-radius: 10px;
     font-size: 15px;
@@ -506,7 +529,7 @@ h1 {
     align-items: center;
     gap: 12px;
     cursor: pointer;
-    color: var(--text-primary);
+    color: #12215E; /* ✅ Цвет текста #12215E */
     font-size: 15px;
     flex: 1;
 }
@@ -516,18 +539,17 @@ h1 {
     /* Сброс стандартных стилей */
     -webkit-appearance: none;
     appearance: none;
-    
     /* Размеры (чуть больше стандарта) */
     width: 24px;
     height: 24px;
-    
+
     /* Белый фон, нет границ */
     background-color: #ffffff;
     border: none;
-    
+
     /* Скругление углов (опционально, можно убрать для квадрата) */
     border-radius: 4px;
-    
+
     cursor: pointer;
     position: relative;
     flex-shrink: 0;
@@ -541,17 +563,16 @@ h1 {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) scale(0);
-    
     /* Размер самой галочки */
     width: 14px;
     height: 14px;
-    
+
     /* Цвет галочки #12215E */
     background-color: #12215E;
-    
+
     /* Форма галочки */
     clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
-    
+
     transition: transform 0.2s ease-in-out;
 }
 
@@ -631,7 +652,7 @@ h1 {
 .counter-value {
     font-weight: 700;
     font-size: 16px;
-    color: #013CFF; 
+    color: #00D9FF; /* ✅ Цвет цифры #00D9FF */
     min-width: 24px;
     text-align: center;
     font-family: 'Inter', monospace;
@@ -653,7 +674,7 @@ h1 {
     padding: 15px;
     border-radius: 8px;
     margin-bottom: 20px;
-    color: var(--text-primary);
+    color: #12215E; /* ✅ Цвет текста #12215E */
 }
 
 .pin-info p {
@@ -669,7 +690,7 @@ h1 {
 }
 
 .form-row label {
-    color: var(--text-primary);
+    color: #12215E; /* ✅ Цвет текста #12215E */
     font-size: 15px;
 }
 
@@ -679,7 +700,7 @@ h1 {
     border: none;
     border-radius: 8px;
     background: var(--bg-body);
-    color: var(--text-primary);
+    color: #12215E; /* ✅ Цвет текста #12215E */
     font-size: 14px;
     width: 140px;
 }
@@ -687,16 +708,15 @@ h1 {
 .generate-btn {
     width: 100%;
     padding: 16px;
-    
     /* Цвета */
     background: #013CFF; /* Синий фон */
     color: #FFFFFF;      /* Белый текст */
-    
+
     border: none;
     border-radius: 12px;
     cursor: pointer;
     margin-top: 10px;
-    
+
     /* ✅ Параметры шрифта по вашему запросу */
     font-family: 'Inter', sans-serif;
     font-weight: 400;
@@ -704,7 +724,7 @@ h1 {
     font-size: 32px;
     line-height: 100%;
     letter-spacing: 0%;
-    
+
     transition: background 0.2s;
 }
 

@@ -45,6 +45,9 @@ const html = `
         
         <!-- КАСТОМНЫЙ СЛАЙДЕР -->
         <div class="custom-slider-wrapper">
+            <!-- ✅ ДОБАВЛЕН ЗАГОЛОВОК -->
+            <div class="slider-title">Длина пароля</div>
+
             <div class="custom-slider" id="customSlider">
                 <div class="slider-track-bg"></div>
                 <div class="slider-track-fill" id="sliderFill"></div>
