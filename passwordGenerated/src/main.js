@@ -19,7 +19,8 @@ const html = `
             <span class="arrow">▲</span>
         </button>
         <div id="modeDropdown" class="mode-dropdown">
-            <div class="dropdown-item" data-mode="random">Случайный</div>
+            <!-- ✅ ДОБАВЛЕН КЛАСС selected ПО УМОЛЧАНИЮ -->
+            <div class="dropdown-item selected" data-mode="random">Случайный</div>
             <div class="dropdown-item" data-mode="pin">Пин-код</div>
             <div class="dropdown-item" data-mode="words">Пароль из слов</div>
         </div>
@@ -596,7 +597,7 @@ function initApp() {
         if (!text || text === 'Нажмите "генерировать"') return;
         try {
             await navigator.clipboard.writeText(text);
-            els.copy.textContent = ' Скопировано';
+            els.copy.textContent = 'Скопировано';
             els.passwordBlock.classList.add('copied');
             setTimeout(() => {
                 els.copy.textContent = 'Копировать';

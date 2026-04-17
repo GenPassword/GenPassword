@@ -334,7 +334,7 @@ h1 {
 .strength-percent {
     text-align: center;
     font-size: 14px;
-    color: var(--text-secondary);
+    color: #0B006B;
     margin-top: -15px;
     margin-bottom: 20px;
     font-weight: 500;
@@ -572,27 +572,33 @@ h1 {
     box-shadow: none;
 }
 
+/* ===== Контейнер счетчика (без рамки) ===== */
 .counter-control {
     display: flex;
     align-items: center;
     gap: 10px;
-    background: rgba(52, 152, 219, 0.15);
-    padding: 6px 12px;
-    border-radius: 8px;
+    /* Убираем фон и рамку */
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    border: none;
 }
 
+/* ===== Метка "Количество:" ===== */
 .counter-label {
-    color: var(--text-secondary);
+    color: #013CFF; /* ✅ Цвет текста #013CFF */
     font-size: 14px;
     font-weight: 500;
+    font-family: 'Inter', sans-serif;
 }
 
+/* ===== Кнопки + и - ===== */
 .counter-btn {
     width: 30px;
     height: 30px;
     border: none;
-    background: var(--accent);
-    color: #fff;
+    background: #00D9FF; /* ✅ Цвет кнопок #00D9FF */
+    color: #FFFFFF;       /* Белый текст для контраста */
     border-radius: 6px;
     cursor: pointer;
     font-size: 18px;
@@ -602,11 +608,12 @@ h1 {
     justify-content: center;
     transition: all 0.2s;
     user-select: none;
+    font-family: 'Inter', sans-serif;
 }
 
 .counter-btn:hover:not(:disabled) {
-    background: var(--accent-hover);
-    transform: scale(1.1);
+    background: #00b8d9; /* Чуть темнее при наведении */
+    transform: scale(1.05);
 }
 
 .counter-btn:active:not(:disabled) {
@@ -614,15 +621,17 @@ h1 {
 }
 
 .counter-btn:disabled {
-    background: #ccc;
+    background: #ccefff; /* Светлый фон для неактивной кнопки */
+    color: #00D9FF;
     cursor: not-allowed;
     opacity: 0.5;
 }
 
+/* ===== Цифра в счетчике ===== */
 .counter-value {
     font-weight: 700;
     font-size: 16px;
-    color: var(--accent);
+    color: #013CFF; 
     min-width: 24px;
     text-align: center;
     font-family: 'Inter', monospace;
@@ -678,18 +687,29 @@ h1 {
 .generate-btn {
     width: 100%;
     padding: 16px;
-    background: var(--accent);
-    color: #fff;
+    
+    /* Цвета */
+    background: #013CFF; /* Синий фон */
+    color: #FFFFFF;      /* Белый текст */
+    
     border: none;
     border-radius: 12px;
-    font-size: 16px;
-    font-weight: 600;
     cursor: pointer;
     margin-top: 10px;
+    
+    /* ✅ Параметры шрифта по вашему запросу */
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-style: normal;      /* вместо "Regular" */
+    font-size: 32px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    
+    transition: background 0.2s;
 }
 
 .generate-btn:hover {
-    background: var(--accent-hover);
+    background: #0033cc; /* Чуть темнее при наведении */
 }
 
 .generate-btn:disabled {
