@@ -1,13 +1,9 @@
 import './style.css'
 
 // ✅ API URLs
- const API_RANDOM = 'https://myproject24.ru/api/password/generate';
- const API_WORDS = 'https://myproject24.ru/api/password/generate-from-words';
- const API_PIN = 'https://myproject24.ru/api/password/generate';
-
-//const API_RANDOM = '/api/password/generate';
-//const API_WORDS = '/api/password/generate-from-words';
-//const API_PIN = '/api/password/generate';
+const API_RANDOM = 'https://myproject24.ru/api/password/generate';
+const API_WORDS = 'https://myproject24.ru/api/password/generate-from-words';
+const API_PIN = 'https://myproject24.ru/api/password/generate';
 
 const $ = (id) => document.getElementById(id);
 
@@ -15,11 +11,26 @@ const $ = (id) => document.getElementById(id);
 const html = `
 <div class="container">
     <button id="themeToggle" class="theme-toggle" title="Сменить тему">🌓</button>
+    
+    <!-- МЕНЮ СПОСОБА ГЕНЕРАЦИИ -->
+    <div class="generation-menu">
+        <button id="modeSelectBtn" class="mode-select-btn">
+            <span>Способ генерации</span>
+            <span class="arrow">▲</span>
+        </button>
+        <div id="modeDropdown" class="mode-dropdown">
+            <div class="dropdown-item" data-mode="random">Случайный</div>
+            <div class="dropdown-item" data-mode="pin">Пин-код</div>
+            <div class="dropdown-item" data-mode="words">Пароль из слов</div>
+        </div>
+    </div>
+
     <h1 class="title_Text">Генератор паролей</h1>
     
-    <div class="password-block">
+    <!-- КЛИКАБЕЛЬНЫЙ БЛОК ПАРОЛЯ -->
+    <div class="password-block" id="passwordBlock" title="Нажмите для копирования">
         <div id="password" class="password-text">Нажмите "генерировать"</div>
-        <button class="copy-btn-small" id="copyBtn" title="Копировать">📋</button>
+        <button class="copy-btn" id="copyBtn">Копировать</button>
     </div>
     
     <div class="strength-container">
@@ -27,12 +38,6 @@ const html = `
         <span class="strength-text" id="strengthText">-</span>
     </div>
     <div class="strength-percent" id="strengthPercent">Надежность: 0%</div>
-
-    <div class="mode-tabs">
-        <button class="mode-tab active" data-mode="random">🎲 Обычный</button>
-        <button class="mode-tab" data-mode="pin">🔢 PIN-код</button>
-        <button class="mode-tab" data-mode="words">📝 Из слов</button>
-    </div>
 
     <!-- Режим: Обычная генерация -->
     <div id="randomSettings" class="settings-section">
@@ -115,7 +120,7 @@ const html = `
         </div>
     </div>
 
-    <!-- Режим: PIN-код (максимум 8) -->
+    <!-- Режим: PIN-код -->
     <div id="pinSettings" class="settings-section" style="display: none;">
         <div class="pin-info">
             <p>Генерация безопасного PIN-кода только из цифр.</p>
@@ -141,7 +146,7 @@ const html = `
         </div>
     </div>
 
-    <!-- Режим: Из слов (слайдер 2-8) -->
+    <!-- Режим: Из слов -->
     <div id="wordsSettings" class="settings-section" style="display: none;">
         
         <!-- СЛАЙДЕР ДЛЯ КОЛИЧЕСТВА СЛОВ -->
@@ -197,18 +202,18 @@ function initApp() {
     const els = {
         theme: $('themeToggle'),
         copy: $('copyBtn'),
+        passwordBlock: $('passwordBlock'),
+        password: $('password'),
         length: $('length'),
         customSlider: $('customSlider'),
         sliderThumb: $('sliderThumb'),
         sliderFill: $('sliderFill'),
         sliderValue: $('sliderValue'),
-        password: $('password'),
         strengthText: $('strengthText'),
         strengthPercent: $('strengthPercent'),
         generate: $('generateBtn'),
         loading: $('loading'),
         error: $('error'),
-        tabs: document.querySelectorAll('.mode-tab'),
         randomSec: $('randomSettings'),
         pinSec: $('pinSettings'),
         wordsSec: $('wordsSettings'),
@@ -216,6 +221,11 @@ function initApp() {
         wordCase: $('wordCase'),
         separator: $('separator'),
         selectAllBtn: $('selectAllBtn'),
+        
+        // Элементы меню
+        modeSelectBtn: $('modeSelectBtn'),
+        modeDropdown: $('modeDropdown'),
+        dropdownItems: document.querySelectorAll('.dropdown-item'),
         
         // Элементы PIN слайдера
         pinLength: $('pinLength'),
@@ -251,12 +261,27 @@ function initApp() {
         };
     }
 
-    // ===== Переключение режимов =====
-    els.tabs.forEach(tab => {
-        tab.onclick = () => {
-            els.tabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            mode = tab.dataset.mode;
+    // ===== ЛОГИКА ВЫПАДАЮЩЕГО МЕНЮ =====
+    let isDropdownOpen = false;
+
+    if (els.modeSelectBtn) {
+        els.modeSelectBtn.onclick = (e) => {
+            e.stopPropagation();
+            isDropdownOpen = !isDropdownOpen;
+            els.modeDropdown.classList.toggle('show', isDropdownOpen);
+            els.modeSelectBtn.classList.toggle('active', isDropdownOpen);
+        };
+    }
+
+    els.dropdownItems.forEach(item => {
+        item.onclick = () => {
+            mode = item.dataset.mode;
+            isDropdownOpen = false;
+            els.modeDropdown.classList.remove('show');
+            els.modeSelectBtn.classList.remove('active');
+            
+            els.dropdownItems.forEach(i => i.classList.remove('selected'));
+            item.classList.add('selected');
             
             els.randomSec.style.display = mode === 'random' ? 'block' : 'none';
             els.pinSec.style.display = mode === 'pin' ? 'block' : 'none';
@@ -265,6 +290,18 @@ function initApp() {
             if (els.error) els.error.style.display = 'none';
         };
     });
+
+    document.addEventListener('click', () => {
+        if (isDropdownOpen) {
+            isDropdownOpen = false;
+            els.modeDropdown.classList.remove('show');
+            els.modeSelectBtn.classList.remove('active');
+        }
+    });
+
+    if (els.modeDropdown) {
+        els.modeDropdown.onclick = (e) => e.stopPropagation();
+    }
 
     // ===== Кнопка "Выбрать все параметры" =====
     const allCheckboxIds = [
@@ -348,7 +385,6 @@ function initApp() {
                 }
                 counters[target] = currentValue;
                 
-                // ✅ Если счетчик стал 0 — снимаем галочку
                 if (currentValue === 0) {
                     if (target === 'digitsCount') {
                         const cb = $('includeDigits');
@@ -466,9 +502,9 @@ function initApp() {
         updateSlider(12);
     }
 
-    // ===== КАСТОМНЫЙ СЛАЙДЕР (PIN) - МАКСИМУМ 8 =====
+    // ===== КАСТОМНЫЙ СЛАЙДЕР (PIN) =====
     if (els.pinSlider) {
-        const MIN = 4, MAX = 8;  // ✅ Максимум 8 вместо 12
+        const MIN = 4, MAX = 8;
         let isDragging = false;
 
         const updatePinSlider = (value) => {
@@ -510,7 +546,7 @@ function initApp() {
         updatePinSlider(4);
     }
 
-    // ===== КАСТОМНЫЙ СЛАЙДЕР (СЛОВА) - 2 до 8 =====
+    // ===== КАСТОМНЫЙ СЛАЙДЕР (СЛОВА) =====
     if (els.wordsSlider) {
         const MIN = 2, MAX = 8;
         let isDragging = false;
@@ -554,17 +590,36 @@ function initApp() {
         updateWordsSlider(3);
     }
 
-    // ===== Копирование =====
+    // ===== КОПИРОВАНИЕ (вся строка кликабельна) =====
+    async function copyPassword() {
+        const text = els.password.textContent;
+        if (!text || text === 'Нажмите "генерировать"') return;
+        try {
+            await navigator.clipboard.writeText(text);
+            els.copy.textContent = ' Скопировано';
+            els.passwordBlock.classList.add('copied');
+            setTimeout(() => {
+                els.copy.textContent = 'Копировать';
+                els.passwordBlock.classList.remove('copied');
+            }, 1500);
+        } catch (e) { 
+            console.error(e); 
+            els.copy.textContent = '❌ Ошибка';
+            setTimeout(() => els.copy.textContent = 'Копировать', 1500);
+        }
+    }
+
     if (els.copy) {
-        els.copy.onclick = async () => {
-            const text = els.password.textContent;
-            if (!text || text === 'Нажмите "генерировать"') return;
-            try {
-                await navigator.clipboard.writeText(text);
-                els.copy.textContent = '✅';
-                setTimeout(() => els.copy.textContent = '📋', 1500);
-            } catch (e) { console.error(e); }
+        els.copy.onclick = (e) => {
+            e.stopPropagation();
+            copyPassword();
         };
+    }
+
+    // Клик по всему блоку пароля тоже копирует
+    if (els.passwordBlock) {
+        els.passwordBlock.onclick = copyPassword;
+        els.passwordBlock.style.cursor = 'pointer';
     }
 
     // ===== Сбор данных =====
