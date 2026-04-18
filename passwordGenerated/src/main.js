@@ -9,185 +9,217 @@ const $ = (id) => document.getElementById(id);
 
 // ✅ HTML-шаблон приложения
 const html = `
-<!-- МЕНЮ СПОСОБА ГЕНЕРАЦИИ -->
- <div class="generation-menu">
-     <button id="modeSelectBtn" class="mode-select-btn">
-         <span>Способ генерации</span>
-         <span class="arrow">▲</span>
-     </button>
-     <div id="modeDropdown" class="mode-dropdown">
-         <div class="dropdown-item selected" data-mode="random">Случайный</div>
-         <div class="dropdown-item" data-mode="pin">Пин-код</div>
-         <div class="dropdown-item" data-mode="words">Пароль из слов</div>
-     </div>
- </div>
-
- <h1 class="title_Text">Генератор паролей</h1>
-
- <!-- КЛИКАБЕЛЬНЫЙ БЛОК ПАРОЛЯ -->
- <div class="password-block" id="passwordBlock" title="Нажмите для копирования">
-     <div id="password" class="password-text">Нажмите "генерировать"</div>
-     <button class="copy-btn" id="copyBtn">Копировать</button>
- </div>
-
- <div class="strength-container">
-     <div class="strength-bar" id="strengthBar"></div>
-     <span class="strength-text" id="strengthText">-</span>
- </div>
- <div class="strength-percent" id="strengthPercent">Надежность: 0%</div>
-
- <!-- Режим: Обычная генерация -->
- <div id="randomSettings" class="settings-section">
-     <div class="custom-slider-wrapper">
-         <div class="slider-title">Длина пароля</div>
-         <div class="custom-slider" id="customSlider">
-             <div class="slider-track-bg"></div>
-             <div class="slider-track-fill" id="sliderFill"></div>
-             <div class="slider-thumb" id="sliderThumb"></div>
-             <div class="slider-value" id="sliderValue">12</div>
-         </div>
-         <div class="slider-labels">
-             <span>4</span>
-             <span>64</span>
-         </div>
-         <input type="hidden" id="length" value="12" min="4" max="64">
-     </div>
-
-     <button id="selectAllBtn" class="select-all-btn">Выбрать все параметры</button>
-
-     <div class="settings-with-counters">
-         <div class="setting-item">
-             <label class="checkbox-item">
-                 <input type="checkbox" id="includeLowercase">
-                 <span>Строчные (a-z)</span>
-             </label>
-         </div>
-
-         <div class="setting-item">
-             <label class="checkbox-item">
-                 <input type="checkbox" id="includeUppercase">
-                 <span>Прописные (A-Z)</span>
-             </label>
-         </div>
-
-         <div class="setting-item with-counter">
-             <label class="checkbox-item">
-                 <input type="checkbox" id="includeDigits">
-                 <span>Цифры (0-9)</span>
-             </label>
-             <div class="counter-control">
-                 <span class="counter-label">Количество:</span>
-                 <button class="counter-btn minus" data-target="digitsCount">-</button>
-                 <span class="counter-value" id="digitsCountValue">0</span>
-                 <button class="counter-btn plus" data-target="digitsCount">+</button>
-             </div>
-         </div>
-
-         <div class="setting-item with-counter">
-             <label class="checkbox-item">
-                 <input type="checkbox" id="includeSpecial">
-                 <span>Спецсимволы (!@#$%)</span>
-             </label>
-             <div class="counter-control">
-                 <span class="counter-label">Количество:</span>
-                 <button class="counter-btn minus" data-target="specialCount">-</button>
-                 <span class="counter-value" id="specialCountValue">0</span>
-                 <button class="counter-btn plus" data-target="specialCount">+</button>
-             </div>
-         </div>
-     </div>
+<div class="container">
+    <!-- КНОПКА ТЕМЫ (SVG внутри, 98x98, без фона) -->
+    <button id="themeToggle" class="theme-toggle" title="Сменить тему">
+        <!-- Луна (для светлой темы) -->
+        <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="98" height="98" viewBox="0 0 98 98" fill="none">
+            <path fill="#013374" d="M47.468 20.457q.76-.04 1.532-.04c15.786 0 28.583 12.797 28.583 28.583S64.786 77.583 49 77.583a28.45 28.45 0 0 1-14.802-4.126c15.074-.796 27.052-13.27 27.052-28.543 0-10.368-5.52-19.446-13.782-24.457M5.4 10.2c.101.304.152.456.203.523a.5.5 0 0 0 .794 0c.05-.067.102-.219.203-.523.082-.245.123-.368.176-.479a2 2 0 0 1 .945-.945c.111-.053.234-.094.479-.176.304-.101.456-.152.523-.203a.5.5 0 0 0 0-.794c-.067-.05-.219-.102-.523-.203-.245-.082-.368-.123-.479-.176a2 2 0 0 1-.945-.945A4 4 0 0 1 6.6 5.8c-.101-.304-.152-.456-.203-.522a.5.5 0 0 0-.794 0c-.05.066-.102.218-.203.522a4 4 0 0 1-.176.479 2 2 0 0 1-.945.945A4 4 0 0 1 3.8 7.4c-.304.101-.456.152-.522.203a.5.5 0 0 0 0 .794c.066.05.218.102.522.203.245.082.368.123.479.176a2 2 0 0 1 .945.945c.053.111.094.234.176.479"/>
+        </svg>
+        <!-- Солнце (для темной темы) -->
+        <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="98" height="98" viewBox="0 0 97 97" fill="none">
+            <circle cx="48.5" cy="48.5" r="15.167" stroke="#fc0" stroke-width="2"/>
+            <path stroke="#fc0" stroke-linecap="round" stroke-width="2" d="M48.5 20.208v-8.083M48.5 84.875v-8.083M68.505 28.495l5.716-5.716M22.779 74.221l5.716-5.716M76.792 48.5h8.083M12.125 48.5h8.083M68.505 68.505l5.716 5.716M22.779 22.779l5.716 5.716"/>
+        </svg>
+    </button>
     
-     <div class="additional-section">
-         <div class="setting-item no-counter">
-             <label class="checkbox-item">
-                 <input type="checkbox" id="excludeSimilar">
-                 <span>Исключить похожие (0Ol1I)</span>
-             </label>
-         </div>
-         <div class="setting-item no-counter">
-             <label class="checkbox-item">
-                 <input type="checkbox" id="noRepeats">
-                 <span>Без повторов</span>
-             </label>
-         </div>
-     </div>
- </div>
+    <!-- МЕНЮ СПОСОБА ГЕНЕРАЦИИ -->
+    <div class="generation-menu">
+        <button id="modeSelectBtn" class="mode-select-btn">
+            <span>Способ генерации</span>
+            <span class="arrow">▲</span>
+        </button>
+        <div id="modeDropdown" class="mode-dropdown">
+            <!-- ✅ ДОБАВЛЕН КЛАСС selected ПО УМОЛЧАНИЮ -->
+            <div class="dropdown-item selected" data-mode="random">Случайный</div>
+            <div class="dropdown-item" data-mode="pin">Пин-код</div>
+            <div class="dropdown-item" data-mode="words">Пароль из слов</div>
+        </div>
+    </div>
 
- <!-- Режим: PIN-код -->
- <div id="pinSettings" class="settings-section" style="display: none;">
-     <div class="custom-slider-wrapper">
-         <div class="slider-title">Длина пароля</div>
-         <div class="custom-slider" id="pinSlider">
-             <div class="slider-track-bg"></div>
-             <div class="slider-track-fill" id="pinSliderFill"></div>
-             <div class="slider-thumb" id="pinSliderThumb"></div>
-             <div class="slider-value" id="pinSliderValue">4</div>
-         </div>
-         <div class="slider-labels">
-             <span>4</span>
-             <span>8</span>
-         </div>
-         <input type="hidden" id="pinLength" value="4" min="4" max="8">
-     </div>
-     <div class="setting-item">
-         <label class="checkbox-item">
-             <input type="checkbox" id="pinNoRepeats">
-             <span>Без повторяющихся цифр</span>
-         </label>
-     </div>
- </div>
+    <h1 class="title_Text">Генератор паролей</h1>
+    
+    <!-- КЛИКАБЕЛЬНЫЙ БЛОК ПАРОЛЯ -->
+    <div class="password-block" id="passwordBlock" title="Нажмите для копирования">
+        <div id="password" class="password-text">Нажмите "генерировать"</div>
+        <button class="copy-btn" id="copyBtn">Копировать</button>
+    </div>
+    
+    <div class="strength-container">
+        <div class="strength-bar" id="strengthBar"></div>
+        <span class="strength-text" id="strengthText">-</span>
+    </div>
+    <div class="strength-percent" id="strengthPercent">Надежность: 0%</div>
 
- <!-- Режим: Из слов -->
- <div id="wordsSettings" class="settings-section" style="display: none;">
-     <div class="custom-slider-wrapper">
-         <div class="slider-title">Количество слов</div>
-         <div class="custom-slider" id="wordsSlider">
-             <div class="slider-track-bg"></div>
-             <div class="slider-track-fill" id="wordsSliderFill"></div>
-             <div class="slider-thumb" id="wordsSliderThumb"></div>
-             <div class="slider-value" id="wordsSliderValue">3</div>
-         </div>
-         <div class="slider-labels">
-             <span>2</span>
-             <span>8</span>
-         </div>
-         <input type="hidden" id="wordCount" value="3" min="2" max="8">
-     </div>
+    <!-- Режим: Обычная генерация -->
+    <div id="randomSettings" class="settings-section">
+        
+        <!-- КАСТОМНЫЙ СЛАЙДЕР -->
+        <div class="custom-slider-wrapper">
+            <!-- ✅ ЗАГОЛОВОК -->
+            <div class="slider-title">Длина пароля</div>
 
-     <div class="settings-with-counters">
-         <div class="setting-item">
-             <label class="checkbox-item">
-                 <span>Регистр:</span>
-             </label>
-             <select id="wordCase">
-                 <option value="0">Нижний</option>
-                 <option value="1" selected>Заглавный</option>
-                 <option value="2">С заглавной</option>
-             </select>
-         </div>
+            <div class="custom-slider" id="customSlider">
+                <div class="slider-track-bg"></div>
+                <div class="slider-track-fill" id="sliderFill"></div>
+                <div class="slider-thumb" id="sliderThumb"></div>
+                <div class="slider-value" id="sliderValue">12</div>
+            </div>
+            <div class="slider-labels">
+                <span>4</span>
+                <span>64</span>
+            </div>
+            <input type="hidden" id="length" value="12" min="4" max="64">
+        </div>
 
-         <div class="setting-item">
-             <label class="checkbox-item">
-                 <span>Разделитель:</span>
-             </label>
-             <select id="separator">
-                 <option value="-">дефис (-)</option>
-                 <option value="_">подчёркивание (_)</option>
-                 <option value=" ">нет</option>
-             </select>
-         </div>
-     </div>
- </div>
+        <!-- Кнопка "Выбрать все параметры" -->
+        <button id="selectAllBtn" class="select-all-btn">Выбрать все параметры</button>
 
- <button id="generateBtn" class="generate-btn">Сгенерировать пароль</button>
- <div id="loading" class="loading">⏳ Генерация...</div>
- <div id="error" class="error-message"></div>
+        <!-- Настройки с счетчиками -->
+        <div class="settings-with-counters">
+            <div class="setting-item">
+                <label class="checkbox-item">
+                    <input type="checkbox" id="includeLowercase">
+                    <span>Строчные (a-z)</span>
+                </label>
+            </div>
+
+            <div class="setting-item">
+                <label class="checkbox-item">
+                    <input type="checkbox" id="includeUppercase">
+                    <span>Прописные (A-Z)</span>
+                </label>
+            </div>
+
+            <div class="setting-item with-counter">
+                <label class="checkbox-item">
+                    <input type="checkbox" id="includeDigits">
+                    <span>Цифры (0-9)</span>
+                </label>
+                <div class="counter-control">
+                    <span class="counter-label">Количество:</span>
+                    <button class="counter-btn minus" data-target="digitsCount">-</button>
+                    <span class="counter-value" id="digitsCountValue">0</span>
+                    <button class="counter-btn plus" data-target="digitsCount">+</button>
+                </div>
+            </div>
+
+            <div class="setting-item with-counter">
+                <label class="checkbox-item">
+                    <input type="checkbox" id="includeSpecial">
+                    <span>Спецсимволы (!@#$%)</span>
+                </label>
+                <div class="counter-control">
+                    <span class="counter-label">Количество:</span>
+                    <button class="counter-btn minus" data-target="specialCount">-</button>
+                    <span class="counter-value" id="specialCountValue">0</span>
+                    <button class="counter-btn plus" data-target="specialCount">+</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Дополнительные опции -->
+        <div class="additional-section">
+            <div class="setting-item no-counter">
+                <label class="checkbox-item">
+                    <input type="checkbox" id="excludeSimilar">
+                    <span>Исключить похожие (0Ol1I)</span>
+                </label>
+            </div>
+            <div class="setting-item no-counter">
+                <label class="checkbox-item">
+                    <input type="checkbox" id="noRepeats">
+                    <span>Без повторов</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Режим: PIN-код -->
+    <div id="pinSettings" class="settings-section" style="display: none;">
+        <!-- ✅ ЗАГОЛОВОК ТАКОЙ ЖЕ, КАК В ОБЫЧНОМ РЕЖИМЕ -->
+        <div class="custom-slider-wrapper">
+            <div class="slider-title">Длина пароля</div>
+            
+            <div class="custom-slider" id="pinSlider">
+                <div class="slider-track-bg"></div>
+                <div class="slider-track-fill" id="pinSliderFill"></div>
+                <div class="slider-thumb" id="pinSliderThumb"></div>
+                <div class="slider-value" id="pinSliderValue">4</div>
+            </div>
+            <div class="slider-labels">
+                <span>4</span>
+                <span>8</span>
+            </div>
+            <input type="hidden" id="pinLength" value="4" min="4" max="8">
+        </div>
+        <div class="setting-item">
+            <label class="checkbox-item">
+                <input type="checkbox" id="pinNoRepeats">
+                <span>Без повторяющихся цифр</span>
+            </label>
+        </div>
+    </div>
+
+    <!-- Режим: Из слов -->
+    <div id="wordsSettings" class="settings-section" style="display: none;">
+        
+        <!-- СЛАЙДЕР ДЛЯ КОЛИЧЕСТВА СЛОВ -->
+        <div class="custom-slider-wrapper">
+            <!-- ✅ ЗАГОЛОВОК -->
+            <div class="slider-title">Количество слов</div>
+
+            <div class="custom-slider" id="wordsSlider">
+                <div class="slider-track-bg"></div>
+                <div class="slider-track-fill" id="wordsSliderFill"></div>
+                <div class="slider-thumb" id="wordsSliderThumb"></div>
+                <div class="slider-value" id="wordsSliderValue">3</div>
+            </div>
+            <div class="slider-labels">
+                <span>2</span>
+                <span>8</span>
+            </div>
+            <input type="hidden" id="wordCount" value="3" min="2" max="8">
+        </div>
+
+        <!-- ✅ ПАРАМЕТРЫ ОФОРМЛЕНЫ КАК setting-item (как в других режимах) -->
+        <div class="settings-with-counters">
+            
+            <div class="setting-item">
+                <label class="checkbox-item">
+                    <span>Регистр:</span>
+                </label>
+                <select id="wordCase">
+                    <option value="0">Нижний</option>
+                    <option value="1" selected>Заглавный</option>
+                    <option value="2">С заглавной</option>
+                </select>
+            </div>
+
+            <div class="setting-item">
+                <label class="checkbox-item">
+                    <span>Разделитель:</span>
+                </label>
+                <select id="separator">
+                    <option value="-">дефис (-)</option>
+                    <option value="_">подчёркивание (_)</option>
+                    <option value="">нет</option>
+                </select>
+            </div>
+
+        </div>
+    </div>
+
+    <button id="generateBtn" class="generate-btn">Сгенерировать пароль</button>
+    <div id="loading" class="loading">⏳ Генерация...</div>
+    <div id="error" class="error-message"></div>
+</div>
 `;
 
 // ✅ Отрисовка интерфейса
 document.getElementById('app').innerHTML = html;
 
-// ✅ Запуск после готовности DOM
+// ✅ Запуск только после готовности DOM
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initApp);
 } else {
@@ -217,14 +249,20 @@ function initApp() {
         wordCase: $('wordCase'),
         separator: $('separator'),
         selectAllBtn: $('selectAllBtn'),
+        
+        // Элементы меню
         modeSelectBtn: $('modeSelectBtn'),
         modeDropdown: $('modeDropdown'),
         dropdownItems: document.querySelectorAll('.dropdown-item'),
+        
+        // Элементы PIN слайдера
         pinLength: $('pinLength'),
         pinSlider: $('pinSlider'),
         pinSliderThumb: $('pinSliderThumb'),
         pinSliderFill: $('pinSliderFill'),
         pinSliderValue: $('pinSliderValue'),
+        
+        // Элементы WORDS слайдера
         wordsSlider: $('wordsSlider'),
         wordsSliderThumb: $('wordsSliderThumb'),
         wordsSliderFill: $('wordsSliderFill'),
@@ -305,6 +343,7 @@ function initApp() {
                 const cb = $(id);
                 if (cb) cb.checked = true;
             });
+            
             counters.digitsCount = 1;
             counters.specialCount = 1;
             updateCounterDisplay();
@@ -366,7 +405,9 @@ function initApp() {
                 if (isPlus) {
                     const otherCounter = target === 'digitsCount' ? counters.specialCount : counters.digitsCount;
                     const newTotal = currentValue + 1 + otherCounter;
-                    if (newTotal <= maxVal) currentValue++;
+                    if (newTotal <= maxVal) {
+                        currentValue++;
+                    }
                 } else {
                     if (currentValue > 0) currentValue--;
                 }
@@ -381,6 +422,7 @@ function initApp() {
                         if (cb) cb.checked = false;
                     }
                 }
+                
                 updateCounterDisplay();
             });
         });
@@ -390,24 +432,37 @@ function initApp() {
             if (checkbox) {
                 checkbox.addEventListener('change', () => {
                     const maxVal = getMaxCounterValue();
+                    
                     if (id === 'includeSpecial') {
-                        if (checkbox.checked && counters.specialCount === 0) {
-                            if (counters.digitsCount + 1 <= maxVal) counters.specialCount = 1;
-                            else if (counters.digitsCount > 0) {
-                                counters.digitsCount--;
-                                counters.specialCount = 1;
+                        if (checkbox.checked) {
+                            if (counters.specialCount === 0) {
+                                if (counters.digitsCount + 1 <= maxVal) {
+                                    counters.specialCount = 1;
+                                } else if (counters.digitsCount > 0) {
+                                    counters.digitsCount--;
+                                    counters.specialCount = 1;
+                                }
                             }
-                        } else if (!checkbox.checked) counters.specialCount = 0;
+                        } else {
+                            counters.specialCount = 0;
+                        }
                     }
+                    
                     if (id === 'includeDigits') {
-                        if (checkbox.checked && counters.digitsCount === 0) {
-                            if (counters.specialCount + 1 <= maxVal) counters.digitsCount = 1;
-                            else if (counters.specialCount > 0) {
-                                counters.specialCount--;
-                                counters.digitsCount = 1;
+                        if (checkbox.checked) {
+                            if (counters.digitsCount === 0) {
+                                if (counters.specialCount + 1 <= maxVal) {
+                                    counters.digitsCount = 1;
+                                } else if (counters.specialCount > 0) {
+                                    counters.specialCount--;
+                                    counters.digitsCount = 1;
+                                }
                             }
-                        } else if (!checkbox.checked) counters.digitsCount = 0;
+                        } else {
+                            counters.digitsCount = 0;
+                        }
                     }
+                    
                     if (id === 'includeLowercase' || id === 'includeUppercase') {
                         const total = counters.digitsCount + counters.specialCount;
                         if (total > maxVal) {
@@ -419,10 +474,12 @@ function initApp() {
                             }
                         }
                     }
+                    
                     updateCounterDisplay();
                 });
             }
         });
+        
         updateCounterDisplay();
     }
 
@@ -452,13 +509,15 @@ function initApp() {
 
         const handleStart = (e) => {
             isDragging = true;
-            updateSlider(getPosition(e.touches ? e.touches[0].clientX : e.clientX));
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            updateSlider(getPosition(clientX));
             els.sliderThumb.classList.add('dragging');
         };
         const handleMove = (e) => {
             if (!isDragging) return;
             e.preventDefault();
-            updateSlider(getPosition(e.touches ? e.touches[0].clientX : e.clientX));
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            updateSlider(getPosition(clientX));
         };
         const handleEnd = () => { isDragging = false; els.sliderThumb.classList.remove('dragging'); };
 
@@ -494,13 +553,15 @@ function initApp() {
 
         const handlePinStart = (e) => {
             isDragging = true;
-            updatePinSlider(getPinPosition(e.touches ? e.touches[0].clientX : e.clientX));
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            updatePinSlider(getPinPosition(clientX));
             els.pinSliderThumb.classList.add('dragging');
         };
         const handlePinMove = (e) => {
             if (!isDragging) return;
             e.preventDefault();
-            updatePinSlider(getPinPosition(e.touches ? e.touches[0].clientX : e.clientX));
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            updatePinSlider(getPinPosition(clientX));
         };
         const handlePinEnd = () => { isDragging = false; els.pinSliderThumb.classList.remove('dragging'); };
 
@@ -536,13 +597,15 @@ function initApp() {
 
         const handleWordsStart = (e) => {
             isDragging = true;
-            updateWordsSlider(getWordsPosition(e.touches ? e.touches[0].clientX : e.clientX));
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            updateWordsSlider(getWordsPosition(clientX));
             els.wordsSliderThumb.classList.add('dragging');
         };
         const handleWordsMove = (e) => {
             if (!isDragging) return;
             e.preventDefault();
-            updateWordsSlider(getWordsPosition(e.touches ? e.touches[0].clientX : e.clientX));
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            updateWordsSlider(getWordsPosition(clientX));
         };
         const handleWordsEnd = () => { isDragging = false; els.wordsSliderThumb.classList.remove('dragging'); };
 
@@ -555,7 +618,7 @@ function initApp() {
         updateWordsSlider(3);
     }
 
-    // ===== КОПИРОВАНИЕ =====
+    // ===== КОПИРОВАНИЕ (вся строка кликабельна) =====
     async function copyPassword() {
         const text = els.password.textContent;
         if (!text || text === 'Нажмите "генерировать"') return;
@@ -574,7 +637,14 @@ function initApp() {
         }
     }
 
-    if (els.copy) els.copy.onclick = (e) => { e.stopPropagation(); copyPassword(); };
+    if (els.copy) {
+        els.copy.onclick = (e) => {
+            e.stopPropagation();
+            copyPassword();
+        };
+    }
+
+    // Клик по всему блоку пароля тоже копирует
     if (els.passwordBlock) {
         els.passwordBlock.onclick = copyPassword;
         els.passwordBlock.style.cursor = 'pointer';
@@ -621,7 +691,7 @@ function initApp() {
         };
     }
 
-    // ===== Индикатор надежности =====
+    // ===== Индикатор надежности (с процентами) =====
     function updateStrengthIndicator(entropy) {
         const container = document.querySelector('.strength-container');
         if (!container || !els.strengthText || !els.strengthPercent) return;
@@ -716,28 +786,4 @@ function initApp() {
     }
 
     if (els.generate) els.generate.onclick = generate;
-
-    // 📱 СТРЕЛКА ПРОКРУТКИ (ТОЛЬКО ДЛЯ МОБИЛЬНЫХ)
-    function createScrollArrow() {
-        const oldArrow = document.getElementById('mobileScrollArrow');
-        if (oldArrow) oldArrow.remove();
-
-        // Создаём только на экранах <= 768px
-        if (window.innerWidth <= 768) {
-            const arrow = document.createElement('div');
-            arrow.id = 'mobileScrollArrow';
-            arrow.className = 'scroll-down-arrow';
-            arrow.innerHTML = '↓';
-            
-            // При клике просто прокручивает страницу вниз на 400px
-            arrow.onclick = () => {
-                window.scrollBy({ top: 400, behavior: 'smooth' });
-            };
-            
-            document.body.appendChild(arrow);
-        }
-    }
-
-    createScrollArrow();
-    window.addEventListener('resize', createScrollArrow);
 }
