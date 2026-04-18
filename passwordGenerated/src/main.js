@@ -16,7 +16,6 @@ const html = `
          <span class="arrow">▲</span>
      </button>
      <div id="modeDropdown" class="mode-dropdown">
-         <!-- ✅ ДОБАВЛЕН КЛАСС selected ПО УМОЛЧАНИЮ -->
          <div class="dropdown-item selected" data-mode="random">Случайный</div>
          <div class="dropdown-item" data-mode="pin">Пин-код</div>
          <div class="dropdown-item" data-mode="words">Пароль из слов</div>
@@ -39,12 +38,8 @@ const html = `
 
  <!-- Режим: Обычная генерация -->
  <div id="randomSettings" class="settings-section">
-    
-     <!-- КАСТОМНЫЙ СЛАЙДЕР -->
      <div class="custom-slider-wrapper">
-         <!-- ✅ ЗАГОЛОВОК -->
          <div class="slider-title">Длина пароля</div>
-
          <div class="custom-slider" id="customSlider">
              <div class="slider-track-bg"></div>
              <div class="slider-track-fill" id="sliderFill"></div>
@@ -58,10 +53,8 @@ const html = `
          <input type="hidden" id="length" value="12" min="4" max="64">
      </div>
 
-     <!-- Кнопка "Выбрать все параметры" -->
      <button id="selectAllBtn" class="select-all-btn">Выбрать все параметры</button>
 
-     <!-- Настройки с счетчиками -->
      <div class="settings-with-counters">
          <div class="setting-item">
              <label class="checkbox-item">
@@ -104,7 +97,6 @@ const html = `
          </div>
      </div>
     
-     <!-- Дополнительные опции -->
      <div class="additional-section">
          <div class="setting-item no-counter">
              <label class="checkbox-item">
@@ -123,10 +115,8 @@ const html = `
 
  <!-- Режим: PIN-код -->
  <div id="pinSettings" class="settings-section" style="display: none;">
-     <!-- ✅ ЗАГОЛОВОК ТАКОЙ ЖЕ, КАК В ОБЫЧНОМ РЕЖИМЕ -->
      <div class="custom-slider-wrapper">
          <div class="slider-title">Длина пароля</div>
-        
          <div class="custom-slider" id="pinSlider">
              <div class="slider-track-bg"></div>
              <div class="slider-track-fill" id="pinSliderFill"></div>
@@ -149,12 +139,8 @@ const html = `
 
  <!-- Режим: Из слов -->
  <div id="wordsSettings" class="settings-section" style="display: none;">
-    
-     <!-- СЛАЙДЕР ДЛЯ КОЛИЧЕСТВА СЛОВ -->
      <div class="custom-slider-wrapper">
-         <!-- ✅ ЗАГОЛОВОК -->
          <div class="slider-title">Количество слов</div>
-
          <div class="custom-slider" id="wordsSlider">
              <div class="slider-track-bg"></div>
              <div class="slider-track-fill" id="wordsSliderFill"></div>
@@ -168,9 +154,7 @@ const html = `
          <input type="hidden" id="wordCount" value="3" min="2" max="8">
      </div>
 
-     <!-- ✅ ПАРАМЕТРЫ ОФОРМЛЕНЫ КАК setting-item (как в других режимах) -->
      <div class="settings-with-counters">
-        
          <div class="setting-item">
              <label class="checkbox-item">
                  <span>Регистр:</span>
@@ -192,7 +176,6 @@ const html = `
                  <option value=" ">нет</option>
              </select>
          </div>
-
      </div>
  </div>
 
@@ -204,7 +187,7 @@ const html = `
 // ✅ Отрисовка интерфейса
 document.getElementById('app').innerHTML = html;
 
-// ✅ Запуск только после готовности DOM
+// ✅ Запуск после готовности DOM
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initApp);
 } else {
@@ -213,7 +196,7 @@ if (document.readyState === 'loading') {
 
 function initApp() {
     const els = {
-        theme: $('themeToggle'), // Обратите внимание: в HTML шаблона выше нет кнопки темы, убедитесь, что она есть в index.html или добавьте её сюда
+        theme: $('themeToggle'),
         copy: $('copyBtn'),
         passwordBlock: $('passwordBlock'),
         password: $('password'),
@@ -234,20 +217,14 @@ function initApp() {
         wordCase: $('wordCase'),
         separator: $('separator'),
         selectAllBtn: $('selectAllBtn'),
-        
-        // Элементы меню
         modeSelectBtn: $('modeSelectBtn'),
         modeDropdown: $('modeDropdown'),
         dropdownItems: document.querySelectorAll('.dropdown-item'),
-        
-        // Элементы PIN слайдера
         pinLength: $('pinLength'),
         pinSlider: $('pinSlider'),
         pinSliderThumb: $('pinSliderThumb'),
         pinSliderFill: $('pinSliderFill'),
         pinSliderValue: $('pinSliderValue'),
-        
-        // Элементы WORDS слайдера
         wordsSlider: $('wordsSlider'),
         wordsSliderThumb: $('wordsSliderThumb'),
         wordsSliderFill: $('wordsSliderFill'),
@@ -262,13 +239,11 @@ function initApp() {
     let mode = 'random';
 
     // ===== Тема =====
-    // Проверка наличия кнопки темы в DOM (если она не в шаблоне html, а в index.html)
-    const themeBtn = document.getElementById('themeToggle');
     if (localStorage.getItem('theme') === 'dark') {
         document.documentElement.setAttribute('data-theme', 'dark');
     }
-    if (themeBtn) {
-        themeBtn.onclick = () => {
+    if (els.theme) {
+        els.theme.onclick = () => {
             const html = document.documentElement;
             const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
             html.setAttribute('data-theme', next);
@@ -330,7 +305,6 @@ function initApp() {
                 const cb = $(id);
                 if (cb) cb.checked = true;
             });
-            
             counters.digitsCount = 1;
             counters.specialCount = 1;
             updateCounterDisplay();
@@ -392,9 +366,7 @@ function initApp() {
                 if (isPlus) {
                     const otherCounter = target === 'digitsCount' ? counters.specialCount : counters.digitsCount;
                     const newTotal = currentValue + 1 + otherCounter;
-                    if (newTotal <= maxVal) {
-                        currentValue++;
-                    }
+                    if (newTotal <= maxVal) currentValue++;
                 } else {
                     if (currentValue > 0) currentValue--;
                 }
@@ -409,7 +381,6 @@ function initApp() {
                         if (cb) cb.checked = false;
                     }
                 }
-                
                 updateCounterDisplay();
             });
         });
@@ -419,37 +390,24 @@ function initApp() {
             if (checkbox) {
                 checkbox.addEventListener('change', () => {
                     const maxVal = getMaxCounterValue();
-                    
                     if (id === 'includeSpecial') {
-                        if (checkbox.checked) {
-                            if (counters.specialCount === 0) {
-                                if (counters.digitsCount + 1 <= maxVal) {
-                                    counters.specialCount = 1;
-                                } else if (counters.digitsCount > 0) {
-                                    counters.digitsCount--;
-                                    counters.specialCount = 1;
-                                }
+                        if (checkbox.checked && counters.specialCount === 0) {
+                            if (counters.digitsCount + 1 <= maxVal) counters.specialCount = 1;
+                            else if (counters.digitsCount > 0) {
+                                counters.digitsCount--;
+                                counters.specialCount = 1;
                             }
-                        } else {
-                            counters.specialCount = 0;
-                        }
+                        } else if (!checkbox.checked) counters.specialCount = 0;
                     }
-                    
                     if (id === 'includeDigits') {
-                        if (checkbox.checked) {
-                            if (counters.digitsCount === 0) {
-                                if (counters.specialCount + 1 <= maxVal) {
-                                    counters.digitsCount = 1;
-                                } else if (counters.specialCount > 0) {
-                                    counters.specialCount--;
-                                    counters.digitsCount = 1;
-                                }
+                        if (checkbox.checked && counters.digitsCount === 0) {
+                            if (counters.specialCount + 1 <= maxVal) counters.digitsCount = 1;
+                            else if (counters.specialCount > 0) {
+                                counters.specialCount--;
+                                counters.digitsCount = 1;
                             }
-                        } else {
-                            counters.digitsCount = 0;
-                        }
+                        } else if (!checkbox.checked) counters.digitsCount = 0;
                     }
-                    
                     if (id === 'includeLowercase' || id === 'includeUppercase') {
                         const total = counters.digitsCount + counters.specialCount;
                         if (total > maxVal) {
@@ -461,12 +419,10 @@ function initApp() {
                             }
                         }
                     }
-                    
                     updateCounterDisplay();
                 });
             }
         });
-        
         updateCounterDisplay();
     }
 
@@ -496,15 +452,13 @@ function initApp() {
 
         const handleStart = (e) => {
             isDragging = true;
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            updateSlider(getPosition(clientX));
+            updateSlider(getPosition(e.touches ? e.touches[0].clientX : e.clientX));
             els.sliderThumb.classList.add('dragging');
         };
         const handleMove = (e) => {
             if (!isDragging) return;
             e.preventDefault();
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            updateSlider(getPosition(clientX));
+            updateSlider(getPosition(e.touches ? e.touches[0].clientX : e.clientX));
         };
         const handleEnd = () => { isDragging = false; els.sliderThumb.classList.remove('dragging'); };
 
@@ -540,15 +494,13 @@ function initApp() {
 
         const handlePinStart = (e) => {
             isDragging = true;
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            updatePinSlider(getPinPosition(clientX));
+            updatePinSlider(getPinPosition(e.touches ? e.touches[0].clientX : e.clientX));
             els.pinSliderThumb.classList.add('dragging');
         };
         const handlePinMove = (e) => {
             if (!isDragging) return;
             e.preventDefault();
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            updatePinSlider(getPinPosition(clientX));
+            updatePinSlider(getPinPosition(e.touches ? e.touches[0].clientX : e.clientX));
         };
         const handlePinEnd = () => { isDragging = false; els.pinSliderThumb.classList.remove('dragging'); };
 
@@ -584,15 +536,13 @@ function initApp() {
 
         const handleWordsStart = (e) => {
             isDragging = true;
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            updateWordsSlider(getWordsPosition(clientX));
+            updateWordsSlider(getWordsPosition(e.touches ? e.touches[0].clientX : e.clientX));
             els.wordsSliderThumb.classList.add('dragging');
         };
         const handleWordsMove = (e) => {
             if (!isDragging) return;
             e.preventDefault();
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            updateWordsSlider(getWordsPosition(clientX));
+            updateWordsSlider(getWordsPosition(e.touches ? e.touches[0].clientX : e.clientX));
         };
         const handleWordsEnd = () => { isDragging = false; els.wordsSliderThumb.classList.remove('dragging'); };
 
@@ -605,7 +555,7 @@ function initApp() {
         updateWordsSlider(3);
     }
 
-    // ===== КОПИРОВАНИЕ (вся строка кликабельна) =====
+    // ===== КОПИРОВАНИЕ =====
     async function copyPassword() {
         const text = els.password.textContent;
         if (!text || text === 'Нажмите "генерировать"') return;
@@ -624,14 +574,7 @@ function initApp() {
         }
     }
 
-    if (els.copy) {
-        els.copy.onclick = (e) => {
-            e.stopPropagation();
-            copyPassword();
-        };
-    }
-
-    // Клик по всему блоку пароля тоже копирует
+    if (els.copy) els.copy.onclick = (e) => { e.stopPropagation(); copyPassword(); };
     if (els.passwordBlock) {
         els.passwordBlock.onclick = copyPassword;
         els.passwordBlock.style.cursor = 'pointer';
@@ -678,7 +621,7 @@ function initApp() {
         };
     }
 
-    // ===== Индикатор надежности (с процентами) =====
+    // ===== Индикатор надежности =====
     function updateStrengthIndicator(entropy) {
         const container = document.querySelector('.strength-container');
         if (!container || !els.strengthText || !els.strengthPercent) return;
@@ -774,32 +717,27 @@ function initApp() {
 
     if (els.generate) els.generate.onclick = generate;
 
-    // ===== 📱 МОБИЛЬНАЯ СТРЕЛКА ПРОКРУТКИ =====
+    // 📱 СТРЕЛКА ПРОКРУТКИ (ТОЛЬКО ДЛЯ МОБИЛЬНЫХ)
     function createScrollArrow() {
-        // Удаляем старую стрелку, если есть
         const oldArrow = document.getElementById('mobileScrollArrow');
         if (oldArrow) oldArrow.remove();
 
-        // Создаем только если ширина экрана <= 768px (мобильные/планшеты)
+        // Создаём только на экранах <= 768px
         if (window.innerWidth <= 768) {
             const arrow = document.createElement('div');
             arrow.id = 'mobileScrollArrow';
             arrow.className = 'scroll-down-arrow';
-            arrow.innerHTML = '↓'; // Символ стрелки
+            arrow.innerHTML = '↓';
             
-            // При клике скроллим к кнопке генерации
+            // При клике просто прокручивает страницу вниз на 400px
             arrow.onclick = () => {
-                const genBtn = document.getElementById('generateBtn');
-                if (genBtn) {
-                    genBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
+                window.scrollBy({ top: 400, behavior: 'smooth' });
             };
             
             document.body.appendChild(arrow);
         }
     }
 
-    // Вызываем при загрузке и при изменении размера окна
     createScrollArrow();
     window.addEventListener('resize', createScrollArrow);
 }
