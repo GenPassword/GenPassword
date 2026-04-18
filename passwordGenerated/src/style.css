@@ -12,7 +12,6 @@
   --error: #e74c3c;
   --error-bg: #fdf2f2;
 }
-
 [data-theme="dark"] {
   --bg-body: #000642;
   --bg-container: transparent;
@@ -26,15 +25,13 @@
   --error: #ff6b6b;
   --error-bg: #2d1a1a;
 }
-
 /* ===== Базовые стили ===== */
-* {
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
-
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   background: var(--bg-body);
@@ -45,20 +42,17 @@ body {
   align-items: flex-start;
   padding: 42px 20px;
 }
-
 #app {
   width: 100%;
   max-width: 1100px;
-  margin-left: 240px; /* Отступ под фиксированное меню на десктопе */
+  margin-left: 240px;
   position: relative;
 }
-
 .container {
   background: transparent;
   padding: 0;
   max-width: 100%;
 }
-
 h1 {
   font-size: 2em;
   font-weight: 700;
@@ -66,7 +60,6 @@ h1 {
   text-align: center;
   width: 100%;
 }
-
 .title_Text {
   color: #12215E;
   margin-bottom: 31px;
@@ -79,7 +72,6 @@ h1 {
   text-align: center;
   display: block;
 }
-
 /* ===== Кнопка смены темы ===== */
 .theme-toggle {
   position: fixed;
@@ -99,22 +91,17 @@ h1 {
   transition: transform 0.3s;
   padding: 0;
 }
-
 .theme-toggle svg {
   width: 98px;
   height: 98px;
   position: absolute;
   transition: all 0.3s ease;
 }
-
 .icon-moon { opacity: 1; transform: rotate(0deg) scale(1); }
 .icon-sun { opacity: 0; transform: rotate(90deg) scale(0); }
-
 [data-theme="dark"] .icon-moon { opacity: 0; transform: rotate(-90deg) scale(0); }
 [data-theme="dark"] .icon-sun { opacity: 1; transform: rotate(0deg) scale(1); }
-
 .theme-toggle:hover { transform: scale(1.1); }
-
 /* ===== ВЫПАДАЮЩЕЕ МЕНЮ ===== */
 .generation-menu {
   position: fixed;
@@ -125,7 +112,6 @@ h1 {
   margin: 0;
   padding: 0;
 }
-
 .mode-select-btn {
   width: 219px;
   height: 68px;
@@ -147,7 +133,6 @@ h1 {
 .mode-select-btn:hover, .mode-select-btn.active { background: #CEFFF7; }
 .mode-select-btn .arrow { font-size: 12px; margin-left: 10px; transition: transform 0.2s; color: #12215E; }
 .mode-select-btn.active .arrow { transform: rotate(180deg); }
-
 .mode-dropdown {
   position: absolute;
   top: 100%;
@@ -167,24 +152,23 @@ h1 {
   padding: 0;
   box-sizing: border-box;
   margin-top: -3px;
-  pointer-events: none; 
+  pointer-events: none;
 }
-
-/* ✅ ОТКРЫТИЕ МЕНЮ ПРИ НАВЕДЕНИИ (Desktop) */
-.generation-menu:hover .mode-dropdown {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-  pointer-events: auto;
+/* ✅ ОТКРЫТИЕ МЕНЮ ПРИ НАВЕДЕНИИ (ТОЛЬКО Desktop > 768px) */
+@media (min-width: 769px) {
+    .generation-menu:hover .mode-dropdown {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
 }
-
 .mode-dropdown.show {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
   pointer-events: auto;
 }
-
 .dropdown-item {
   width: 219px; height: 49px; padding: 0; cursor: pointer; font-size: 14px;
   color: #12215E; font-family: 'Inter', sans-serif; border-top: 1px solid #000000;
@@ -195,32 +179,29 @@ h1 {
 .dropdown-item:first-child { border-top: 1px solid #000000; }
 .dropdown-item:hover { background: #b2ebf2; }
 .dropdown-item.selected { background: #013CFF; color: #FFFFFF; }
-
 /* ===== БЛОК ПАРОЛЯ ===== */
 .password-block {
-  background: #CEFFF7; 
-  border: 5px solid #00FFEA; 
-  border-radius: 16px; 
+  background: #CEFFF7;
+  border: 5px solid #00FFEA;
+  border-radius: 16px;
   padding: 20px 25px;
-  margin-bottom: 38px; 
-  position: relative; 
+  margin-bottom: 38px;
+  position: relative;
   box-shadow: 0 4px 15px rgba(0, 255, 234, 0.2);
-  min-height: 64px; 
-  display: flex; 
-  align-items: center; 
+  min-height: 64px;
+  display: flex;
+  align-items: center;
   justify-content: space-between;
-  gap: 15px; 
-  cursor: pointer; 
+  gap: 15px;
+  cursor: pointer;
   transition: all 0.2s;
 }
 .password-block:hover { box-shadow: 0 6px 20px rgba(0, 255, 234, 0.3); transform: translateY(-2px); }
 .password-block.copied { border-color: #2ecc71; background: #d4edda; }
-
 .password-text {
   font-family: 'Inter', monospace; font-size: 24px; font-weight: 400; color: #12215E;
   word-break: break-all; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-
 .copy-btn {
   background: #00D9FF; border: none; cursor: pointer; font-size: 14px; font-weight: 600;
   font-family: 'Inter', sans-serif; color: #FFFFFF; padding: 12px 24px; border-radius: 8px;
@@ -228,7 +209,6 @@ h1 {
 }
 .copy-btn:hover { background: #00b8d9; transform: scale(1.05); }
 .copy-btn:active { transform: scale(0.95); }
-
 /* ===== Индикатор надежности ===== */
 .strength-container { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; padding: 0; background: transparent; }
 .strength-bar { flex: 1; height: 17px; background: #e0f2fe; border-radius: 10px; overflow: hidden; position: relative; }
@@ -238,12 +218,10 @@ h1 {
 }
 .strength-text { font-family: 'Inter', sans-serif; font-size: 18px; font-weight: 400; color: #12215E; min-width: 100px; text-align: left; }
 .strength-percent { text-align: center; font-size: 14px; color: #013374; margin-top: -15px; margin-bottom: 20px; font-weight: 500; }
-
 .strength-container.weak .strength-bar::after { background: #e74c3c; width: 25%; }
 .strength-container.medium .strength-bar::after { background: #f39c12; width: 50%; }
 .strength-container.strong .strength-bar::after { background: #2ecc71; width: 75%; }
 .strength-container.very-strong .strength-bar::after { background: #27ae60; width: 100%; }
-
 /* ===== КАСТОМНЫЙ СЛАЙДЕР ===== */
 .custom-slider-wrapper { margin-bottom: 30px; position: relative; }
 .slider-title { font-family: 'Inter', sans-serif; font-weight: 400; font-style: normal; font-size: 20px; line-height: 100%; letter-spacing: 0%; color: #12215E; margin-bottom: 15px; display: block; }
@@ -260,7 +238,6 @@ h1 {
 .slider-labels { margin-top: -28px; font-family: 'Inter', sans-serif; font-weight: 400; font-size: 20px; display: flex; justify-content: space-between; color: #013CFF; }
 .slider-labels span:first-child { margin-left: -5px; }
 .slider-labels span:last-child { margin-right: -20px; }
-
 /* ===== Кнопка "Выбрать все параметры" ===== */
 .select-all-btn {
   display: block; width: 100%; background: #e0f7ff; border: 2px solid #00ffea; color: #12215E;
@@ -269,23 +246,21 @@ h1 {
 }
 .select-all-btn:hover { background: #b3efff; transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0, 255, 234, 0.3); }
 .select-all-btn:active { transform: translateY(1px); }
-
 /* ===== Настройки со счетчиками ===== */
 .settings-with-counters { display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; }
-.setting-item { 
-  background: #e0f7ff; 
-  border: 3px solid #00ffea; 
-  border-radius: 10px; 
-  padding: 15px 20px; 
-  display: flex; 
-  align-items: center; 
-  justify-content: space-between; 
-  gap: 15px; 
+.setting-item {
+  background: #e0f7ff;
+  border: 3px solid #00ffea;
+  border-radius: 10px;
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
 }
 .setting-item.with-counter { flex-wrap: wrap; }
 .setting-item.no-counter { flex-wrap: nowrap; }
 .checkbox-item { display: flex; align-items: center; gap: 12px; cursor: pointer; color: #12215E; font-size: 15px; flex: 1; }
-
 /* ===== Чекбоксы ===== */
 .checkbox-item input {
   -webkit-appearance: none; appearance: none; width: 24px; height: 24px; background-color: #ffffff;
@@ -298,7 +273,6 @@ h1 {
 .checkbox-item input[type="checkbox"]:checked::before { transform: translate(-50%, -50%) scale(1); }
 .checkbox-item input[type="checkbox"]:focus,
 .checkbox-item input[type="checkbox"]:active { outline: none; box-shadow: none; }
-
 /* ===== Контейнер счетчика ===== */
 .counter-control { display: flex; align-items: center; gap: 10px; background: transparent; padding: 0; border-radius: 0; border: none; }
 .counter-label { color: #013CFF; font-size: 14px; font-weight: 500; font-family: 'Inter', sans-serif; }
@@ -311,7 +285,6 @@ h1 {
 .counter-btn:active:not(:disabled) { transform: scale(0.95); }
 .counter-btn:disabled { background: #ccefff; color: #00D9FF; cursor: not-allowed; opacity: 0.5; }
 .counter-value { font-weight: 700; font-size: 16px; color: #00D9FF; min-width: 24px; text-align: center; font-family: 'Inter', monospace; }
-
 .additional-section { display: flex; flex-direction: column; gap: 12px; margin-top: 0; background: transparent; padding: 0; border-radius: 0; }
 .pin-info { background: rgba(52, 152, 219, 0.1); border-left: 4px solid var(--accent); padding: 15px; border-radius: 8px; margin-bottom: 20px; color: #12215E; }
 .pin-info p { margin: 0; font-size: 15px; }
@@ -322,7 +295,6 @@ h1 {
   font-size: 14px; width: 140px; font-family: 'Inter', sans-serif; font-weight: 600; cursor: pointer;
 }
 .form-row select option, .setting-item select option { background: #01AAFF; color: #12215E; }
-
 .generate-btn {
   width: 100%; padding: 16px; background: #013CFF; color: #FFFFFF; border: none; border-radius: 12px;
   cursor: pointer; margin-top: 10px; font-family: 'Inter', sans-serif; font-weight: 400; font-style: normal;
@@ -330,20 +302,54 @@ h1 {
 }
 .generate-btn:hover { background: #0033cc; }
 .generate-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-
 .error-message { color: var(--error); background: var(--error-bg); border-radius: 12px; padding: 15px; margin-top: 20px; text-align: center; display: none; }
 .loading { text-align: center; color: var(--text-secondary); margin: 20px 0; display: none; }
 
+/* ===== 🔽 КНОПКА ПРОКРУТКИ К ГЕНЕРАЦИИ ===== */
+.scroll-to-generate {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #013CFF;
+  color: #FFFFFF;
+  border: none;
+  box-shadow: 0 4px 12px rgba(1, 60, 255, 0.4);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+.scroll-to-generate svg {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.scroll-to-generate:hover { background: #0033cc; transform: scale(1.05); }
+.scroll-to-generate:active { transform: scale(0.95); }
+[data-theme="dark"] .scroll-to-generate {
+  background: #1C1FC2;
+  box-shadow: 0 4px 12px rgba(28, 31, 194, 0.4);
+}
+[data-theme="dark"] .scroll-to-generate:hover { background: #2528d9; }
+
 /* ========================================================
-   ✅ АДАПТАЦИЯ ТЕМНОЙ ТЕМЫ (ФОН #000642, ТЕКСТ #BEE3FE)
-   ======================================================== */
+✅ АДАПТАЦИЯ ТЕМНОЙ ТЕМЫ (ФОН #000642, ТЕКСТ #BEE3FE)
+======================================================== */
 [data-theme="dark"] {
   --bg-body: #000642;
   --text-primary: #BEE3FE;
   --text-secondary: #BEE3FE;
 }
-
-/* 1️⃣ ВЕСЬ ТЕКСТ -> #BEE3FE */
 [data-theme="dark"] h1,
 [data-theme="dark"] .title_Text,
 [data-theme="dark"] .password-text,
@@ -361,14 +367,10 @@ h1 {
 [data-theme="dark"] .pin-info {
   color: #BEE3FE;
 }
-
-/* ✅ Текст "Способ генерации" и стрелка -> #BEE3FE */
 [data-theme="dark"] .mode-select-btn,
 [data-theme="dark"] .mode-select-btn .arrow {
   color: #BEE3FE;
 }
-
-/* 2️⃣ КНОПКИ И ПУНКТЫ МЕНЮ (кроме выбранного) -> ФОН #1C1FC2 */
 [data-theme="dark"] .copy-btn,
 [data-theme="dark"] .generate-btn,
 [data-theme="dark"] .mode-select-btn,
@@ -381,123 +383,61 @@ h1 {
 [data-theme="dark"] .dropdown-item:not(.selected):hover {
   background: #2528d9;
 }
-
-/* 3️⃣ ВЫБРАННЫЙ ПУНКТ МЕНЮ -> ФОН #01AAFF */
 [data-theme="dark"] .dropdown-item.selected {
   background: #01AAFF;
   color: #BEE3FE;
 }
-
-/* 4️⃣ ЧЕКБОКСЫ */
-[data-theme="dark"] .checkbox-item input[type="checkbox"] {
-  background-color: #BEE3FE; /* Выключенный */
-}
-[data-theme="dark"] .checkbox-item input[type="checkbox"]:checked {
-  background-color: #1C1FC2; /* Включенный фон */
-}
-[data-theme="dark"] .checkbox-item input[type="checkbox"]:checked::before {
-  background-color: #BEE3FE; /* Галочка */
-}
-
-/* 5️⃣ РАМКИ (3px параметры, 5px пароль, БЕЗ свечения) */
-[data-theme="dark"] .password-block {
-  background: #000d55;
-  border: 5px solid #1C1FC2;
-  box-shadow: none;
-}
-[data-theme="dark"] .password-block:hover {
-  box-shadow: none;
-  transform: translateY(-2px);
-}
-
+[data-theme="dark"] .checkbox-item input[type="checkbox"] { background-color: #BEE3FE; }
+[data-theme="dark"] .checkbox-item input[type="checkbox"]:checked { background-color: #1C1FC2; }
+[data-theme="dark"] .checkbox-item input[type="checkbox"]:checked::before { background-color: #BEE3FE; }
+[data-theme="dark"] .password-block { background: #000d55; border: 5px solid #1C1FC2; box-shadow: none; }
+[data-theme="dark"] .password-block:hover { box-shadow: none; transform: translateY(-2px); }
 [data-theme="dark"] .setting-item,
 [data-theme="dark"] .form-row select,
-[data-theme="dark"] .setting-item select {
-  background: #000d55;
-  border: 3px solid #1C1FC2;
-  color: #BEE3FE;
-}
-
-/* 6️⃣ МЕНЮ ГЕНЕРАЦИИ: РАМКА ЦВЕТА ТЕКСТА (#BEE3FE) */
-[data-theme="dark"] .mode-dropdown {
-  background: #000d55;
-  border: 3px solid #BEE3FE;
-  border-top: 2px solid #BEE3FE;
-}
-[data-theme="dark"] .dropdown-item {
-  border-top-color: #BEE3FE;
-}
-[data-theme="dark"] .dropdown-item:first-child {
-  border-top-color: #BEE3FE;
-}
-
-/* 7️⃣ СЛАЙДЕРЫ И ИНДИКАТОРЫ */
+[data-theme="dark"] .setting-item select { background: #000d55; border: 3px solid #1C1FC2; color: #BEE3FE; }
+[data-theme="dark"] .mode-dropdown { background: #000d55; border: 3px solid #BEE3FE; border-top: 2px solid #BEE3FE; }
+[data-theme="dark"] .dropdown-item { border-top-color: #BEE3FE; }
+[data-theme="dark"] .dropdown-item:first-child { border-top-color: #BEE3FE; }
 [data-theme="dark"] .slider-track-bg { background: #1C1FC2; }
 [data-theme="dark"] .slider-track-fill { background: #BEE3FE; }
 [data-theme="dark"] .slider-thumb { background: #1C1FC2; border-color: #BEE3FE; }
 [data-theme="dark"] .strength-bar { background: #1C1FC2; }
-
-/* 8️⃣ СЕЛЕКТЫ (ОПЦИИ) И СЧЁТЧИКИ */
 [data-theme="dark"] .form-row select option,
-[data-theme="dark"] .setting-item select option {
-  background: #000642;
-  color: #BEE3FE;
-}
+[data-theme="dark"] .setting-item select option { background: #000642; color: #BEE3FE; }
 [data-theme="dark"] .counter-btn { background: #1C1FC2; color: #BEE3FE; }
 [data-theme="dark"] .counter-btn:hover:not(:disabled) { background: #2528d9; }
 [data-theme="dark"] .counter-btn:disabled { background: #0f1166; color: #5a60c4; }
-
-/* 9️⃣ ДОПОЛНИТЕЛЬНО */
 [data-theme="dark"] .select-all-btn { background: rgba(28, 31, 194, 0.15); border-color: #1C1FC2; }
 [data-theme="dark"] .select-all-btn:hover { background: rgba(28, 31, 194, 0.3); }
 [data-theme="dark"] .pin-info { background: rgba(190, 227, 254, 0.08); border-color: #1C1FC2; }
 
 /* ========================================================
-   ✅ АДАПТИВНОСТЬ (MOBILE & TABLET)
-   ======================================================== */
+✅ АДАПТИВНОСТЬ (MOBILE & TABLET)
+======================================================== */
 @media (max-width: 768px) {
-    /* 📱 Шапка */
-    .generation-menu { top: 10px; left: 10px; width: 50%; }
-    .mode-select-btn { width: 100%; height: 50px; font-size: 14px; }
-    .mode-dropdown { width: 100%; }
-    .dropdown-item { width: 100%; height: 44px; }
-    .theme-toggle { top: 5px; right: 10px; width: 60px; height: 60px; }
-    .theme-toggle svg { width: 60px; height: 60px; }
-
-    /* 📱 Контейнер */
-    #app {
-        margin-left: 0;
-        padding-top: 75px;
-        display: flex;
-        flex-direction: column;
-    }
-
-    /* ✅ СТРЕЛКА УДАЛЕНА */
-
-    /* 📱 ПОРЯДОК: Кнопка СРАЗУ ПОСЛЕ ПАРОЛЯ (перед настройками) */
-    .title_Text { order: 1; font-size: 24px; margin-bottom: 15px; }
-    .password-block { order: 2; margin-bottom: 10px; flex-direction: column; align-items: stretch; }
-    
-    /* Кнопка идет третьей, сразу после пароля */
-    .generate-btn { order: 3; margin: 10px 0 20px; font-size: 24px; padding: 14px; }
-    
-    /* Индикаторы надежности */
-    .strength-container { order: 4; margin-bottom: 10px; }
-    .strength-percent { order: 5; margin-top: 0; margin-bottom: 20px; }
-    
-    /* Настройки (со слайдером) идут в конце */
-    .settings-section { order: 6; }
-    
-    #loading, #error { order: 7; }
-
-    /* 📱 Адаптация настроек */
-    .setting-item { flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px 15px; }
-    .counter-control { width: 100%; justify-content: flex-start; margin-top: 5px; margin-left: 36px; }
-    .form-row select, .setting-item select { width: 100%; }
-    .password-text { font-size: 20px; white-space: normal; margin-bottom: 10px; }
-    .copy-btn { width: 100%; padding: 10px; }
+  .generation-menu { top: 10px; left: 10px; width: 50%; }
+  .mode-select-btn { width: 100%; height: 50px; font-size: 14px; }
+  .mode-dropdown { width: 100%; }
+  .dropdown-item { width: 100%; height: 44px; }
+  .theme-toggle { top: 5px; right: 10px; width: 60px; height: 60px; }
+  .theme-toggle svg { width: 60px; height: 60px; }
+  #app { margin-left: 0; padding-top: 75px; display: flex; flex-direction: column; }
+  .title_Text { order: 1; font-size: 24px; margin-bottom: 15px; }
+  .password-block { order: 2; margin-bottom: 10px; flex-direction: column; align-items: stretch; }
+  .generate-btn { order: 3; margin: 10px 0 20px; font-size: 24px; padding: 14px; }
+  .strength-container { order: 4; margin-bottom: 10px; }
+  .strength-percent { order: 5; margin-top: 0; margin-bottom: 20px; }
+  .settings-section { order: 6; }
+  #loading, #error { order: 7; }
+  .setting-item { flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px 15px; }
+  .counter-control { width: 100%; justify-content: flex-start; margin-top: 5px; margin-left: 36px; }
+  .form-row select, .setting-item select { width: 100%; }
+  .password-text { font-size: 20px; white-space: normal; margin-bottom: 10px; }
+  .copy-btn { width: 100%; padding: 10px; }
+  
+  /* 🔽 Показываем кнопку прокрутки только на мобильных */
+  .scroll-to-generate { display: flex; }
 }
-
 @media (max-width: 480px) {
   body { padding: 10px; }
   .title_Text { font-size: 20px; }

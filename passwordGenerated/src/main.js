@@ -213,6 +213,11 @@ const html = `
     <button id="generateBtn" class="generate-btn">Сгенерировать пароль</button>
     <div id="loading" class="loading">⏳ Генерация...</div>
     <div id="error" class="error-message"></div>
+
+    <!-- 🔽 Кнопка прокрутки к генерации (мобильная версия) -->
+    <button id="scrollToGenBtn" class="scroll-to-generate" aria-label="Прокрутить к кнопке генерации">
+        <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
 </div>
 `;
 
@@ -786,4 +791,15 @@ function initApp() {
     }
 
     if (els.generate) els.generate.onclick = generate;
+
+    // ===== 🔽 Кнопка прокрутки к генерации =====
+    const scrollToGenBtn = $('scrollToGenBtn');
+    if (scrollToGenBtn) {
+        scrollToGenBtn.onclick = () => {
+            const genBtn = $('generateBtn');
+            if (genBtn) {
+                genBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        };
+    }
 }
