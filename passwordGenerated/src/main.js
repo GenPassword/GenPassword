@@ -10,7 +10,7 @@ const $ = (id) => document.getElementById(id);
 // ✅ HTML-шаблон приложения
 const html = `
 <div class="container">
-    <!-- КНОПКА ТЕМЫ (SVG внутри) -->
+    <!-- КНОПКА ТЕМЫ (SVG внутри, 98x98, без фона) -->
     <button id="themeToggle" class="theme-toggle" title="Сменить тему">
         <!-- Луна (для светлой темы) -->
         <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="98" height="98" viewBox="0 0 98 98" fill="none">
@@ -56,7 +56,7 @@ const html = `
         
         <!-- КАСТОМНЫЙ СЛАЙДЕР -->
         <div class="custom-slider-wrapper">
-            <!-- ✅ ДОБАВЛЕН ЗАГОЛОВОК -->
+            <!-- ✅ ЗАГОЛОВОК -->
             <div class="slider-title">Длина пароля</div>
 
             <div class="custom-slider" id="customSlider">
@@ -137,10 +137,10 @@ const html = `
 
     <!-- Режим: PIN-код -->
     <div id="pinSettings" class="settings-section" style="display: none;">
-        <div class="pin-info">
-            <p>Генерация безопасного PIN-кода только из цифр.</p>
-        </div>
+        <!-- ✅ ЗАГОЛОВОК ТАКОЙ ЖЕ, КАК В ОБЫЧНОМ РЕЖИМЕ -->
         <div class="custom-slider-wrapper">
+            <div class="slider-title">Длина пароля</div>
+            
             <div class="custom-slider" id="pinSlider">
                 <div class="slider-track-bg"></div>
                 <div class="slider-track-fill" id="pinSliderFill"></div>

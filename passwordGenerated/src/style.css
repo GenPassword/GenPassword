@@ -5,7 +5,7 @@
     --bg-input: #ffffff;
     /* Основной цвет текста теперь #12215E */
     --text-primary: #12215E; 
-    --text-secondary: #12215E; /* Тоже делаем тем же цветом, так как просили "во всех словах" */
+    --text-secondary: #12215E; /* Тоже делаем тем же цветом */
     --shadow: none;
     --accent: #3498db;
     --accent-hover: #2980b9;
@@ -18,10 +18,7 @@
     --bg-body: #1a1a2e;
     --bg-container: transparent;
     --bg-input: #0f3460;
-    /* В темной теме тоже можно оставить светлый вариант этого цвета или белый, 
-       но по запросу "черный на #12215E" оставляем основной цвет. 
-       Для темной темы лучше сделать его светлее, иначе не будет видно на темном фоне.
-       Я поставлю белый для темной темы, чтобы было читаемо, либо светло-голубой. */
+    /* В темной теме текст светлый для читаемости */
     --text-primary: #eaeaea; 
     --text-secondary: #b0b0b0;
     --shadow: none;
@@ -54,7 +51,7 @@ body {
 #app {
     width: 100%;
     max-width: 1100px;
-    /* Сдвиг вправо на 50px, как просили ранее */
+    /* Сдвиг вправо на 50px */
     margin-left: 50px; 
 }
 
@@ -81,7 +78,6 @@ h1 {
     letter-spacing: 0%;
 }
 
-/* ===== Кнопка смены темы — без фона и рамок ===== */
 /* ===== Кнопка смены темы (SVG, без круга, 98x98) ===== */
 .theme-toggle {
     position: fixed;
@@ -374,7 +370,7 @@ h1 {
 .strength-percent {
     text-align: center;
     font-size: 14px;
-    color: #013374; /* Цвет надежности, как просили ранее */
+    color: #013374; /* Цвет надежности */
     margin-top: -15px;
     margin-bottom: 20px;
     font-weight: 500;
@@ -399,7 +395,7 @@ h1 {
     font-size: 20px;
     line-height: 100%;
     letter-spacing: 0%;
-    color: #12215E; /* Черный, как просили в задании */
+    color: #12215E; /* ✅ Цвет #12215E */
     margin-bottom: 15px; /* Отступ до самой полоски слайдера */
     display: block;
 }
@@ -698,6 +694,7 @@ h1 {
     border-radius: 0;
 }
 
+/* Стиль для info блока в PIN (если останется где-то) */
 .pin-info {
     background: rgba(52, 152, 219, 0.1);
     border-left: 4px solid var(--accent);
