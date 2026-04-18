@@ -9,211 +9,196 @@ const $ = (id) => document.getElementById(id);
 
 // ✅ HTML-шаблон приложения
 const html = `
-<div class="container">
-    <!-- КНОПКА ТЕМЫ (SVG внутри, 98x98, без фона) -->
-    <button id="themeToggle" class="theme-toggle" title="Сменить тему">
-        <!-- Луна (для светлой темы) -->
-        <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="98" height="98" viewBox="0 0 98 98" fill="none">
-            <path fill="#013374" d="M47.468 20.457q.76-.04 1.532-.04c15.786 0 28.583 12.797 28.583 28.583S64.786 77.583 49 77.583a28.45 28.45 0 0 1-14.802-4.126c15.074-.796 27.052-13.27 27.052-28.543 0-10.368-5.52-19.446-13.782-24.457M5.4 10.2c.101.304.152.456.203.523a.5.5 0 0 0 .794 0c.05-.067.102-.219.203-.523.082-.245.123-.368.176-.479a2 2 0 0 1 .945-.945c.111-.053.234-.094.479-.176.304-.101.456-.152.523-.203a.5.5 0 0 0 0-.794c-.067-.05-.219-.102-.523-.203-.245-.082-.368-.123-.479-.176a2 2 0 0 1-.945-.945A4 4 0 0 1 6.6 5.8c-.101-.304-.152-.456-.203-.522a.5.5 0 0 0-.794 0c-.05.066-.102.218-.203.522a4 4 0 0 1-.176.479 2 2 0 0 1-.945.945A4 4 0 0 1 3.8 7.4c-.304.101-.456.152-.522.203a.5.5 0 0 0 0 .794c.066.05.218.102.522.203.245.082.368.123.479.176a2 2 0 0 1 .945.945c.053.111.094.234.176.479"/>
-        </svg>
-        <!-- Солнце (для темной темы) -->
-        <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="98" height="98" viewBox="0 0 97 97" fill="none">
-            <circle cx="48.5" cy="48.5" r="15.167" stroke="#fc0" stroke-width="2"/>
-            <path stroke="#fc0" stroke-linecap="round" stroke-width="2" d="M48.5 20.208v-8.083M48.5 84.875v-8.083M68.505 28.495l5.716-5.716M22.779 74.221l5.716-5.716M76.792 48.5h8.083M12.125 48.5h8.083M68.505 68.505l5.716 5.716M22.779 22.779l5.716 5.716"/>
-        </svg>
-    </button>
+<!-- МЕНЮ СПОСОБА ГЕНЕРАЦИИ -->
+ <div class="generation-menu">
+     <button id="modeSelectBtn" class="mode-select-btn">
+         <span>Способ генерации</span>
+         <span class="arrow">▲</span>
+     </button>
+     <div id="modeDropdown" class="mode-dropdown">
+         <!-- ✅ ДОБАВЛЕН КЛАСС selected ПО УМОЛЧАНИЮ -->
+         <div class="dropdown-item selected" data-mode="random">Случайный</div>
+         <div class="dropdown-item" data-mode="pin">Пин-код</div>
+         <div class="dropdown-item" data-mode="words">Пароль из слов</div>
+     </div>
+ </div>
+
+ <h1 class="title_Text">Генератор паролей</h1>
+
+ <!-- КЛИКАБЕЛЬНЫЙ БЛОК ПАРОЛЯ -->
+ <div class="password-block" id="passwordBlock" title="Нажмите для копирования">
+     <div id="password" class="password-text">Нажмите "генерировать"</div>
+     <button class="copy-btn" id="copyBtn">Копировать</button>
+ </div>
+
+ <div class="strength-container">
+     <div class="strength-bar" id="strengthBar"></div>
+     <span class="strength-text" id="strengthText">-</span>
+ </div>
+ <div class="strength-percent" id="strengthPercent">Надежность: 0%</div>
+
+ <!-- Режим: Обычная генерация -->
+ <div id="randomSettings" class="settings-section">
     
-    <!-- МЕНЮ СПОСОБА ГЕНЕРАЦИИ -->
-    <div class="generation-menu">
-        <button id="modeSelectBtn" class="mode-select-btn">
-            <span>Способ генерации</span>
-            <span class="arrow">▲</span>
-        </button>
-        <div id="modeDropdown" class="mode-dropdown">
-            <!-- ✅ ДОБАВЛЕН КЛАСС selected ПО УМОЛЧАНИЮ -->
-            <div class="dropdown-item selected" data-mode="random">Случайный</div>
-            <div class="dropdown-item" data-mode="pin">Пин-код</div>
-            <div class="dropdown-item" data-mode="words">Пароль из слов</div>
-        </div>
-    </div>
+     <!-- КАСТОМНЫЙ СЛАЙДЕР -->
+     <div class="custom-slider-wrapper">
+         <!-- ✅ ЗАГОЛОВОК -->
+         <div class="slider-title">Длина пароля</div>
 
-    <h1 class="title_Text">Генератор паролей</h1>
+         <div class="custom-slider" id="customSlider">
+             <div class="slider-track-bg"></div>
+             <div class="slider-track-fill" id="sliderFill"></div>
+             <div class="slider-thumb" id="sliderThumb"></div>
+             <div class="slider-value" id="sliderValue">12</div>
+         </div>
+         <div class="slider-labels">
+             <span>4</span>
+             <span>64</span>
+         </div>
+         <input type="hidden" id="length" value="12" min="4" max="64">
+     </div>
+
+     <!-- Кнопка "Выбрать все параметры" -->
+     <button id="selectAllBtn" class="select-all-btn">Выбрать все параметры</button>
+
+     <!-- Настройки с счетчиками -->
+     <div class="settings-with-counters">
+         <div class="setting-item">
+             <label class="checkbox-item">
+                 <input type="checkbox" id="includeLowercase">
+                 <span>Строчные (a-z)</span>
+             </label>
+         </div>
+
+         <div class="setting-item">
+             <label class="checkbox-item">
+                 <input type="checkbox" id="includeUppercase">
+                 <span>Прописные (A-Z)</span>
+             </label>
+         </div>
+
+         <div class="setting-item with-counter">
+             <label class="checkbox-item">
+                 <input type="checkbox" id="includeDigits">
+                 <span>Цифры (0-9)</span>
+             </label>
+             <div class="counter-control">
+                 <span class="counter-label">Количество:</span>
+                 <button class="counter-btn minus" data-target="digitsCount">-</button>
+                 <span class="counter-value" id="digitsCountValue">0</span>
+                 <button class="counter-btn plus" data-target="digitsCount">+</button>
+             </div>
+         </div>
+
+         <div class="setting-item with-counter">
+             <label class="checkbox-item">
+                 <input type="checkbox" id="includeSpecial">
+                 <span>Спецсимволы (!@#$%)</span>
+             </label>
+             <div class="counter-control">
+                 <span class="counter-label">Количество:</span>
+                 <button class="counter-btn minus" data-target="specialCount">-</button>
+                 <span class="counter-value" id="specialCountValue">0</span>
+                 <button class="counter-btn plus" data-target="specialCount">+</button>
+             </div>
+         </div>
+     </div>
     
-    <!-- КЛИКАБЕЛЬНЫЙ БЛОК ПАРОЛЯ -->
-    <div class="password-block" id="passwordBlock" title="Нажмите для копирования">
-        <div id="password" class="password-text">Нажмите "генерировать"</div>
-        <button class="copy-btn" id="copyBtn">Копировать</button>
-    </div>
+     <!-- Дополнительные опции -->
+     <div class="additional-section">
+         <div class="setting-item no-counter">
+             <label class="checkbox-item">
+                 <input type="checkbox" id="excludeSimilar">
+                 <span>Исключить похожие (0Ol1I)</span>
+             </label>
+         </div>
+         <div class="setting-item no-counter">
+             <label class="checkbox-item">
+                 <input type="checkbox" id="noRepeats">
+                 <span>Без повторов</span>
+             </label>
+         </div>
+     </div>
+ </div>
+
+ <!-- Режим: PIN-код -->
+ <div id="pinSettings" class="settings-section" style="display: none;">
+     <!-- ✅ ЗАГОЛОВОК ТАКОЙ ЖЕ, КАК В ОБЫЧНОМ РЕЖИМЕ -->
+     <div class="custom-slider-wrapper">
+         <div class="slider-title">Длина пароля</div>
+        
+         <div class="custom-slider" id="pinSlider">
+             <div class="slider-track-bg"></div>
+             <div class="slider-track-fill" id="pinSliderFill"></div>
+             <div class="slider-thumb" id="pinSliderThumb"></div>
+             <div class="slider-value" id="pinSliderValue">4</div>
+         </div>
+         <div class="slider-labels">
+             <span>4</span>
+             <span>8</span>
+         </div>
+         <input type="hidden" id="pinLength" value="4" min="4" max="8">
+     </div>
+     <div class="setting-item">
+         <label class="checkbox-item">
+             <input type="checkbox" id="pinNoRepeats">
+             <span>Без повторяющихся цифр</span>
+         </label>
+     </div>
+ </div>
+
+ <!-- Режим: Из слов -->
+ <div id="wordsSettings" class="settings-section" style="display: none;">
     
-    <div class="strength-container">
-        <div class="strength-bar" id="strengthBar"></div>
-        <span class="strength-text" id="strengthText">-</span>
-    </div>
-    <div class="strength-percent" id="strengthPercent">Надежность: 0%</div>
+     <!-- СЛАЙДЕР ДЛЯ КОЛИЧЕСТВА СЛОВ -->
+     <div class="custom-slider-wrapper">
+         <!-- ✅ ЗАГОЛОВОК -->
+         <div class="slider-title">Количество слов</div>
 
-    <!-- Режим: Обычная генерация -->
-    <div id="randomSettings" class="settings-section">
+         <div class="custom-slider" id="wordsSlider">
+             <div class="slider-track-bg"></div>
+             <div class="slider-track-fill" id="wordsSliderFill"></div>
+             <div class="slider-thumb" id="wordsSliderThumb"></div>
+             <div class="slider-value" id="wordsSliderValue">3</div>
+         </div>
+         <div class="slider-labels">
+             <span>2</span>
+             <span>8</span>
+         </div>
+         <input type="hidden" id="wordCount" value="3" min="2" max="8">
+     </div>
+
+     <!-- ✅ ПАРАМЕТРЫ ОФОРМЛЕНЫ КАК setting-item (как в других режимах) -->
+     <div class="settings-with-counters">
         
-        <!-- КАСТОМНЫЙ СЛАЙДЕР -->
-        <div class="custom-slider-wrapper">
-            <!-- ✅ ЗАГОЛОВОК -->
-            <div class="slider-title">Длина пароля</div>
+         <div class="setting-item">
+             <label class="checkbox-item">
+                 <span>Регистр:</span>
+             </label>
+             <select id="wordCase">
+                 <option value="0">Нижний</option>
+                 <option value="1" selected>Заглавный</option>
+                 <option value="2">С заглавной</option>
+             </select>
+         </div>
 
-            <div class="custom-slider" id="customSlider">
-                <div class="slider-track-bg"></div>
-                <div class="slider-track-fill" id="sliderFill"></div>
-                <div class="slider-thumb" id="sliderThumb"></div>
-                <div class="slider-value" id="sliderValue">12</div>
-            </div>
-            <div class="slider-labels">
-                <span>4</span>
-                <span>64</span>
-            </div>
-            <input type="hidden" id="length" value="12" min="4" max="64">
-        </div>
+         <div class="setting-item">
+             <label class="checkbox-item">
+                 <span>Разделитель:</span>
+             </label>
+             <select id="separator">
+                 <option value="-">дефис (-)</option>
+                 <option value="_">подчёркивание (_)</option>
+                 <option value=" ">нет</option>
+             </select>
+         </div>
 
-        <!-- Кнопка "Выбрать все параметры" -->
-        <button id="selectAllBtn" class="select-all-btn">Выбрать все параметры</button>
+     </div>
+ </div>
 
-        <!-- Настройки с счетчиками -->
-        <div class="settings-with-counters">
-            <div class="setting-item">
-                <label class="checkbox-item">
-                    <input type="checkbox" id="includeLowercase">
-                    <span>Строчные (a-z)</span>
-                </label>
-            </div>
-
-            <div class="setting-item">
-                <label class="checkbox-item">
-                    <input type="checkbox" id="includeUppercase">
-                    <span>Прописные (A-Z)</span>
-                </label>
-            </div>
-
-            <div class="setting-item with-counter">
-                <label class="checkbox-item">
-                    <input type="checkbox" id="includeDigits">
-                    <span>Цифры (0-9)</span>
-                </label>
-                <div class="counter-control">
-                    <span class="counter-label">Количество:</span>
-                    <button class="counter-btn minus" data-target="digitsCount">-</button>
-                    <span class="counter-value" id="digitsCountValue">0</span>
-                    <button class="counter-btn plus" data-target="digitsCount">+</button>
-                </div>
-            </div>
-
-            <div class="setting-item with-counter">
-                <label class="checkbox-item">
-                    <input type="checkbox" id="includeSpecial">
-                    <span>Спецсимволы (!@#$%)</span>
-                </label>
-                <div class="counter-control">
-                    <span class="counter-label">Количество:</span>
-                    <button class="counter-btn minus" data-target="specialCount">-</button>
-                    <span class="counter-value" id="specialCountValue">0</span>
-                    <button class="counter-btn plus" data-target="specialCount">+</button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Дополнительные опции -->
-        <div class="additional-section">
-            <div class="setting-item no-counter">
-                <label class="checkbox-item">
-                    <input type="checkbox" id="excludeSimilar">
-                    <span>Исключить похожие (0Ol1I)</span>
-                </label>
-            </div>
-            <div class="setting-item no-counter">
-                <label class="checkbox-item">
-                    <input type="checkbox" id="noRepeats">
-                    <span>Без повторов</span>
-                </label>
-            </div>
-        </div>
-    </div>
-
-    <!-- Режим: PIN-код -->
-    <div id="pinSettings" class="settings-section" style="display: none;">
-        <!-- ✅ ЗАГОЛОВОК ТАКОЙ ЖЕ, КАК В ОБЫЧНОМ РЕЖИМЕ -->
-        <div class="custom-slider-wrapper">
-            <div class="slider-title">Длина пароля</div>
-            
-            <div class="custom-slider" id="pinSlider">
-                <div class="slider-track-bg"></div>
-                <div class="slider-track-fill" id="pinSliderFill"></div>
-                <div class="slider-thumb" id="pinSliderThumb"></div>
-                <div class="slider-value" id="pinSliderValue">4</div>
-            </div>
-            <div class="slider-labels">
-                <span>4</span>
-                <span>8</span>
-            </div>
-            <input type="hidden" id="pinLength" value="4" min="4" max="8">
-        </div>
-        <div class="setting-item">
-            <label class="checkbox-item">
-                <input type="checkbox" id="pinNoRepeats">
-                <span>Без повторяющихся цифр</span>
-            </label>
-        </div>
-    </div>
-
-    <!-- Режим: Из слов -->
-    <div id="wordsSettings" class="settings-section" style="display: none;">
-        
-        <!-- СЛАЙДЕР ДЛЯ КОЛИЧЕСТВА СЛОВ -->
-        <div class="custom-slider-wrapper">
-            <!-- ✅ ЗАГОЛОВОК -->
-            <div class="slider-title">Количество слов</div>
-
-            <div class="custom-slider" id="wordsSlider">
-                <div class="slider-track-bg"></div>
-                <div class="slider-track-fill" id="wordsSliderFill"></div>
-                <div class="slider-thumb" id="wordsSliderThumb"></div>
-                <div class="slider-value" id="wordsSliderValue">3</div>
-            </div>
-            <div class="slider-labels">
-                <span>2</span>
-                <span>8</span>
-            </div>
-            <input type="hidden" id="wordCount" value="3" min="2" max="8">
-        </div>
-
-        <!-- ✅ ПАРАМЕТРЫ ОФОРМЛЕНЫ КАК setting-item (как в других режимах) -->
-        <div class="settings-with-counters">
-            
-            <div class="setting-item">
-                <label class="checkbox-item">
-                    <span>Регистр:</span>
-                </label>
-                <select id="wordCase">
-                    <option value="0">Нижний</option>
-                    <option value="1" selected>Заглавный</option>
-                    <option value="2">С заглавной</option>
-                </select>
-            </div>
-
-            <div class="setting-item">
-                <label class="checkbox-item">
-                    <span>Разделитель:</span>
-                </label>
-                <select id="separator">
-                    <option value="-">дефис (-)</option>
-                    <option value="_">подчёркивание (_)</option>
-                    <option value="">нет</option>
-                </select>
-            </div>
-
-        </div>
-    </div>
-
-    <button id="generateBtn" class="generate-btn">Сгенерировать пароль</button>
-    <div id="loading" class="loading">⏳ Генерация...</div>
-    <div id="error" class="error-message"></div>
-</div>
+ <button id="generateBtn" class="generate-btn">Сгенерировать пароль</button>
+ <div id="loading" class="loading">⏳ Генерация...</div>
+ <div id="error" class="error-message"></div>
 `;
 
 // ✅ Отрисовка интерфейса
@@ -228,7 +213,7 @@ if (document.readyState === 'loading') {
 
 function initApp() {
     const els = {
-        theme: $('themeToggle'),
+        theme: $('themeToggle'), // Обратите внимание: в HTML шаблона выше нет кнопки темы, убедитесь, что она есть в index.html или добавьте её сюда
         copy: $('copyBtn'),
         passwordBlock: $('passwordBlock'),
         password: $('password'),
@@ -277,11 +262,13 @@ function initApp() {
     let mode = 'random';
 
     // ===== Тема =====
+    // Проверка наличия кнопки темы в DOM (если она не в шаблоне html, а в index.html)
+    const themeBtn = document.getElementById('themeToggle');
     if (localStorage.getItem('theme') === 'dark') {
         document.documentElement.setAttribute('data-theme', 'dark');
     }
-    if (els.theme) {
-        els.theme.onclick = () => {
+    if (themeBtn) {
+        themeBtn.onclick = () => {
             const html = document.documentElement;
             const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
             html.setAttribute('data-theme', next);
@@ -786,4 +773,33 @@ function initApp() {
     }
 
     if (els.generate) els.generate.onclick = generate;
+
+    // ===== 📱 МОБИЛЬНАЯ СТРЕЛКА ПРОКРУТКИ =====
+    function createScrollArrow() {
+        // Удаляем старую стрелку, если есть
+        const oldArrow = document.getElementById('mobileScrollArrow');
+        if (oldArrow) oldArrow.remove();
+
+        // Создаем только если ширина экрана <= 768px (мобильные/планшеты)
+        if (window.innerWidth <= 768) {
+            const arrow = document.createElement('div');
+            arrow.id = 'mobileScrollArrow';
+            arrow.className = 'scroll-down-arrow';
+            arrow.innerHTML = '↓'; // Символ стрелки
+            
+            // При клике скроллим к кнопке генерации
+            arrow.onclick = () => {
+                const genBtn = document.getElementById('generateBtn');
+                if (genBtn) {
+                    genBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            };
+            
+            document.body.appendChild(arrow);
+        }
+    }
+
+    // Вызываем при загрузке и при изменении размера окна
+    createScrollArrow();
+    window.addEventListener('resize', createScrollArrow);
 }
