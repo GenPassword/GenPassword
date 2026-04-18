@@ -166,6 +166,9 @@ const html = `
         
         <!-- СЛАЙДЕР ДЛЯ КОЛИЧЕСТВА СЛОВ -->
         <div class="custom-slider-wrapper">
+            <!-- ✅ ЗАГОЛОВОК -->
+            <div class="slider-title">Количество слов</div>
+
             <div class="custom-slider" id="wordsSlider">
                 <div class="slider-track-bg"></div>
                 <div class="slider-track-fill" id="wordsSliderFill"></div>
@@ -179,21 +182,31 @@ const html = `
             <input type="hidden" id="wordCount" value="3" min="2" max="8">
         </div>
 
-        <div class="form-row">
-            <label>Регистр:</label>
-            <select id="wordCase">
-                <option value="0">нижний</option>
-                <option value="1" selected>Заглавный</option>
-                <option value="2">ВЕРХНИЙ</option>
-            </select>
-        </div>
-        <div class="form-row">
-            <label>Разделитель:</label>
-            <select id="separator">
-                <option value="-">дефис (-)</option>
-                <option value="_">подчёркивание (_)</option>
-                <option value="">нет</option>
-            </select>
+        <!-- ✅ ПАРАМЕТРЫ ОФОРМЛЕНЫ КАК setting-item (как в других режимах) -->
+        <div class="settings-with-counters">
+            
+            <div class="setting-item">
+                <label class="checkbox-item">
+                    <span>Регистр:</span>
+                </label>
+                <select id="wordCase">
+                    <option value="0">Нижний</option>
+                    <option value="1" selected>Заглавный</option>
+                    <option value="2">С заглавной</option>
+                </select>
+            </div>
+
+            <div class="setting-item">
+                <label class="checkbox-item">
+                    <span>Разделитель:</span>
+                </label>
+                <select id="separator">
+                    <option value="-">дефис (-)</option>
+                    <option value="_">подчёркивание (_)</option>
+                    <option value="">нет</option>
+                </select>
+            </div>
+
         </div>
     </div>
 

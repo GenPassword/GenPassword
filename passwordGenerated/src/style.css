@@ -721,15 +721,26 @@ h1 {
     font-size: 15px;
 }
 
-.form-row input,
-.form-row select {
+/* ✅ Стили для выпадающих списков (Регистр и Разделитель) */
+.form-row select,
+.setting-item select {
     padding: 8px 12px;
     border: none;
     border-radius: 8px;
-    background: var(--bg-body);
-    color: #12215E; /* ✅ Цвет текста #12215E */
+    background: #01AAFF;      /* ✅ Фон #01AAFF */
+    color: #12215E;           /* ✅ Обычный цвет текста */
     font-size: 14px;
     width: 140px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Стили для опций внутри выпадающего списка */
+.form-row select option,
+.setting-item select option {
+    background: #01AAFF;
+    color: #12215E;
 }
 
 .generate-btn {
