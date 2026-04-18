@@ -456,7 +456,7 @@ h1 {
    ✅ АДАПТИВНОСТЬ (MOBILE & TABLET)
    ======================================================== */
 @media (max-width: 768px) {
-    /* 📱 Шапка */
+    /* 📱 Фиксация шапки */
     .generation-menu { top: 10px; left: 10px; width: 50%; }
     .mode-select-btn { width: 100%; height: 50px; font-size: 14px; }
     .mode-dropdown { width: 100%; }
@@ -464,33 +464,31 @@ h1 {
     .theme-toggle { top: 5px; right: 10px; width: 60px; height: 60px; }
     .theme-toggle svg { width: 60px; height: 60px; }
 
-    /* 📱 Контейнер */
+    /* 📱 Включаем Flex-контейнер для работы order */
     #app {
         margin-left: 0;
         padding-top: 75px;
-        display: flex;
+        display: flex !important;
         flex-direction: column;
     }
 
-    /* ✅ СТРЕЛКА УДАЛЕНА */
+    /* 🚫 Полное удаление стрелки */
+    .title_Text::after { display: none !important; }
 
-    /* 📱 ПОРЯДОК: Кнопка СРАЗУ ПОСЛЕ ПАРОЛЯ (перед настройками) */
+    /* 📱 ЖЕСТКИЙ ПОРЯДОК ЭЛЕМЕНТОВ */
     .title_Text { order: 1; font-size: 24px; margin-bottom: 15px; }
     .password-block { order: 2; margin-bottom: 10px; flex-direction: column; align-items: stretch; }
     
-    /* Кнопка идет третьей, сразу после пароля */
-    .generate-btn { order: 3; margin: 10px 0 20px; font-size: 24px; padding: 14px; }
+    /* ✅ КНОПКА СРАЗУ ПОСЛЕ ПАРОЛЯ */
+    .generate-btn { order: 3; margin: 15px 0 20px; font-size: 24px; padding: 14px; }
     
-    /* Индикаторы надежности */
     .strength-container { order: 4; margin-bottom: 10px; }
     .strength-percent { order: 5; margin-top: 0; margin-bottom: 20px; }
-    
-    /* Настройки (со слайдером) идут в конце */
-    .settings-section { order: 6; }
-    
-    #loading, #error { order: 7; }
+    .settings-section { order: 6; } /* Все блоки настроек идут ниже */
+    #loading { order: 7; }
+    #error { order: 8; }
 
-    /* 📱 Адаптация настроек */
+    /* 📱 Адаптация внутренних элементов под палец */
     .setting-item { flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px 15px; }
     .counter-control { width: 100%; justify-content: flex-start; margin-top: 5px; margin-left: 36px; }
     .form-row select, .setting-item select { width: 100%; }
