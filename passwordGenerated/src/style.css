@@ -170,7 +170,7 @@ h1 {
   pointer-events: none; 
 }
 
-/* ✅ ОТКРЫТИЕ МЕНЮ ПРИ НАВЕДЕНИИ */
+/* ✅ ОТКРЫТИЕ МЕНЮ ПРИ НАВЕДЕНИИ (Desktop) */
 .generation-menu:hover .mode-dropdown {
   opacity: 1;
   visibility: visible;
@@ -455,66 +455,123 @@ h1 {
 /* ========================================================
    ✅ АДАПТИВНОСТЬ (MOBILE & TABLET)
    ======================================================== */
+
 @media (max-width: 768px) {
-  /* 📱 Шапка: Меню слева 50%, Тема справа */
+  /* 1. Сброс отступов контейнера и активация Flex Column */
+  #app {
+    display: flex;
+    flex-direction: column;
+    padding-top: 85px; /* Отступ под фиксированные элементы (меню и тема) */
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-left: 0;
+    max-width: 100%;
+  }
+
+  /* 2. Меню генерации: Фиксировано слева сверху, 50% ширины */
   .generation-menu {
     top: 10px;
     left: 10px;
     width: 50%;
+    position: fixed;
+    z-index: 1001;
   }
-  .mode-select-btn { width: 100%; height: 50px; font-size: 14px; }
+  .mode-select-btn { width: 100%; height: 45px; font-size: 14px; }
   .mode-dropdown { width: 100%; }
-  .dropdown-item { width: 100%; height: 44px; }
+  .dropdown-item { width: 100%; height: 40px; font-size: 13px; }
 
+  /* ✅ ОТКЛЮЧЕНИЕ ОТКРЫТИЯ ПО НАВЕДЕНИЮ НА ТЕЛЕФОНЕ */
+  .generation-menu:hover .mode-dropdown {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    pointer-events: none;
+  }
+  /* Разрешаем открытие только если JS добавил класс .show */
+  .mode-dropdown.show {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+    pointer-events: auto !important;
+  }
+
+  /* 3. Кнопка темы: Фиксирована справа сверху, уменьшена */
   .theme-toggle {
-    top: 5px;
+    top: 0px;
     right: 10px;
     width: 60px;
     height: 60px;
+    z-index: 1002;
   }
   .theme-toggle svg { width: 60px; height: 60px; }
 
-  /* 📱 Контейнер приложения */
-  #app {
-    margin-left: 0;
-    padding-top: 75px;
-    display: flex;
-    flex-direction: column;
+  /* 4. ПЕРЕОПРЕДЕЛЕНИЕ ПОРЯДКА ЭЛЕМЕНТОВ (Кнопка сразу под паролем) */
+  
+  /* Заголовок */
+  .title_Text { 
+    order: 1; 
+    font-size: 22px; 
+    margin-bottom: 15px; 
+    text-align: center;
   }
 
-  /* 📱 ПЕРЕОПРЕДЕЛЕНИЕ ПОРЯДКА ЭЛЕМЕНТОВ */
-  /* Заголовок -> Пароль -> Генерировать -> Надежность -> Настройки */
-  .title_Text { order: 1; font-size: 24px; margin-bottom: 15px; }
-  .password-block { order: 2; margin-bottom: 10px; flex-direction: column; align-items: stretch; }
-  .generate-btn { order: 3; margin: 10px 0 20px; font-size: 24px; padding: 14px; }
-  .strength-container { order: 4; margin-bottom: 10px; }
-  .strength-percent { order: 5; margin-top: 0; margin-bottom: 20px; }
-  .settings-section { order: 6; }
-  #loading, #error { order: 7; }
+  /* Блок пароля */
+  .password-block { 
+    order: 2; 
+    margin-bottom: 10px; 
+    flex-direction: column; /* Текст и кнопка "Копировать" друг под другом */
+    align-items: stretch;
+  }
+  .password-text { 
+    font-size: 20px; 
+    margin-bottom: 10px; 
+    white-space: normal; /* Разрешить перенос длинного пароля */
+    text-align: center;
+  }
+  .copy-btn { width: 100%; padding: 8px; font-size: 13px; }
 
-  /* 📱 Адаптация настроек под палец */
+  /* Кнопка "Сгенерировать" (Сразу после пароля) */
+  .generate-btn { 
+    order: 3; 
+    margin-top: 0; 
+    margin-bottom: 20px; 
+    font-size: 24px; 
+    padding: 14px; 
+  }
+
+  /* Индикатор надежности */
+  .strength-container { order: 4; margin-bottom: 5px; }
+  .strength-percent { order: 5; margin-bottom: 20px; margin-top: 0; }
+
+  /* Настройки (В самом низу) */
+  .settings-section { 
+    order: 6; 
+    margin-bottom: 30px; 
+  }
+
+  /* 5. Адаптация настроек под палец */
   .setting-item {
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
     padding: 12px 15px;
   }
+  
+  .setting-item.with-counter {
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
   .counter-control {
     width: 100%;
     justify-content: flex-start;
     margin-top: 5px;
-    margin-left: 36px;
+    margin-left: 36px; /* Отступ под чекбокс */
   }
+
   .form-row select, .setting-item select { width: 100%; }
   
-  .password-text { font-size: 20px; white-space: normal; margin-bottom: 10px; }
-  .copy-btn { width: 100%; padding: 10px; }
-}
-
-@media (max-width: 480px) {
-  body { padding: 10px; }
-  .title_Text { font-size: 20px; }
   .slider-title { font-size: 16px; }
-  .custom-slider { height: 35px; }
+  .custom-slider { height: 30px; }
   .slider-thumb { width: 20px; height: 20px; }
 }
