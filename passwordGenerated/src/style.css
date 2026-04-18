@@ -472,18 +472,25 @@ h1 {
         flex-direction: column;
     }
 
-    /* ✅ СТРЕЛКА ПОЛНОСТЬЮ УДАЛЕНА (код ::after и @keyframes убран) */
+    /* ✅ СТРЕЛКА УДАЛЕНА */
 
-    /* 📱 ПОРЯДОК ЭЛЕМЕНТОВ: Кнопка теперь ПЕРЕД слайдером */
+    /* 📱 ПОРЯДОК: Кнопка СРАЗУ ПОСЛЕ ПАРОЛЯ (перед настройками) */
     .title_Text { order: 1; font-size: 24px; margin-bottom: 15px; }
     .password-block { order: 2; margin-bottom: 10px; flex-direction: column; align-items: stretch; }
+    
+    /* Кнопка идет третьей, сразу после пароля */
     .generate-btn { order: 3; margin: 10px 0 20px; font-size: 24px; padding: 14px; }
+    
+    /* Индикаторы надежности */
     .strength-container { order: 4; margin-bottom: 10px; }
     .strength-percent { order: 5; margin-top: 0; margin-bottom: 20px; }
-    .settings-section { order: 6; } /* Настройки и слайдер идут ниже */
+    
+    /* Настройки (со слайдером) идут в конце */
+    .settings-section { order: 6; }
+    
     #loading, #error { order: 7; }
 
-    /* 📱 Адаптация настроек под палец */
+    /* 📱 Адаптация настроек */
     .setting-item { flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px 15px; }
     .counter-control { width: 100%; justify-content: flex-start; margin-top: 5px; margin-left: 36px; }
     .form-row select, .setting-item select { width: 100%; }
