@@ -81,29 +81,59 @@ h1 {
     letter-spacing: 0%;
 }
 
+/* ===== Кнопка смены темы — без фона и рамок ===== */
+/* ===== Кнопка смены темы (SVG, без круга, 98x98) ===== */
 .theme-toggle {
     position: fixed;
     top: 20px;
     right: 20px;
-    background: var(--bg-input);
-    border: none;
-    border-radius: 50%;
-    width: 44px;
-    height: 44px;
+    background: transparent; /* Убираем фон */
+    border: none;            /* Убираем рамку */
+    border-radius: 0;        /* Убираем скругление */
+    width: 98px;             /* Размер 98px */
+    height: 98px;
     cursor: pointer;
-    font-size: 22px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: none;        /* Убираем тень */
     z-index: 1000;
-    transition: all 0.3s;
-    color: #12215E; /* Иконка тоже цвета текста */
+    transition: transform 0.3s;
+    padding: 0;
+}
+
+.theme-toggle svg {
+    width: 98px;     /* Размер SVG 98x98 */
+    height: 98px;
+    position: absolute;
+    transition: all 0.3s ease;
+}
+
+/* Луна — видна в СВЕТЛОЙ теме */
+.icon-moon {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+}
+
+/* Солнце — скрыто в СВЕТЛОЙ теме */
+.icon-sun {
+    opacity: 0;
+    transform: rotate(90deg) scale(0);
+}
+
+/* В ТЁМНОЙ теме: Луна скрыта, Солнце видно */
+[data-theme="dark"] .icon-moon {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0);
+}
+
+[data-theme="dark"] .icon-sun {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
 }
 
 .theme-toggle:hover {
-    transform: rotate(30deg) scale(1.1);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    transform: scale(1.1);
 }
 
 /* ===== ВЫПАДАЮЩЕЕ МЕНЮ ===== */
