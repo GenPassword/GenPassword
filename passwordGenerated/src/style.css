@@ -49,7 +49,7 @@ body {
 #app {
   width: 100%;
   max-width: 1100px;
-  margin-left: 50px; /* Отступ для меню на больших экранах */
+  margin-left: 240px; /* Отступ под фиксированное меню на десктопе */
   position: relative;
 }
 
@@ -83,7 +83,7 @@ h1 {
 /* ===== Кнопка смены темы ===== */
 .theme-toggle {
   position: fixed;
-  top: -5px;
+  top: -5px; /* На 5px ниже края экрана */
   right: 20px;
   background: transparent;
   border: none;
@@ -170,7 +170,7 @@ h1 {
   pointer-events: none; 
 }
 
-/* ✅ ОТКРЫТИЕ МЕНЮ ПРИ НАВЕДЕНИИ (HOVER) */
+/* ✅ ОТКРЫТИЕ МЕНЮ ПРИ НАВЕДЕНИИ */
 .generation-menu:hover .mode-dropdown {
   opacity: 1;
   visibility: visible;
@@ -196,7 +196,7 @@ h1 {
 .dropdown-item:hover { background: #b2ebf2; }
 .dropdown-item.selected { background: #013CFF; color: #FFFFFF; }
 
-/* ===== БЛОК ПАРОЛЯ (КЛИКАБЕЛЬНЫЙ) ===== */
+/* ===== БЛОК ПАРОЛЯ ===== */
 .password-block {
   background: #CEFFF7; 
   border: 5px solid #00FFEA; 
@@ -453,186 +453,68 @@ h1 {
 [data-theme="dark"] .pin-info { background: rgba(190, 227, 254, 0.08); border-color: #1C1FC2; }
 
 /* ========================================================
-   ✅ АДАПТИВНОСТЬ (RESPONSIVE)
+   ✅ АДАПТИВНОСТЬ (MOBILE & TABLET)
    ======================================================== */
-
-/* 🖥️ Ноутбуки и небольшие десктопы (до 1200px) */
-@media (max-width: 1200px) {
-  #app {
-    margin-left: 20px; /* Уменьшаем отступ слева */
-    max-width: 90%;
-  }
-}
-
-/* 💻 Планшеты в альбомной ориентации и маленькие ноутбуки (до 1024px) */
-@media (max-width: 1024px) {
-  #app {
-    margin-left: 240px; /* Оставляем место под фиксированное меню */
-    max-width: calc(100% - 260px);
-  }
-  
-  .theme-toggle {
-    right: 10px;
-    width: 80px;
-    height: 80px;
-  }
-  .theme-toggle svg {
-    width: 80px;
-    height: 80px;
-  }
-}
-
-/* 📱 Планшеты в портретной ориентации (до 768px) */
 @media (max-width: 768px) {
-  body {
-    padding: 20px 15px;
-    justify-content: flex-start; /* Чтобы контент шел сверху вниз */
-  }
-
-  #app {
-    margin-left: 0; /* Убираем отступ слева */
-    max-width: 100%;
-    padding-top: 100px; /* Отступ сверху, чтобы не наезжать на меню и кнопку темы */
-  }
-
-  /* Меню генерации делаем более компактным или оставляем фиксированным, но проверяем, чтобы не мешало */
+  /* 📱 Шапка: Меню слева 50%, Тема справа */
   .generation-menu {
-    width: 180px;
+    top: 10px;
+    left: 10px;
+    width: 50%;
   }
-  .mode-select-btn {
-    width: 180px;
-    height: 50px;
-    font-size: 14px;
+  .mode-select-btn { width: 100%; height: 50px; font-size: 14px; }
+  .mode-dropdown { width: 100%; }
+  .dropdown-item { width: 100%; height: 44px; }
+
+  .theme-toggle {
+    top: 5px;
+    right: 10px;
+    width: 60px;
+    height: 60px;
   }
-  .mode-dropdown {
-    width: 180px;
-  }
-  .dropdown-item {
-    width: 180px;
-    height: 40px;
+  .theme-toggle svg { width: 60px; height: 60px; }
+
+  /* 📱 Контейнер приложения */
+  #app {
+    margin-left: 0;
+    padding-top: 75px;
+    display: flex;
+    flex-direction: column;
   }
 
-  .title_Text {
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
+  /* 📱 ПЕРЕОПРЕДЕЛЕНИЕ ПОРЯДКА ЭЛЕМЕНТОВ */
+  /* Заголовок -> Пароль -> Генерировать -> Надежность -> Настройки */
+  .title_Text { order: 1; font-size: 24px; margin-bottom: 15px; }
+  .password-block { order: 2; margin-bottom: 10px; flex-direction: column; align-items: stretch; }
+  .generate-btn { order: 3; margin: 10px 0 20px; font-size: 24px; padding: 14px; }
+  .strength-container { order: 4; margin-bottom: 10px; }
+  .strength-percent { order: 5; margin-top: 0; margin-bottom: 20px; }
+  .settings-section { order: 6; }
+  #loading, #error { order: 7; }
 
-  .password-block {
-    flex-direction: column; /* Пароль и кнопка копирования друг под другом */
-    align-items: stretch;
-    text-align: center;
-  }
-  
-  .password-text {
-    margin-bottom: 10px;
-    white-space: normal; /* Разрешаем перенос длинного пароля */
-  }
-
-  .copy-btn {
-    width: 100%;
-  }
-
+  /* 📱 Адаптация настроек под палец */
   .setting-item {
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
+    gap: 8px;
+    padding: 12px 15px;
   }
-  
-  .setting-item.with-counter {
-    align-items: center;
-  }
-  
   .counter-control {
     width: 100%;
-    justify-content: space-between;
+    justify-content: flex-start;
     margin-top: 5px;
+    margin-left: 36px;
   }
-
-  .generate-btn {
-    font-size: 24px;
-    padding: 12px;
-  }
+  .form-row select, .setting-item select { width: 100%; }
+  
+  .password-text { font-size: 20px; white-space: normal; margin-bottom: 10px; }
+  .copy-btn { width: 100%; padding: 10px; }
 }
 
-/* 📱 Мобильные телефоны (до 480px) */
 @media (max-width: 480px) {
-  body {
-    padding: 10px;
-  }
-
-  #app {
-    padding-top: 120px; /* Еще больше отступа, так как кнопка темы может быть большой */
-  }
-
-  /* Кнопку темы делаем меньше и сдвигаем, чтобы не мешала */
-  .theme-toggle {
-    top: 5px;
-    right: 5px;
-    width: 60px;
-    height: 60px;
-  }
-  .theme-toggle svg {
-    width: 60px;
-    height: 60px;
-  }
-
-  /* Меню генерации на мобильных можно сделать поверх или уменьшить */
-  .generation-menu {
-    width: 100%;
-    position: relative; /* Становится частью потока */
-    margin-bottom: 20px;
-  }
-  
-  .mode-select-btn {
-    width: 100%;
-  }
-  
-  .mode-dropdown {
-    width: 100%;
-    position: static; /* Выпадает в поток */
-    border-top: none;
-    margin-top: 0;
-    opacity: 1;
-    visibility: visible;
-    transform: none;
-    display: none; /* Скрываем по умолчанию, показываем через JS или hover */
-  }
-  
-  /* Для мобильных лучше оставить клик, но hover тоже работает */
-  .generation-menu:hover .mode-dropdown {
-    display: block;
-  }
-  .mode-dropdown.show {
-    display: block;
-  }
-
-  .title_Text {
-    font-size: 20px;
-  }
-
-  .slider-title {
-    font-size: 16px;
-  }
-
-  .custom-slider {
-    height: 30px;
-  }
-
-  .slider-thumb {
-    width: 20px;
-    height: 20px;
-  }
-
-  .generate-btn {
-    font-size: 20px;
-  }
-  
-  .strength-text {
-    font-size: 14px;
-    min-width: 80px;
-  }
-  
-  .strength-percent {
-    font-size: 12px;
-  }
+  body { padding: 10px; }
+  .title_Text { font-size: 20px; }
+  .slider-title { font-size: 16px; }
+  .custom-slider { height: 35px; }
+  .slider-thumb { width: 20px; height: 20px; }
 }
