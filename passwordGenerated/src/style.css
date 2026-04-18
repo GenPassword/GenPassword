@@ -456,56 +456,36 @@ h1 {
    ✅ АДАПТИВНОСТЬ (MOBILE & TABLET)
    ======================================================== */
 @media (max-width: 768px) {
-    /* 📱 Шапка: Меню слева 50%, Тема справа */
-    .generation-menu {
-        top: 10px;
-        left: 10px;
-        width: 50%;
-    }
+    /* 📱 Шапка */
+    .generation-menu { top: 10px; left: 10px; width: 50%; }
     .mode-select-btn { width: 100%; height: 50px; font-size: 14px; }
     .mode-dropdown { width: 100%; }
     .dropdown-item { width: 100%; height: 44px; }
-    .theme-toggle {
-        top: 5px;
-        right: 10px;
-        width: 60px;
-        height: 60px;
-    }
+    .theme-toggle { top: 5px; right: 10px; width: 60px; height: 60px; }
     .theme-toggle svg { width: 60px; height: 60px; }
-    
-    /* 📱 Контейнер приложения */
+
+    /* 📱 Контейнер */
     #app {
         margin-left: 0;
         padding-top: 75px;
         display: flex;
         flex-direction: column;
     }
-    
-    /* ✅ СТРЕЛКА УДАЛЕНА (блок ::after и @keyframes полностью убраны) */
-    
-    /* 📱 НОВЫЙ ПОРЯДОК ЭЛЕМЕНТОВ */
-    /* Заголовок -> Пароль -> Настройки (Слайдер) -> Кнопка -> Надежность */
+
+    /* ✅ СТРЕЛКА ПОЛНОСТЬЮ УДАЛЕНА (код ::after и @keyframes убран) */
+
+    /* 📱 ПОРЯДОК ЭЛЕМЕНТОВ: Кнопка теперь ПЕРЕД слайдером */
     .title_Text { order: 1; font-size: 24px; margin-bottom: 15px; }
     .password-block { order: 2; margin-bottom: 10px; flex-direction: column; align-items: stretch; }
-    .settings-section { order: 3; } /* Подтягивает слайдер вверх */
-    .generate-btn { order: 4; margin: 10px 0 20px; font-size: 24px; padding: 14px; }
-    .strength-container { order: 5; margin-bottom: 10px; }
-    .strength-percent { order: 6; margin-top: 0; margin-bottom: 20px; }
+    .generate-btn { order: 3; margin: 10px 0 20px; font-size: 24px; padding: 14px; }
+    .strength-container { order: 4; margin-bottom: 10px; }
+    .strength-percent { order: 5; margin-top: 0; margin-bottom: 20px; }
+    .settings-section { order: 6; } /* Настройки и слайдер идут ниже */
     #loading, #error { order: 7; }
-    
+
     /* 📱 Адаптация настроек под палец */
-    .setting-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-        padding: 12px 15px;
-    }
-    .counter-control {
-        width: 100%;
-        justify-content: flex-start;
-        margin-top: 5px;
-        margin-left: 36px;
-    }
+    .setting-item { flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px 15px; }
+    .counter-control { width: 100%; justify-content: flex-start; margin-top: 5px; margin-left: 36px; }
     .form-row select, .setting-item select { width: 100%; }
     .password-text { font-size: 20px; white-space: normal; margin-bottom: 10px; }
     .copy-btn { width: 100%; padding: 10px; }
