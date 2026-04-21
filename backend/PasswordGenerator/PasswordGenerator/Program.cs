@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -9,6 +10,7 @@ using PasswordGenerator.Services.Auth;
 using PasswordGenerator.Services.Password.Analysis;
 using PasswordGenerator.Services.Password.Generation;
 using PasswordGenerator.Services.Password.Validator;
+using PasswordGenerator.Services.RateLimiting;
 using PasswordGenerator.Services.Users;
 using PasswordGenerator.Services.Wordlist;
 using PasswordGenerator.Validators;
@@ -33,6 +35,7 @@ builder.Services.AddScoped<IRepetitionPatternChecker, RepetitionPatternChecker>(
 builder.Services.AddScoped<IPasswordRule, RepetitionRule>();
 builder.Services.AddScoped<IPasswordRule, SequentialRule>();
 builder.Services.AddScoped<IPasswordValidator, PasswordValidator>();
+builder.Services.AddSingleton<IRequestRateLimiter, RequestRateLimiter>();
 
 // Регистрация DbContext
 var connectionStr = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -66,6 +69,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
+var useForwardedHeaders = builder.Configuration.GetValue<bool>("ReverseProxy:UseForwardedHeaders");
+if (useForwardedHeaders)
+{
+    builder.Services.Configure<ForwardedHeadersOptions>(options =>
+    {
+        options.ForwardedHeaders =
+            ForwardedHeaders.XForwardedFor |
+            ForwardedHeaders.XForwardedProto;
+
+        options.KnownNetworks.Clear();
+        options.KnownProxies.Clear();
+    });
+}
 
 var app = builder.Build();
 
@@ -73,6 +89,11 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
+}
+
+if (useForwardedHeaders)
+{
+    app.UseForwardedHeaders();
 }
 
 app.UseAuthentication();

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PasswordGenerator.Models;
 using PasswordGenerator.Services.Password.Generation;
+using PasswordGenerator.Services.RateLimiting;
 
 namespace PasswordGenerator.Controllers;
 
@@ -8,13 +9,15 @@ namespace PasswordGenerator.Controllers;
 [Route("api/[controller]")]
 public class PasswordController : ControllerBase
 {
-    private readonly IPasswordGeneratorService _generator;
+    private readonly IPasswordGeneratorService generator;
     private readonly IPassphraseGeneratorService passphraseGenerator;
+    private readonly IRequestRateLimiter rateLimiter;
 
-    public PasswordController(IPasswordGeneratorService generator, IPassphraseGeneratorService passphraseGenerator)
+    public PasswordController(IPasswordGeneratorService generator, IPassphraseGeneratorService passphraseGenerator, IRequestRateLimiter rateLimiter)
     {
-        _generator = generator;
+        this.generator = generator;
         this.passphraseGenerator = passphraseGenerator;
+        this.rateLimiter = rateLimiter;
     }
 
     /// <summary>
@@ -26,10 +29,20 @@ public class PasswordController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult Generate([FromBody] GeneratePasswordRequest request)
     {
+        var key = GetClientKey();
+        Console.WriteLine(key);
+        if (!rateLimiter.IsRequestAllowed(key))
+        {
+            return StatusCode(429, new GeneratePasswordResponse
+            {
+                Message = "Слишком много запросов. Попробуйте позже."
+            });
+        }
+
         if (request == null)
             return BadRequest(new GeneratePasswordResponse { Message = "Тело запроса не может быть пустым." });
 
-        var response = _generator.Generate(request);
+        var response = generator.Generate(request);
 
         if (!string.IsNullOrEmpty(response.Message) && string.IsNullOrEmpty(response.Password))
             return BadRequest(response);
@@ -42,7 +55,16 @@ public class PasswordController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult GenerateFromWords([FromBody] GeneratePasswordFromWordsRequest request)
     {
-        if(request == null)
+        var key = GetClientKey();
+        if (!rateLimiter.IsRequestAllowed(key))
+        {
+            return StatusCode(429, new GeneratePasswordResponse
+            {
+                Message = "Слишком много запросов. Попробуйте позже."
+            });
+        }
+
+        if (request == null)
         {
             return BadRequest(new GeneratePasswordResponse { Message = "Тело запроса не может быть пустым." });
         }
@@ -54,5 +76,17 @@ public class PasswordController : ControllerBase
         }
 
         return Ok(result);
+    }
+
+    private string GetClientKey()
+    {
+        if (User?.Identity?.IsAuthenticated == true)
+        {
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if(!string.IsNullOrEmpty(userId))
+                return "user:" + userId;
+        }
+        var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
+        return string.IsNullOrEmpty(ip) ? "anonym" : "ip:" + ip;
     }
 }

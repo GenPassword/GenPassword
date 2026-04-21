@@ -5,13 +5,13 @@
         private readonly Dictionary<string, Queue<DateTime>> requestsByKey = new();
         private readonly object _lock = new();
 
-        private const int MaxRequests = 3;
-        private readonly TimeSpan timeWindow = TimeSpan.FromSeconds(1);
+        private const int MaxRequests = 4;
+        private readonly TimeSpan timeWindow = TimeSpan.FromSeconds(2);
 
         public bool IsRequestAllowed(string key)
         {
             if (string.IsNullOrEmpty(key))
-                key = "anonymous";
+                key = "anonym";
 
             var now = DateTime.UtcNow;
             var threshold = now - timeWindow;
@@ -33,7 +33,7 @@
                     return false;
 
                 queue.Enqueue(now);
-
+                Console.WriteLine(requestsByKey.Count);
                 return true;
             }
         }
