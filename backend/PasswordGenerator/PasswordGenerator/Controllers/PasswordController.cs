@@ -12,6 +12,7 @@ public class PasswordController : ControllerBase
     private readonly IPasswordGeneratorService generator;
     private readonly IPassphraseGeneratorService passphraseGenerator;
     private readonly IRequestRateLimiter rateLimiter;
+    private static int countRequest = 0;
 
     public PasswordController(IPasswordGeneratorService generator, IPassphraseGeneratorService passphraseGenerator, IRequestRateLimiter rateLimiter)
     {
@@ -30,14 +31,9 @@ public class PasswordController : ControllerBase
     public IActionResult Generate([FromBody] GeneratePasswordRequest request)
     {
         var key = GetClientKey();
-        Console.WriteLine(key);
-        if (!rateLimiter.IsRequestAllowed(key))
-        {
-            return StatusCode(429, new GeneratePasswordResponse
-            {
-                Message = "Слишком много запросов. Попробуйте позже."
-            });
-        }
+        Console.Write("User: " + key + " ");
+        Console.WriteLine("Запрос номер " + countRequest++);
+
 
         if (request == null)
             return BadRequest(new GeneratePasswordResponse { Message = "Тело запроса не может быть пустым." });
@@ -56,13 +52,9 @@ public class PasswordController : ControllerBase
     public IActionResult GenerateFromWords([FromBody] GeneratePasswordFromWordsRequest request)
     {
         var key = GetClientKey();
-        if (!rateLimiter.IsRequestAllowed(key))
-        {
-            return StatusCode(429, new GeneratePasswordResponse
-            {
-                Message = "Слишком много запросов. Попробуйте позже."
-            });
-        }
+        Console.Write("User ip: " + key + " ");
+        Console.WriteLine("Запрос номер " + countRequest++);
+
 
         if (request == null)
         {
