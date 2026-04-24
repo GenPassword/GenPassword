@@ -9,6 +9,7 @@
     public enum GeneratorType
     {
         Random,
+        Pin,
         Words
     }
 }
