@@ -36,6 +36,7 @@ builder.Services.AddScoped<IPasswordRule, RepetitionRule>();
 builder.Services.AddScoped<IPasswordRule, SequentialRule>();
 builder.Services.AddScoped<IPasswordValidator, PasswordValidator>();
 builder.Services.AddSingleton<IRequestRateLimiter, RequestRateLimiter>();
+builder.Services.AddScoped<SettingsFactory>();
 
 // Регистрация DbContext
 var connectionStr = builder.Configuration.GetConnectionString("DefaultConnection");

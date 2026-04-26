@@ -1,4 +1,4 @@
-﻿using PasswordGenerator.Models;
+﻿using PasswordGenerator.Models.GeneratorSettings;
 
 namespace PasswordGenerator.Entities
 {

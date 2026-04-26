@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PasswordGenerator.Data;
 using PasswordGenerator.Entities;
-using PasswordGenerator.Models;
+using PasswordGenerator.Models.GeneratorSettings;
 
 namespace PasswordGenerator.Services.Users
 {
@@ -9,10 +9,11 @@ namespace PasswordGenerator.Services.Users
     {
 
         private readonly AppDbContext appDbContext;
-
-        public UserSettingsService(AppDbContext appDbContext)
+        private readonly SettingsFactory settingsFactory;
+        public UserSettingsService(AppDbContext appDbContext, SettingsFactory settingsFactory)
         {
             this.appDbContext = appDbContext;
+            this.settingsFactory = settingsFactory;
         }
 
         public async Task<string> GetSettings(int userId, GeneratorType generatorType)
@@ -27,14 +28,19 @@ namespace PasswordGenerator.Services.Users
             return null;   
         }
 
-        public async Task SaveSettings(int userId, GeneratorType generatorType, string settingsJson)
+        public async Task SaveSettings(int userId, SaveSettingsRequest saveSettingsRequest)
         {
+            var parsedSettings = settingsFactory.ParseRequest(saveSettingsRequest);
+
+            if (parsedSettings == null)
+                throw new Exception("Invalid settings");
+
             var setting = await appDbContext.UserSettings
-                .FirstOrDefaultAsync(s => s.UserId == userId && s.GeneratorType == generatorType);
+                .FirstOrDefaultAsync(s => s.UserId == userId && s.GeneratorType == saveSettingsRequest.GeneratorType);
 
             if (setting != null)
             {
-                setting.SettingJson = settingsJson;
+                setting.SettingJson = saveSettingsRequest.SettingsJson;
                 setting.UpdateAt = DateTime.Now;
                 appDbContext.Update(setting);
             }
@@ -43,8 +49,8 @@ namespace PasswordGenerator.Services.Users
                 var newSetting = new UserSetting
                 {
                     UserId = userId,
-                    GeneratorType = generatorType,
-                    SettingJson = settingsJson,
+                    GeneratorType = saveSettingsRequest.GeneratorType,
+                    SettingJson = saveSettingsRequest.SettingsJson,
                     CreateAt = DateTime.Now,
                     UpdateAt = DateTime.Now
                 };
