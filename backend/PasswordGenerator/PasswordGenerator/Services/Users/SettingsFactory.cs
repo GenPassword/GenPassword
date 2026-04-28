@@ -6,7 +6,7 @@ namespace PasswordGenerator.Services.Users
 {
     public class SettingsFactory
     {
-        public IGeneratorSettings? ParseRequest(SaveSettingsRequest request)
+        public IGeneratorSettings ParseRequest(SaveSettingsRequest request)
         {
             var type = request.GeneratorType;
             var settings = request.SettingsJson;
@@ -19,7 +19,7 @@ namespace PasswordGenerator.Services.Users
                 case GeneratorType.Words:
                     return JsonSerializer.Deserialize<WordGeneratorSettings>(settings);
                 default:
-                    throw new InvalidCastException($"{type} is not supported.");
+                    throw new NotSupportedException($"{type} is not supported.");
             }
         }
     }

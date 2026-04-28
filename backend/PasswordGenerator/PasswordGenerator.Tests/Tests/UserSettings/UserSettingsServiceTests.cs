@@ -3,6 +3,7 @@ using NUnit.Framework.Legacy;
 using PasswordGenerator.Data;
 using PasswordGenerator.Models.GeneratorSettings;
 using PasswordGenerator.Services.Users;
+using System.Text.Json;
 
 
 namespace PasswordGenerator.Tests.Tests.UserSettings
@@ -28,9 +29,9 @@ namespace PasswordGenerator.Tests.Tests.UserSettings
         [Test]
         public async Task SaveSettings_ShouldCreateNewSettings_WhenUserHasNoSettings()
         {
-            int userId = 1;
-            GeneratorType generatorType = GeneratorType.Random;
-            string settingsJson = "{ \"length\": 12 }";
+            var userId = 1;
+            var generatorType = GeneratorType.Random;
+            var settingsJson = "{ \"length\": 12 }";
             var request = MakeRequest(generatorType, settingsJson);
             await service.SaveSettings(userId, request);
 
@@ -44,13 +45,13 @@ namespace PasswordGenerator.Tests.Tests.UserSettings
         [Test]
         public async Task SaveSettings_ShouldUpdateExistingSettings_WhenSettingsAlreadyExist()
         {
-            int userId = 1;
-            GeneratorType generatorType = GeneratorType.Random;
-            string settingsJson1 = "{ \"length\": 12 }";
+            var userId = 1;
+            var generatorType = GeneratorType.Random;
+            var settingsJson1 = "{ \"length\": 12 }";
             var request1 = MakeRequest(generatorType, settingsJson1);
             await service.SaveSettings(userId, request1);
 
-            string settingsJson2 = "{ \"length\": 15 }";
+            var settingsJson2 = "{ \"length\": 15 }";
             var request2 = MakeRequest(generatorType, settingsJson2);
             await service.SaveSettings(userId, request2);
 
@@ -70,9 +71,9 @@ namespace PasswordGenerator.Tests.Tests.UserSettings
         [Test]
         public async Task GetSettings_ShouldReturnSettingsJson_WhenSettingsExist()
         {
-            int userId = 1;
-            GeneratorType generatorType = GeneratorType.Random;
-            string settingsJson = "{ \"length\": 12 }";
+            var userId = 1;
+            var generatorType = GeneratorType.Random;
+            var settingsJson = "{ \"length\": 12 }";
             var request = MakeRequest(generatorType, settingsJson);
             await service.SaveSettings(userId, request);
 
@@ -85,11 +86,11 @@ namespace PasswordGenerator.Tests.Tests.UserSettings
         [Test]
         public async Task GetSettings_ShouldReturnCorrectSettings_ForCorrectGeneratorType()
         {
-            int userId = 1;
-            GeneratorType generatorType1 = GeneratorType.Random;
-            GeneratorType generatorType2 = GeneratorType.Words;
-            string settingsJson1 = "{ \"length\": 12 }";
-            string settingsJson2 = "{ \"length\": 3 }";
+            var userId = 1;
+            var generatorType1 = GeneratorType.Random;
+            var generatorType2 = GeneratorType.Words;
+            var settingsJson1 = "{ \"length\": 12 }";
+            var settingsJson2 = "{ \"length\": 3 }";
             var request1 = MakeRequest(generatorType1, settingsJson1);
             await service.SaveSettings(userId, request1);
             var request2 = MakeRequest(generatorType2, settingsJson2);
@@ -97,6 +98,23 @@ namespace PasswordGenerator.Tests.Tests.UserSettings
 
             var getSetting = await service.GetSettings(1, GeneratorType.Words);
             Assert.That(settingsJson2, Is.EqualTo(getSetting));
+        }
+
+        [Test]
+        public async Task SaveSettings_ShouldThrowException_WhenJsonIsInvalid()
+        {
+            var userId = 1;
+            var generatorType = GeneratorType.Random;
+            var settingsJson = "{ \"length\": ";
+            var request = MakeRequest(generatorType, settingsJson);
+            Assert.ThrowsAsync<JsonException>(async () =>
+            {
+                await service.SaveSettings(userId, request);
+            });
+
+            var saved = appDbContext.UserSettings
+                .FirstOrDefault(x => x.UserId == userId);
+            Assert.That(saved, Is.Null);
         }
 
         private SaveSettingsRequest MakeRequest(GeneratorType generatorType, string settingsJson)
