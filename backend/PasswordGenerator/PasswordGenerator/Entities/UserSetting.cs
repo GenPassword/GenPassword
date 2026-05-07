@@ -6,6 +6,7 @@ namespace PasswordGenerator.Entities
     {
         public int Id { get; set; }
         public int UserId { get; set; }
+        public string Name { get; set; }
         public GeneratorType GeneratorType { get; set; }
         public string SettingJson { get; set; }
         public DateTime CreateAt { get; set; } = DateTime.Now;

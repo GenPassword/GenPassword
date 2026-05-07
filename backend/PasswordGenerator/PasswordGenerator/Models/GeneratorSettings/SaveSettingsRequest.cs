@@ -3,6 +3,7 @@
     public class SaveSettingsRequest
     {
         public GeneratorType GeneratorType { get; set; }
+        public string Name { get; set; }
         public string SettingsJson { get; set; } = "";
     }
 

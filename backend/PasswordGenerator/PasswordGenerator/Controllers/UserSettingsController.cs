@@ -23,8 +23,8 @@ namespace PasswordGenerator.Controllers
         public async Task<IActionResult> GetSettings(GeneratorType generatorType)
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-            var settingsJson = await userSettingsService.GetSettings(userId, generatorType);
-            return Ok(new { Settings = settingsJson});
+            var settings = await userSettingsService.GetAllSettings(userId, generatorType);
+            return Ok(new { Settings = settings });
         }
 
         [HttpPost("save")]
