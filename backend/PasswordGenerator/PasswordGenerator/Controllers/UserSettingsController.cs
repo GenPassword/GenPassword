@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PasswordGenerator.Data;
 using PasswordGenerator.Entities;
@@ -8,6 +9,7 @@ using System.Security.Claims;
 
 namespace PasswordGenerator.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class UserSettingsController : ControllerBase
@@ -22,7 +24,12 @@ namespace PasswordGenerator.Controllers
         [HttpGet("{generatorType}")]
         public async Task<IActionResult> GetSettings(GeneratorType generatorType)
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+
+            if (userIdClaim == null)
+                return Unauthorized();
+            if (!int.TryParse(userIdClaim.Value, out var userId))
+                return Unauthorized();
             var settings = await userSettingsService.GetAllSettings(userId, generatorType);
             return Ok(new { Settings = settings });
         }
