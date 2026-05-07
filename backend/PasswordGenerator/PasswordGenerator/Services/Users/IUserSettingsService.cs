@@ -5,6 +5,6 @@ namespace PasswordGenerator.Services.Users
     public interface IUserSettingsService
     {
         Task SaveSettings(int  userId, SaveSettingsRequest saveSettingsRequest);
-        Task<string> GetAllSettings(int userId, GeneratorType generatorType);
+        Task<List<UserSettingDto>> GetAllSettings(int userId, GeneratorType generatorType);
     }
 }
