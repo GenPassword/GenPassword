@@ -44,7 +44,7 @@ namespace PasswordGenerator.Services.Users
             if (setting != null)
             {
                 setting.SettingJson = saveSettingsRequest.SettingsJson;
-                setting.UpdateAt = DateTime.Now;
+                setting.UpdateAt = DateTime.UtcNow;
                 appDbContext.Update(setting);
             }
             else
@@ -54,8 +54,8 @@ namespace PasswordGenerator.Services.Users
                     UserId = userId,
                     GeneratorType = saveSettingsRequest.GeneratorType,
                     SettingJson = saveSettingsRequest.SettingsJson,
-                    CreateAt = DateTime.Now,
-                    UpdateAt = DateTime.Now,
+                    CreateAt = DateTime.UtcNow,
+                    UpdateAt = DateTime.UtcNow,
                     Name = saveSettingsRequest.Name
                 };
                 await appDbContext.UserSettings.AddAsync(newSetting);
