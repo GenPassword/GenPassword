@@ -6,11 +6,7 @@ import './style.css'
 // const API_WORDS = '/api/password/generate-from-words';
 // const API_PIN = '/api/password/generate';
 
-// Для работы на локальном сервере
-// const API_RANDOM = 'https://myproject24.ru/api/password/generate';
-// const API_WORDS = 'https://myproject24.ru/api/password/generate-from-words';
-// const API_PIN = 'https://myproject24.ru/api/password/generate';
-
+// ✅ API URLs
 const API_RANDOM = 'https://myproject24.ru/api/password/generate';
 const API_WORDS = 'https://myproject24.ru/api/password/generate-from-words';
 const API_PIN = 'https://myproject24.ru/api/password/generate';
@@ -1234,36 +1230,22 @@ async function initApp() {
 
     // ===== КОПИРОВАНИЕ =====
     async function copyPassword() {
-    const text = document.getElementById('password').textContent;
-    if (!text || text === 'Нажмите "генерировать"') return;
-    
-    // Пробуем современный API
-    if (navigator.clipboard && window.isSecureContext) {
+        const text = els.password.textContent;
+        if (!text || text === 'Нажмите "генерировать"') return;
         try {
             await navigator.clipboard.writeText(text);
-            showSuccess();
-            return;
-        } catch(e) {}
+            els.copy.textContent = 'Скопировано';
+            els.passwordBlock.classList.add('copied');
+            setTimeout(() => {
+                els.copy.textContent = 'Копировать';
+                els.passwordBlock.classList.remove('copied');
+            }, 1500);
+        } catch (e) { 
+            console.error(e); 
+            els.copy.textContent = '❌ Ошибка';
+            setTimeout(() => els.copy.textContent = 'Копировать', 1500);
+        }
     }
-    
-    // Fallback для HTTP (работает везде)
-    const textarea = document.createElement('textarea');
-    textarea.value = text;
-    textarea.style.position = 'fixed';
-    textarea.style.opacity = '0';
-    document.body.appendChild(textarea);
-    textarea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textarea);
-    showSuccess();
-}
-
-function showSuccess() {
-    const btn = document.querySelector('.copy-btn');
-    const original = btn.textContent;
-    btn.textContent = 'Скопировано!';
-    setTimeout(() => btn.textContent = original, 1500);
-}
 
     if (els.copy) {
         els.copy.onclick = (e) => {
