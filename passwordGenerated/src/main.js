@@ -1,17 +1,16 @@
 import './style.css'
 
 // ✅ API URLs
-<<<<<<< HEAD
 // Для работы на сервере УрФУ
-const API_RANDOM = '/api/password/generate';
-const API_WORDS = '/api/password/generate-from-words';
-const API_PIN = '/api/password/generate';
+// const API_RANDOM = '/api/password/generate';
+// const API_WORDS = '/api/password/generate-from-words';
+// const API_PIN = '/api/password/generate';
 
 // Для работы на локальном сервере
 // const API_RANDOM = 'https://myproject24.ru/api/password/generate';
 // const API_WORDS = 'https://myproject24.ru/api/password/generate-from-words';
 // const API_PIN = 'https://myproject24.ru/api/password/generate';
-=======
+
 const API_RANDOM = 'https://myproject24.ru/api/password/generate';
 const API_WORDS = 'https://myproject24.ru/api/password/generate-from-words';
 const API_PIN = 'https://myproject24.ru/api/password/generate';
@@ -19,7 +18,6 @@ const API_AUTH_REGISTER = 'https://myproject24.ru/api/Auth/register';
 const API_AUTH_LOGIN = 'https://myproject24.ru/api/Auth/login';
 const API_SETTINGS_SAVE = 'https://myproject24.ru/api/UserSettings/save';
 const API_SETTINGS_GET = 'https://myproject24.ru/api/UserSettings';
->>>>>>> 7e89ec372ccd94577bc913b66364d2b614a39d14
 
 const $ = (id) => document.getElementById(id);
 
