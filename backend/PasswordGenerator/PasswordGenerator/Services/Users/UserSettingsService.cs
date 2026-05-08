@@ -16,16 +16,19 @@ namespace PasswordGenerator.Services.Users
             this.settingsFactory = settingsFactory;
         }
 
-        public async Task<string> GetSettings(int userId, GeneratorType generatorType)
+        public async Task<List<UserSettingDto>> GetAllSettings(int userId, GeneratorType generatorType)
         {
             var settings = await appDbContext.UserSettings
-                .FirstOrDefaultAsync(s => s.UserId == userId && s.GeneratorType == generatorType);
+                .Where(s => s.UserId == userId && s.GeneratorType == generatorType)
+                .ToListAsync();
 
-            if (settings != null)
-            {
-                return settings.SettingJson;
-            }
-            return null;   
+            return settings.Select(s => new UserSettingDto
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    SettingsJson = s.SettingJson,
+                    GeneratorType = s.GeneratorType
+                }).ToList();
         }
 
         public async Task SaveSettings(int userId, SaveSettingsRequest saveSettingsRequest)
@@ -36,12 +39,12 @@ namespace PasswordGenerator.Services.Users
                 throw new Exception("Invalid settings");
 
             var setting = await appDbContext.UserSettings
-                .FirstOrDefaultAsync(s => s.UserId == userId && s.GeneratorType == saveSettingsRequest.GeneratorType);
+                .FirstOrDefaultAsync(s => s.UserId == userId && s.GeneratorType == saveSettingsRequest.GeneratorType && s.Name == saveSettingsRequest.Name);
 
             if (setting != null)
             {
                 setting.SettingJson = saveSettingsRequest.SettingsJson;
-                setting.UpdateAt = DateTime.Now;
+                setting.UpdateAt = DateTime.UtcNow;
                 appDbContext.Update(setting);
             }
             else
@@ -51,8 +54,9 @@ namespace PasswordGenerator.Services.Users
                     UserId = userId,
                     GeneratorType = saveSettingsRequest.GeneratorType,
                     SettingJson = saveSettingsRequest.SettingsJson,
-                    CreateAt = DateTime.Now,
-                    UpdateAt = DateTime.Now
+                    CreateAt = DateTime.UtcNow,
+                    UpdateAt = DateTime.UtcNow,
+                    Name = saveSettingsRequest.Name
                 };
                 await appDbContext.UserSettings.AddAsync(newSetting);
             }

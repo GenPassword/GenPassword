@@ -97,16 +97,15 @@ if (useForwardedHeaders)
     app.UseForwardedHeaders();
 }
 
+app.UseRouting();
+
+app.UseCors("AllowAll");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
-app.UseRouting();
-
-// Используем CORS (важно — до маршрутов)
-app.UseCors("AllowAll");
 
 app.MapControllers(); // API: POST /api/password/generate
 
