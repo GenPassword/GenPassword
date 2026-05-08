@@ -62,5 +62,21 @@ namespace PasswordGenerator.Services.Users
             }
             await appDbContext.SaveChangesAsync();
         }
+
+        public async Task DeleteSettings(int userId, DeleteSettingsRequest deleteSettingsRequest)
+        {
+            var setting = await appDbContext.UserSettings
+                .FirstOrDefaultAsync(s => s.UserId == userId && s.Id == deleteSettingsRequest.Id);
+
+            if (setting != null)
+            {
+                appDbContext.UserSettings.Remove(setting);
+                await appDbContext.SaveChangesAsync();
+            }
+            else
+            {
+                throw new Exception("Настройки не найдены");
+            }
+        }
     }
 }

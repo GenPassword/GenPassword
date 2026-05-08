@@ -1,10 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using NUnit.Framework.Legacy;
+using NUnit.Framework;
 using PasswordGenerator.Data;
 using PasswordGenerator.Models.GeneratorSettings;
 using PasswordGenerator.Services.Users;
 using System.Text.Json;
-
 
 namespace PasswordGenerator.Tests.Tests.UserSettings
 {
@@ -19,7 +18,7 @@ namespace PasswordGenerator.Tests.Tests.UserSettings
         public void Setup()
         {
             var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options;
 
             appDbContext = new AppDbContext(options);
@@ -27,86 +26,112 @@ namespace PasswordGenerator.Tests.Tests.UserSettings
         }
 
         [Test]
-        public async Task SaveSettings_ShouldCreateNewSettings_WhenUserHasNoSettings()
+        public async Task SaveSettings_ShouldCreateNewPreset_WhenNotExists()
         {
             var userId = 1;
-            var generatorType = GeneratorType.Random;
-            var settingsJson = "{ \"length\": 12 }";
-            var request = MakeRequest(generatorType, settingsJson);
+            var request = MakeRequest(GeneratorType.Random, "Fast", "{ \"length\": 12 }");
+
             await service.SaveSettings(userId, request);
 
             var saved = await appDbContext.UserSettings
-                .FirstOrDefaultAsync(x => x.UserId == userId && x.GeneratorType == generatorType);
+                .FirstOrDefaultAsync(x =>
+                    x.UserId == userId &&
+                    x.GeneratorType == GeneratorType.Random &&
+                    x.Name == "Fast");
 
             Assert.That(saved, Is.Not.Null);
-            Assert.That(settingsJson, Is.EqualTo(saved.SettingJson));
+            Assert.That(saved!.SettingJson, Is.EqualTo("{ \"length\": 12 }"));
         }
 
         [Test]
-        public async Task SaveSettings_ShouldUpdateExistingSettings_WhenSettingsAlreadyExist()
+        public async Task SaveSettings_ShouldUpdateExistingPreset_WhenSameName()
         {
             var userId = 1;
-            var generatorType = GeneratorType.Random;
-            var settingsJson1 = "{ \"length\": 12 }";
-            var request1 = MakeRequest(generatorType, settingsJson1);
+
+            var request1 = MakeRequest(GeneratorType.Random, "Fast", "{ \"length\": 12 }");
             await service.SaveSettings(userId, request1);
 
-            var settingsJson2 = "{ \"length\": 15 }";
-            var request2 = MakeRequest(generatorType, settingsJson2);
+            var request2 = MakeRequest(GeneratorType.Random, "Fast", "{ \"length\": 20 }");
             await service.SaveSettings(userId, request2);
 
             var saved = await appDbContext.UserSettings
-                .FirstOrDefaultAsync(x => x.UserId == userId && x.GeneratorType == generatorType);
+                .FirstOrDefaultAsync(x =>
+                    x.UserId == userId &&
+                    x.GeneratorType == GeneratorType.Random &&
+                    x.Name == "Fast");
+
             Assert.That(saved, Is.Not.Null);
-            Assert.That(settingsJson2, Is.EqualTo(saved.SettingJson));
+            Assert.That(saved!.SettingJson, Is.EqualTo("{ \"length\": 20 }"));
         }
 
         [Test]
-        public async Task GetSettings_ShouldReturnNull_WhenSettingsDoNotExist()
-        {
-            var getSetting = await service.GetSettings(1, GeneratorType.Random);
-            Assert.That(getSetting, Is.Null);
-        }
-
-        [Test]
-        public async Task GetSettings_ShouldReturnSettingsJson_WhenSettingsExist()
+        public async Task SaveSettings_ShouldCreateMultiplePresets_ForSameGeneratorType()
         {
             var userId = 1;
-            var generatorType = GeneratorType.Random;
-            var settingsJson = "{ \"length\": 12 }";
-            var request = MakeRequest(generatorType, settingsJson);
-            await service.SaveSettings(userId, request);
 
-            var getSetting = service.GetSettings(1, GeneratorType.Random);
-            Assert.That(getSetting.Result, Is.Not.Null);
-            Assert.That(settingsJson, Is.EqualTo(getSetting.Result));
+            await service.SaveSettings(userId,
+                MakeRequest(GeneratorType.Random, "Fast", "{ \"length\": 8 }"));
 
+            await service.SaveSettings(userId,
+                MakeRequest(GeneratorType.Random, "Secure", "{ \"length\": 20 }"));
+
+            var all = await appDbContext.UserSettings
+                .Where(x => x.UserId == userId && x.GeneratorType == GeneratorType.Random)
+                .ToListAsync();
+
+            Assert.That(all.Count, Is.EqualTo(2));
         }
 
         [Test]
-        public async Task GetSettings_ShouldReturnCorrectSettings_ForCorrectGeneratorType()
+        public async Task GetAllSettings_ShouldReturnEmptyList_WhenNoSettings()
         {
-            var userId = 1;
-            var generatorType1 = GeneratorType.Random;
-            var generatorType2 = GeneratorType.Words;
-            var settingsJson1 = "{ \"length\": 12 }";
-            var settingsJson2 = "{ \"length\": 3 }";
-            var request1 = MakeRequest(generatorType1, settingsJson1);
-            await service.SaveSettings(userId, request1);
-            var request2 = MakeRequest(generatorType2, settingsJson2);
-            await service.SaveSettings(userId, request2);
+            var result = await service.GetAllSettings(1, GeneratorType.Random);
 
-            var getSetting = await service.GetSettings(1, GeneratorType.Words);
-            Assert.That(settingsJson2, Is.EqualTo(getSetting));
+            Assert.That(result, Is.Empty);
         }
 
         [Test]
-        public async Task SaveSettings_ShouldThrowException_WhenJsonIsInvalid()
+        public async Task GetAllSettings_ShouldReturnAllPresets()
         {
             var userId = 1;
-            var generatorType = GeneratorType.Random;
-            var settingsJson = "{ \"length\": ";
-            var request = MakeRequest(generatorType, settingsJson);
+
+            await service.SaveSettings(userId,
+                MakeRequest(GeneratorType.Random, "Fast", "{ \"length\": 8 }"));
+
+            await service.SaveSettings(userId,
+                MakeRequest(GeneratorType.Random, "Secure", "{ \"length\": 20 }"));
+
+            var result = await service.GetAllSettings(userId, GeneratorType.Random);
+
+            Assert.That(result.Count, Is.EqualTo(2));
+            Assert.That(result.Any(x => x.Name == "Fast"), Is.True);
+            Assert.That(result.Any(x => x.Name == "Secure"), Is.True);
+        }
+
+        [Test]
+        public async Task GetAllSettings_ShouldFilterByGeneratorType()
+        {
+            var userId = 1;
+
+            await service.SaveSettings(userId,
+                MakeRequest(GeneratorType.Random, "Fast", "{ \"length\": 8 }"));
+
+            await service.SaveSettings(userId,
+                MakeRequest(GeneratorType.Words, "WordsPreset", "{ \"count\": 3 }"));
+
+            var result = await service.GetAllSettings(userId, GeneratorType.Words);
+
+            Assert.That(result.Count, Is.EqualTo(1));
+            Assert.That(result[0].Name, Is.EqualTo("WordsPreset"));
+        }
+
+        [Test]
+        public async Task SaveSettings_ShouldThrowException_WhenJsonInvalid()
+        {
+            var userId = 1;
+
+            var request = MakeRequest(GeneratorType.Random, "Bad", "{ \"length\": ");
+
             Assert.ThrowsAsync<JsonException>(async () =>
             {
                 await service.SaveSettings(userId, request);
@@ -114,16 +139,87 @@ namespace PasswordGenerator.Tests.Tests.UserSettings
 
             var saved = appDbContext.UserSettings
                 .FirstOrDefault(x => x.UserId == userId);
+
             Assert.That(saved, Is.Null);
         }
 
-        private SaveSettingsRequest MakeRequest(GeneratorType generatorType, string settingsJson)
+        private SaveSettingsRequest MakeRequest(
+            GeneratorType generatorType,
+            string name,
+            string settingsJson)
         {
             return new SaveSettingsRequest
             {
                 GeneratorType = generatorType,
+                Name = name,
                 SettingsJson = settingsJson
             };
+        }
+
+        [Test]
+        public async Task DeleteSettings_ShouldRemovePreset_WhenExists()
+        {
+            var userId = 1;
+
+            var request = MakeRequest(GeneratorType.Random, "Fast", "{ \"length\": 8 }");
+            await service.SaveSettings(userId, request);
+
+            var saved = await appDbContext.UserSettings.FirstAsync();
+
+            var deleteRequest = new DeleteSettingsRequest
+            {
+                Id = saved.Id
+            };
+
+            await service.DeleteSettings(userId, deleteRequest);
+
+            var deleted = await appDbContext.UserSettings
+                .FirstOrDefaultAsync(x => x.Id == saved.Id);
+
+            Assert.That(deleted, Is.Null);
+        }
+
+        [Test]
+        public void DeleteSettings_ShouldThrowException_WhenNotFound()
+        {
+            var userId = 1;
+
+            var deleteRequest = new DeleteSettingsRequest
+            {
+                Id = 999
+            };
+
+            Assert.ThrowsAsync<Exception>(async () =>
+            {
+                await service.DeleteSettings(userId, deleteRequest);
+            });
+        }
+
+        [Test]
+        public async Task DeleteSettings_ShouldNotDeleteOtherUserSettings()
+        {
+            var user1 = 1;
+            var user2 = 2;
+
+            var request = MakeRequest(GeneratorType.Random, "Fast", "{ \"length\": 8 }");
+            await service.SaveSettings(user1, request);
+
+            var saved = await appDbContext.UserSettings.FirstAsync();
+
+            var deleteRequest = new DeleteSettingsRequest
+            {
+                Id = saved.Id,
+            };
+
+            Assert.ThrowsAsync<Exception>(async () =>
+            {
+                await service.DeleteSettings(user2, deleteRequest);
+            });
+
+            var stillExists = await appDbContext.UserSettings
+                .FirstOrDefaultAsync(x => x.Id == saved.Id);
+
+            Assert.That(stillExists, Is.Not.Null);
         }
     }
 }
