@@ -37,9 +37,27 @@ namespace PasswordGenerator.Controllers
         [HttpPost("save")]
         public async Task<IActionResult> SaveSettings([FromBody] SaveSettingsRequest saveSettingsRequest)
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+
+            if (userIdClaim == null)
+                return Unauthorized();
+            if (!int.TryParse(userIdClaim.Value, out var userId))
+                return Unauthorized();
             await userSettingsService.SaveSettings(userId, saveSettingsRequest);
             return Ok(new { Message = "Настройки сохранены" });
+        }
+
+        [HttpPost("delete")]
+        public async Task<IActionResult> DeleteSettings(DeleteSettingsRequest deleteSettingsRequest)
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+
+            if (userIdClaim == null)
+                return Unauthorized();
+            if (!int.TryParse(userIdClaim.Value, out var userId))
+                return Unauthorized();
+            await userSettingsService.DeleteSettings(userId, deleteSettingsRequest);
+            return Ok(new { Message = "Настройки удалены" });
         }
     }
 }
