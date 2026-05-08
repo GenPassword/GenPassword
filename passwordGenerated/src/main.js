@@ -8,6 +8,7 @@ const API_AUTH_REGISTER = 'https://myproject24.ru/api/Auth/register';
 const API_AUTH_LOGIN = 'https://myproject24.ru/api/Auth/login';
 const API_SETTINGS_SAVE = 'https://myproject24.ru/api/UserSettings/save';
 const API_SETTINGS_GET = 'https://myproject24.ru/api/UserSettings';
+const API_SETTINGS_DELETE = 'https://myproject24.ru/api/UserSettings/delete';
 
 const $ = (id) => document.getElementById(id);
 
@@ -484,6 +485,18 @@ async function initApp() {
         }
     }
     
+    // ✅ УДАЛЕНИЕ ПРЕСЕТА
+    async function deletePresetFromServer(id) {
+        if (!authToken) return false;
+        try {
+            await apiRequest(API_SETTINGS_DELETE, 'POST', { Id: id }, authToken);
+            return true;
+        } catch (err) {
+            console.error('Ошибка удаления:', err);
+            return false;
+        }
+    }
+    
     function renderPresets() {
         if (!els.presetsList) return;
         
@@ -625,8 +638,14 @@ async function initApp() {
         showToast(`✅ Применён: ${preset.name}`);
     }
     
+    // ✅ УДАЛЕНИЕ ПРЕСЕТА (с вызовом API)
     async function deletePreset(id) {
-        if (confirm('Удалить этот пресет?')) {
+        if (!confirm('Удалить этот пресет?')) return;
+        
+        const success = await deletePresetFromServer(id);
+        
+        if (success) {
+            // Обновляем локальные массивы
             const currentPresets = getCurrentPresets();
             const newPresets = currentPresets.filter(p => p.id !== id);
             
@@ -638,6 +657,8 @@ async function initApp() {
             
             renderPresets();
             showToast('🗑️ Пресет удалён');
+        } else {
+            showToast('❌ Ошибка при удалении');
         }
     }
     
@@ -1424,7 +1445,6 @@ async function initApp() {
     // ===== ИНИЦИАЛИЗАЦИЯ =====
     initCounters();
     
-    // Устанавливаем чекбоксы по умолчанию
     const defaultCheckboxes = ['includeLowercase', 'includeUppercase', 'includeDigits', 'includeSpecial'];
     defaultCheckboxes.forEach(id => {
         const cb = $(id);
