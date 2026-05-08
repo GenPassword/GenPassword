@@ -6,5 +6,6 @@ namespace PasswordGenerator.Services.Users
     {
         Task SaveSettings(int  userId, SaveSettingsRequest saveSettingsRequest);
         Task<List<UserSettingDto>> GetAllSettings(int userId, GeneratorType generatorType);
+        Task DeleteSettings(int userId, DeleteSettingsRequest deleteSettingsRequest);
     }
 }

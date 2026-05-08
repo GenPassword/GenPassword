@@ -155,5 +155,71 @@ namespace PasswordGenerator.Tests.Tests.UserSettings
                 SettingsJson = settingsJson
             };
         }
+
+        [Test]
+        public async Task DeleteSettings_ShouldRemovePreset_WhenExists()
+        {
+            var userId = 1;
+
+            var request = MakeRequest(GeneratorType.Random, "Fast", "{ \"length\": 8 }");
+            await service.SaveSettings(userId, request);
+
+            var saved = await appDbContext.UserSettings.FirstAsync();
+
+            var deleteRequest = new DeleteSettingsRequest
+            {
+                Id = saved.Id
+            };
+
+            await service.DeleteSettings(userId, deleteRequest);
+
+            var deleted = await appDbContext.UserSettings
+                .FirstOrDefaultAsync(x => x.Id == saved.Id);
+
+            Assert.That(deleted, Is.Null);
+        }
+
+        [Test]
+        public void DeleteSettings_ShouldThrowException_WhenNotFound()
+        {
+            var userId = 1;
+
+            var deleteRequest = new DeleteSettingsRequest
+            {
+                Id = 999
+            };
+
+            Assert.ThrowsAsync<Exception>(async () =>
+            {
+                await service.DeleteSettings(userId, deleteRequest);
+            });
+        }
+
+        [Test]
+        public async Task DeleteSettings_ShouldNotDeleteOtherUserSettings()
+        {
+            var user1 = 1;
+            var user2 = 2;
+
+            var request = MakeRequest(GeneratorType.Random, "Fast", "{ \"length\": 8 }");
+            await service.SaveSettings(user1, request);
+
+            var saved = await appDbContext.UserSettings.FirstAsync();
+
+            var deleteRequest = new DeleteSettingsRequest
+            {
+                Id = saved.Id,
+            };
+
+            Assert.ThrowsAsync<Exception>(async () =>
+            {
+                await service.DeleteSettings(user2, deleteRequest);
+            });
+
+            var stillExists = await appDbContext.UserSettings
+                .FirstOrDefaultAsync(x => x.Id == saved.Id);
+
+            Assert.That(stillExists, Is.Not.Null);
+        }
     }
 }
