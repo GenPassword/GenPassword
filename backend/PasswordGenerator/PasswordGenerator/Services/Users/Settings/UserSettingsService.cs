@@ -3,7 +3,7 @@ using PasswordGenerator.Data;
 using PasswordGenerator.Entities;
 using PasswordGenerator.Models.GeneratorSettings;
 
-namespace PasswordGenerator.Services.Users
+namespace PasswordGenerator.Services.Users.Settings
 {
     public class UserSettingsService : IUserSettingsService
     {

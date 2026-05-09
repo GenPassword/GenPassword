@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using PasswordGenerator.Data;
 using PasswordGenerator.Entities;
-using PasswordGenerator.Services.Users;
+using PasswordGenerator.Services.Users.Registration;
 using System.Security.Authentication;
 
 namespace PasswordGenerator.Services.Auth

@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using PasswordGenerator.Data;
 using PasswordGenerator.Models.GeneratorSettings;
-using PasswordGenerator.Services.Users;
+using PasswordGenerator.Services.Users.Settings;
 using System.Text.Json;
 
 namespace PasswordGenerator.Tests.Tests.UserSettings

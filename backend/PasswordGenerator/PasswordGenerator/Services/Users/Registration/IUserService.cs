@@ -1,6 +1,6 @@
 ﻿using PasswordGenerator.Entities;
 
-namespace PasswordGenerator.Services.Users
+namespace PasswordGenerator.Services.Users.Registration
 {
     public interface IUserService
     {

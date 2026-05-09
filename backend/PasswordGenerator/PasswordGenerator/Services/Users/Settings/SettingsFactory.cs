@@ -2,7 +2,7 @@
 using PasswordGenerator.Models.GeneratorSettings;
 using System.Text.Json;
 
-namespace PasswordGenerator.Services.Users
+namespace PasswordGenerator.Services.Users.Settings
 {
     public class SettingsFactory
     {

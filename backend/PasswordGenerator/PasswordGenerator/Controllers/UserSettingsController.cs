@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using PasswordGenerator.Data;
 using PasswordGenerator.Entities;
 using PasswordGenerator.Models.GeneratorSettings;
-using PasswordGenerator.Services.Users;
+using PasswordGenerator.Services.Users.Settings;
 using System.Security.Claims;
 
 namespace PasswordGenerator.Controllers

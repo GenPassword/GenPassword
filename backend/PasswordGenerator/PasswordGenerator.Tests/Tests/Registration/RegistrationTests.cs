@@ -5,7 +5,7 @@ using NUnit.Framework.Legacy;
 using PasswordGenerator.Data;
 using PasswordGenerator.Entities;
 using PasswordGenerator.Services.Auth;
-using PasswordGenerator.Services.Users;
+using PasswordGenerator.Services.Users.Registration;
 using System;
 using System.Collections.Generic;
 using System.Linq;

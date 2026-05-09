@@ -1,6 +1,6 @@
 ﻿using PasswordGenerator.Models.GeneratorSettings;
 
-namespace PasswordGenerator.Services.Users
+namespace PasswordGenerator.Services.Users.Settings
 {
     public interface IUserSettingsService
     {

@@ -4,8 +4,8 @@ using NUnit.Framework.Legacy;
 using PasswordGenerator.Data;
 using PasswordGenerator.Entities;
 using System.Security.Authentication;
-using PasswordGenerator.Services.Users;
 using PasswordGenerator.Services.Auth;
+using PasswordGenerator.Services.Users.Registration;
 
 namespace PasswordGenerator.Tests.Tests.Login
 {
