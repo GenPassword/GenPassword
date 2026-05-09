@@ -1,5 +1,5 @@
 using PasswordGenerator.Domain;
-using PasswordGenerator.Models;
+using PasswordGenerator.Models.GeneratePassword;
 
 namespace PasswordGenerator.Validators;
 

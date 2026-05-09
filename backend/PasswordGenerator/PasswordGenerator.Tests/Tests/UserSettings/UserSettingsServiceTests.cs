@@ -11,7 +11,7 @@ namespace PasswordGenerator.Tests.Tests.UserSettings
     public class UserSettingsServiceTests
     {
         private AppDbContext appDbContext = null!;
-        private UserSettingsService service = null!;
+        private IUserSettingsService service = null!;
         private SettingsFactory settingsFactory = new SettingsFactory();
 
         [SetUp]
@@ -178,9 +178,8 @@ namespace PasswordGenerator.Tests.Tests.UserSettings
 
             Assert.That(deleted, Is.Null);
         }
-
         [Test]
-        public void DeleteSettings_ShouldThrowException_WhenNotFound()
+        public async Task DeleteSettings_ShouldDoNothing_WhenNotFound()
         {
             var userId = 1;
 
@@ -189,10 +188,9 @@ namespace PasswordGenerator.Tests.Tests.UserSettings
                 Id = 999
             };
 
-            Assert.ThrowsAsync<Exception>(async () =>
-            {
-                await service.DeleteSettings(userId, deleteRequest);
-            });
+            await service.DeleteSettings(userId, deleteRequest);
+
+            Assert.Pass("No exception should be thrown");
         }
 
         [Test]
@@ -202,19 +200,17 @@ namespace PasswordGenerator.Tests.Tests.UserSettings
             var user2 = 2;
 
             var request = MakeRequest(GeneratorType.Random, "Fast", "{ \"length\": 8 }");
+
             await service.SaveSettings(user1, request);
 
             var saved = await appDbContext.UserSettings.FirstAsync();
 
             var deleteRequest = new DeleteSettingsRequest
             {
-                Id = saved.Id,
+                Id = saved.Id
             };
 
-            Assert.ThrowsAsync<Exception>(async () =>
-            {
-                await service.DeleteSettings(user2, deleteRequest);
-            });
+            await service.DeleteSettings(user2, deleteRequest);
 
             var stillExists = await appDbContext.UserSettings
                 .FirstOrDefaultAsync(x => x.Id == saved.Id);

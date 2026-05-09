@@ -1,4 +1,4 @@
-﻿using PasswordGenerator.Models;
+﻿using PasswordGenerator.Models.GeneratePassword;
 using PasswordGenerator.Services.Password.Analysis;
 using PasswordGenerator.Services.Password.Generation;
 using PasswordGenerator.Tests.Tests.Stubs;

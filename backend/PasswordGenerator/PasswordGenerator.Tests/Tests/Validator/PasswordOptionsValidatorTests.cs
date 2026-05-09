@@ -1,6 +1,6 @@
 using NUnit.Framework;
 using PasswordGenerator.Domain;
-using PasswordGenerator.Models;
+using PasswordGenerator.Models.GeneratePassword;
 using PasswordGenerator.Validators;
 
 namespace PasswordGenerator.Tests.Validator;

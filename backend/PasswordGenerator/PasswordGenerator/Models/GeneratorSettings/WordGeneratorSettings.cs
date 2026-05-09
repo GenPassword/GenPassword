@@ -1,4 +1,6 @@
-﻿namespace PasswordGenerator.Models.GeneratorSettings
+﻿using PasswordGenerator.Models.GeneratePassword;
+
+namespace PasswordGenerator.Models.GeneratorSettings
 {
     public class WordGeneratorSettings : IGeneratorSettings
     {

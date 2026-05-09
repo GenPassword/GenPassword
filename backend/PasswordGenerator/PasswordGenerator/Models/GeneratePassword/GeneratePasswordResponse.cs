@@ -1,4 +1,4 @@
-namespace PasswordGenerator.Models;
+namespace PasswordGenerator.Models.GeneratePassword;
 
 public class GeneratePasswordResponse
 {

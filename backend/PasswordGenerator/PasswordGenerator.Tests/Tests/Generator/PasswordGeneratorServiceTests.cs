@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using PasswordGenerator.Domain;
-using PasswordGenerator.Models;
+using PasswordGenerator.Models.GeneratePassword;
 using PasswordGenerator.Services;
 using PasswordGenerator.Services.Password.Analysis;
 using PasswordGenerator.Services.Password.Generation;

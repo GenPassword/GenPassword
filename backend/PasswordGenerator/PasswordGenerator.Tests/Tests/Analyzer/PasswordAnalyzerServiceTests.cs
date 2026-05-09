@@ -1,5 +1,5 @@
 using NUnit.Framework;
-using PasswordGenerator.Models;
+using PasswordGenerator.Models.GeneratePassword;
 using PasswordGenerator.Services.Password.Analysis;
 
 namespace PasswordGenerator.Tests.Analyzer;

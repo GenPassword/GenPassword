@@ -75,7 +75,7 @@ namespace PasswordGenerator.Services.Users.Settings
             }
             else
             {
-                throw new Exception("Настройки не найдены");
+                return;
             }
         }
     }

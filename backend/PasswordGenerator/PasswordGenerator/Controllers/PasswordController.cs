@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using PasswordGenerator.Models;
+using PasswordGenerator.Models.GeneratePassword;
 using PasswordGenerator.Services.Password.Generation;
 using PasswordGenerator.Services.RateLimiting;
 
