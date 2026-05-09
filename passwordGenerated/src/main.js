@@ -6,11 +6,7 @@ import './style.css'
 // const API_WORDS = '/api/password/generate-from-words';
 // const API_PIN = '/api/password/generate';
 
-// Для работы на локальном сервере
-// const API_RANDOM = 'https://myproject24.ru/api/password/generate';
-// const API_WORDS = 'https://myproject24.ru/api/password/generate-from-words';
-// const API_PIN = 'https://myproject24.ru/api/password/generate';
-
+// ✅ API URLs
 const API_RANDOM = 'https://myproject24.ru/api/password/generate';
 const API_WORDS = 'https://myproject24.ru/api/password/generate-from-words';
 const API_PIN = 'https://myproject24.ru/api/password/generate';
@@ -18,6 +14,7 @@ const API_AUTH_REGISTER = 'https://myproject24.ru/api/Auth/register';
 const API_AUTH_LOGIN = 'https://myproject24.ru/api/Auth/login';
 const API_SETTINGS_SAVE = 'https://myproject24.ru/api/UserSettings/save';
 const API_SETTINGS_GET = 'https://myproject24.ru/api/UserSettings';
+const API_SETTINGS_DELETE = 'https://myproject24.ru/api/UserSettings/delete';
 
 const $ = (id) => document.getElementById(id);
 
@@ -494,6 +491,18 @@ async function initApp() {
         }
     }
     
+    // ✅ УДАЛЕНИЕ ПРЕСЕТА
+    async function deletePresetFromServer(id) {
+        if (!authToken) return false;
+        try {
+            await apiRequest(API_SETTINGS_DELETE, 'POST', { Id: id }, authToken);
+            return true;
+        } catch (err) {
+            console.error('Ошибка удаления:', err);
+            return false;
+        }
+    }
+    
     function renderPresets() {
         if (!els.presetsList) return;
         
@@ -635,8 +644,14 @@ async function initApp() {
         showToast(`✅ Применён: ${preset.name}`);
     }
     
+    // ✅ УДАЛЕНИЕ ПРЕСЕТА (с вызовом API)
     async function deletePreset(id) {
-        if (confirm('Удалить этот пресет?')) {
+        if (!confirm('Удалить этот пресет?')) return;
+        
+        const success = await deletePresetFromServer(id);
+        
+        if (success) {
+            // Обновляем локальные массивы
             const currentPresets = getCurrentPresets();
             const newPresets = currentPresets.filter(p => p.id !== id);
             
@@ -648,6 +663,8 @@ async function initApp() {
             
             renderPresets();
             showToast('🗑️ Пресет удалён');
+        } else {
+            showToast('❌ Ошибка при удалении');
         }
     }
     
@@ -1213,36 +1230,22 @@ async function initApp() {
 
     // ===== КОПИРОВАНИЕ =====
     async function copyPassword() {
-    const text = document.getElementById('password').textContent;
-    if (!text || text === 'Нажмите "генерировать"') return;
-    
-    // Пробуем современный API
-    if (navigator.clipboard && window.isSecureContext) {
+        const text = els.password.textContent;
+        if (!text || text === 'Нажмите "генерировать"') return;
         try {
             await navigator.clipboard.writeText(text);
-            showSuccess();
-            return;
-        } catch(e) {}
+            els.copy.textContent = 'Скопировано';
+            els.passwordBlock.classList.add('copied');
+            setTimeout(() => {
+                els.copy.textContent = 'Копировать';
+                els.passwordBlock.classList.remove('copied');
+            }, 1500);
+        } catch (e) { 
+            console.error(e); 
+            els.copy.textContent = '❌ Ошибка';
+            setTimeout(() => els.copy.textContent = 'Копировать', 1500);
+        }
     }
-    
-    // Fallback для HTTP (работает везде)
-    const textarea = document.createElement('textarea');
-    textarea.value = text;
-    textarea.style.position = 'fixed';
-    textarea.style.opacity = '0';
-    document.body.appendChild(textarea);
-    textarea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textarea);
-    showSuccess();
-}
-
-function showSuccess() {
-    const btn = document.querySelector('.copy-btn');
-    const original = btn.textContent;
-    btn.textContent = 'Скопировано!';
-    setTimeout(() => btn.textContent = original, 1500);
-}
 
     if (els.copy) {
         els.copy.onclick = (e) => {
@@ -1448,7 +1451,6 @@ function showSuccess() {
     // ===== ИНИЦИАЛИЗАЦИЯ =====
     initCounters();
     
-    // Устанавливаем чекбоксы по умолчанию
     const defaultCheckboxes = ['includeLowercase', 'includeUppercase', 'includeDigits', 'includeSpecial'];
     defaultCheckboxes.forEach(id => {
         const cb = $(id);
