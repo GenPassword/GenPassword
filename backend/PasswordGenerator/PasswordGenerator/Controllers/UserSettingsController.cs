@@ -47,7 +47,7 @@ namespace PasswordGenerator.Controllers
             return Ok(new { Message = "Настройки сохранены" });
         }
 
-        [HttpPost("delete")]
+        [HttpDelete("delete")]
         public async Task<IActionResult> DeleteSettings(DeleteSettingsRequest deleteSettingsRequest)
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);

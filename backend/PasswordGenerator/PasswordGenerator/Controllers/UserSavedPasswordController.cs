@@ -34,7 +34,7 @@ namespace PasswordGenerator.Controllers
             return Ok(new { Message = "Пароль сохранен" });
         }
 
-        [HttpPost("delete")]
+        [HttpDelete("delete")]
         public async Task<IActionResult> DeleteUserPassword(DeletePasswordRequest deletePasswordRequest)
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
