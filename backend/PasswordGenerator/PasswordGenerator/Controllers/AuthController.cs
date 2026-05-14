@@ -4,6 +4,7 @@ using PasswordGenerator.Entities;
 using PasswordGenerator.Models;
 using PasswordGenerator.Services.Auth;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Authentication;
 using System.Security.Claims;
 using System.Text;
 
@@ -28,14 +29,14 @@ namespace PasswordGenerator.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return ValidationProblem(ModelState);
             }
             var email = registerUserRequest.Email;
             var password = registerUserRequest.Password;
             var result = await authService.RegisterUser(email, password);
             if(result)
                 return Ok(new { message = "User registered" });
-            return BadRequest("Email уже существует");
+            return Conflict(new { message = "Email уже существует" });
         }
 
         [HttpPost("login")]
@@ -43,7 +44,7 @@ namespace PasswordGenerator.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return ValidationProblem(ModelState);
             }
             try
             {
@@ -51,9 +52,13 @@ namespace PasswordGenerator.Controllers
                 var token = GenerateJwtToken(userInBd);
                 return Ok(new { token });
             }
-            catch
+            catch (AuthenticationException)
             {
-                return BadRequest("Invalid credentials");
+                return Unauthorized(new { message = "Неверный email или пароль" });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
             }
         }
 
