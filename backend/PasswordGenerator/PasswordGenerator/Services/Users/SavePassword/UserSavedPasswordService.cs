@@ -9,10 +9,12 @@ namespace PasswordGenerator.Services.Users.SavePassword
     public class UserSavedPasswordService : IUserSavedPasswordService
     {
         private readonly AppDbContext appDbContext;
+        private readonly IEncryptionService encryptionService;
         
-        public UserSavedPasswordService(AppDbContext appDbContext)
+        public UserSavedPasswordService(AppDbContext appDbContext, IEncryptionService encryptionService)
         {
             this.appDbContext = appDbContext;
+            this.encryptionService = encryptionService;
         }
         public async Task DeletePassword(int userId, DeletePasswordRequest deletePasswordRequest)
         {
@@ -24,9 +26,7 @@ namespace PasswordGenerator.Services.Users.SavePassword
                 await appDbContext.SaveChangesAsync();
             }
             else
-            {
                 return;
-            }
         }
 
         public async Task<List<UserSavedPasswordDto>> GetAllPassword(int userId)
@@ -34,12 +34,18 @@ namespace PasswordGenerator.Services.Users.SavePassword
             var savedPassword = await appDbContext.UserSavesPasswords
                 .Where(p => p.UserId == userId)
                 .ToListAsync();
+            
             return savedPassword
-                .Select(s => new UserSavedPasswordDto
+                .Select(s =>
                 {
-                    Description = s.Description,
-                    Id = s.Id,
-                    Password = s.Password,
+                    var encrypted = s.Password;
+                    var plain = encryptionService.Decrypt(encrypted);
+                    return new UserSavedPasswordDto
+                    {
+                        Description = s.Description,
+                        Id = s.Id,
+                        Password = plain,
+                    };
                 })
                 .ToList();
         }
@@ -49,6 +55,7 @@ namespace PasswordGenerator.Services.Users.SavePassword
             var password = savePasswordRequest.Password;
             var description = savePasswordRequest.Description;
             var id = savePasswordRequest.Id;
+            var encrypted = encryptionService.Encrypt(password);
 
             var savedPassword = await appDbContext.UserSavesPasswords
                 .FirstOrDefaultAsync(p => p.UserId == userId && p.Id == id);
@@ -64,7 +71,7 @@ namespace PasswordGenerator.Services.Users.SavePassword
                 {
                     Description = description,
                     Id = id,
-                    Password = password,
+                    Password = encrypted,
                     CreateAt = DateTime.UtcNow,
                     UpdateAt = DateTime.UtcNow,
                     UserId = userId

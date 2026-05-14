@@ -12,6 +12,7 @@ using PasswordGenerator.Services.Password.Generation;
 using PasswordGenerator.Services.Password.Validator;
 using PasswordGenerator.Services.RateLimiting;
 using PasswordGenerator.Services.Users.Registration;
+using PasswordGenerator.Services.Users.SavePassword;
 using PasswordGenerator.Services.Users.Settings;
 using PasswordGenerator.Services.Wordlist;
 using PasswordGenerator.Validators;
@@ -37,7 +38,16 @@ builder.Services.AddScoped<IPasswordRule, RepetitionRule>();
 builder.Services.AddScoped<IPasswordRule, SequentialRule>();
 builder.Services.AddScoped<IPasswordValidator, PasswordValidator>();
 builder.Services.AddSingleton<IRequestRateLimiter, RequestRateLimiter>();
+builder.Services.AddScoped<IUserSavedPasswordService, UserSavedPasswordService>();
+builder.Services.AddScoped<IEncryptionService>(provider =>
+{
+    var configuration = provider.GetRequiredService<IConfiguration>();
+    var key = builder.Configuration["ENCRYPTION_KEY"];
+
+    return new EncryptionService(key);
+});
 builder.Services.AddScoped<SettingsFactory>();
+
 
 // Регистрация DbContext
 var connectionStr = builder.Configuration.GetConnectionString("DefaultConnection");

@@ -12,11 +12,18 @@ using System.Threading.Tasks;
 
 namespace PasswordGenerator.Tests.Tests.PasswordSaves
 {
+    public class FakeEncryptionService : IEncryptionService
+    {
+        public string Encrypt(string text) => text;
+        public string Decrypt(string text) => text;
+    }
+
     [TestFixture]
     public class PasswordSavesTest
     {
         private AppDbContext appDbContext = null!;
         private IUserSavedPasswordService service = null!;
+        private IEncryptionService encryptionService = new FakeEncryptionService();
 
         [SetUp]
         public void Setup()
@@ -26,7 +33,7 @@ namespace PasswordGenerator.Tests.Tests.PasswordSaves
                 .Options;
 
             appDbContext = new AppDbContext(options);
-            service = new UserSavedPasswordService(appDbContext);
+            service = new UserSavedPasswordService(appDbContext, encryptionService);
         }
 
         [Test]
