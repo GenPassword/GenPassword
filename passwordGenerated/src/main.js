@@ -1,32 +1,38 @@
 import './style.css'
 
 // ✅ API URLs
-// Для работы на сервере УрФУ
-// const API_RANDOM = '/api/password/generate';
-// const API_WORDS = '/api/password/generate-from-words';
-// const API_PIN = '/api/password/generate';
-
-// ✅ API URLs
 const API_RANDOM = 'https://myproject24.ru/api/password/generate';
 const API_WORDS = 'https://myproject24.ru/api/password/generate-from-words';
 const API_PIN = 'https://myproject24.ru/api/password/generate';
 const API_AUTH_REGISTER = 'https://myproject24.ru/api/Auth/register';
 const API_AUTH_LOGIN = 'https://myproject24.ru/api/Auth/login';
+const API_AUTH_REFRESH = 'https://myproject24.ru/api/Auth/refresh';
+const API_AUTH_LOGOUT = 'https://myproject24.ru/api/Auth/logout';
 const API_SETTINGS_SAVE = 'https://myproject24.ru/api/UserSettings/save';
 const API_SETTINGS_GET = 'https://myproject24.ru/api/UserSettings';
 const API_SETTINGS_DELETE = 'https://myproject24.ru/api/UserSettings/delete';
+const API_SAVED_PASSWORD_SAVE = 'https://myproject24.ru/api/UserSavedPassword/save';
+const API_SAVED_PASSWORD_GET = 'https://myproject24.ru/api/UserSavedPassword/getSaves';
+const API_SAVED_PASSWORD_DELETE = 'https://myproject24.ru/api/UserSavedPassword/delete';
 
 const $ = (id) => document.getElementById(id);
 
 // ===== СОСТОЯНИЕ ПОЛЬЗОВАТЕЛЯ =====
 let currentUser = null;
-let authToken = null;
+let accessToken = null;
 let currentMode = 'random';
 
 // ===== ПРЕСЕТЫ НАСТРОЕК =====
 let presetsRandom = [];
 let presetsPin = [];
 let presetsWords = [];
+
+// ===== СОХРАНЁННЫЕ ПАРОЛИ =====
+let savedPasswords = [];
+
+// ===== ФЛАГ ОБНОВЛЕНИЯ ТОКЕНА =====
+let isRefreshing = false;
+let refreshQueue = [];
 
 function getCurrentPresets() {
     switch(currentMode) {
@@ -55,7 +61,7 @@ function getGeneratorTypeNumber() {
     }
 }
 
-// ✅ HTML-шаблон
+// ✅ HTML-шаблон (без изменений)
 const html = `
 <div class="container">
     <div class="presets-sidebar">
@@ -103,6 +109,11 @@ const html = `
         <div class="password-block" id="passwordBlock" title="Нажмите для копирования">
             <div id="password" class="password-text">Нажмите "генерировать"</div>
             <button class="copy-btn" id="copyBtn">Копировать</button>
+        </div>
+        
+        <div class="password-actions">
+            <button id="savePasswordBtn" class="save-password-btn">💾 Сохранить пароль</button>
+            <button id="viewSavedPasswordsBtn" class="view-saved-btn">📋 Мои пароли</button>
         </div>
         
         <div class="strength-container">
@@ -261,6 +272,61 @@ const html = `
     </div>
 </div>
 
+<!-- Модалка для сохранения пароля -->
+<div id="savePasswordModal" class="save-password-modal" style="display: none;">
+    <div class="save-password-modal-content">
+        <div class="save-password-modal-header">
+            <h3>Сохранить пароль</h3>
+            <button id="closeSavePasswordModal" class="close-modal">&times;</button>
+        </div>
+        <div class="save-password-modal-body">
+            <div class="form-group">
+                <label>Пароль</label>
+                <input type="text" id="savePasswordValue" readonly>
+            </div>
+            <div class="form-group">
+                <label>Описание</label>
+                <input type="text" id="savePasswordDescription" maxlength="100">
+            </div>
+        </div>
+        <div class="save-password-modal-footer">
+            <button id="cancelSavePasswordBtn" class="cancel-save-btn">Отмена</button>
+            <button id="confirmSavePasswordBtn" class="confirm-save-btn">Сохранить</button>
+        </div>
+    </div>
+</div>
+
+<!-- Модалка для просмотра сохранённых паролей -->
+<div id="savedPasswordsModal" class="saved-passwords-modal" style="display: none;">
+    <div class="saved-passwords-modal-content">
+        <div class="saved-passwords-modal-header">
+            <h3>Мои сохранённые пароли</h3>
+            <button id="closeSavedPasswordsModal" class="close-modal">&times;</button>
+        </div>
+        <div class="saved-passwords-modal-body">
+            <div id="savedPasswordsList" class="saved-passwords-list">
+                <div class="saved-passwords-empty">Нет сохранённых паролей</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модалка для подтверждения удаления пароля -->
+<div id="deletePasswordConfirmModal" class="confirm-modal" style="display: none;">
+    <div class="confirm-modal-content">
+        <div class="confirm-modal-header">
+            <h3>Подтверждение</h3>
+        </div>
+        <div class="confirm-modal-body">
+            <p>Вы уверены, что хотите удалить этот пароль?</p>
+        </div>
+        <div class="confirm-modal-footer">
+            <button id="cancelDeleteBtn" class="confirm-cancel-btn">Отмена</button>
+            <button id="confirmDeleteBtn" class="confirm-delete-btn">Удалить</button>
+        </div>
+    </div>
+</div>
+
 <div id="authModal" class="auth-modal" style="display: none;">
     <div class="auth-modal-content">
         <div class="auth-modal-header">
@@ -390,14 +456,85 @@ async function initApp() {
         presetNameInput: $('presetNameInput'),
         closePresetModal: $('closePresetModal'),
         cancelPresetBtn: $('cancelPresetBtn'),
-        confirmPresetBtn: $('confirmPresetBtn')
+        confirmPresetBtn: $('confirmPresetBtn'),
+        savePasswordBtn: $('savePasswordBtn'),
+        viewSavedPasswordsBtn: $('viewSavedPasswordsBtn'),
+        savePasswordModal: $('savePasswordModal'),
+        closeSavePasswordModal: $('closeSavePasswordModal'),
+        cancelSavePasswordBtn: $('cancelSavePasswordBtn'),
+        confirmSavePasswordBtn: $('confirmSavePasswordBtn'),
+        savePasswordValue: $('savePasswordValue'),
+        savePasswordDescription: $('savePasswordDescription'),
+        savedPasswordsModal: $('savedPasswordsModal'),
+        closeSavedPasswordsModal: $('closeSavedPasswordsModal'),
+        savedPasswordsList: $('savedPasswordsList'),
+        deletePasswordConfirmModal: $('deletePasswordConfirmModal'),
+        cancelDeleteBtn: $('cancelDeleteBtn'),
+        confirmDeleteBtn: $('confirmDeleteBtn')
     };
 
-    // ===== API ВЫЗОВЫ =====
-    async function apiRequest(url, method, body, token = null) {
+    let pendingDeleteId = null;
+
+    // ===== ФУНКЦИЯ ДЛЯ ОБНОВЛЕНИЯ ACCESS TOKEN ЧЕРЕЗ REFRESH TOKEN =====
+    async function refreshAccessToken() {
+        if (isRefreshing) {
+            // Если уже идёт обновление, ждём его завершения
+            return new Promise((resolve, reject) => {
+                refreshQueue.push({ resolve, reject });
+            });
+        }
+        
+        isRefreshing = true;
+        
+        try {
+            console.log('🔄 Обновляем access token через refresh token...');
+            const response = await fetch(API_AUTH_REFRESH, {
+                method: 'POST',
+                credentials: 'include' // httpOnly cookie отправляется автоматически
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                const newToken = data?.accessToken || data?.token;
+                
+                if (newToken) {
+                    accessToken = newToken;
+                    // Не сохраняем в localStorage - только в памяти
+                    console.log('✅ Access token обновлён');
+                    
+                    // Обрабатываем очередь ожидающих запросов
+                    refreshQueue.forEach(({ resolve }) => resolve(true));
+                    refreshQueue = [];
+                    return true;
+                }
+            }
+            
+            console.log('❌ Не удалось обновить токен');
+            refreshQueue.forEach(({ reject }) => reject(new Error('Сессия истекла')));
+            refreshQueue = [];
+            return false;
+        } catch (err) {
+            console.error('❌ Ошибка обновления токена:', err);
+            refreshQueue.forEach(({ reject }) => reject(err));
+            refreshQueue = [];
+            return false;
+        } finally {
+            isRefreshing = false;
+        }
+    }
+
+    // ===== API ВЫЗОВЫ С АВТОМАТИЧЕСКИМ ОБНОВЛЕНИЕМ ТОКЕНА =====
+    async function apiRequest(url, method, body, customToken = null, retry = true) {
         const headers = { 'Content-Type': 'application/json' };
         
-        if (token) {
+        const needsAuth = !url.includes('/Auth/');
+        
+        if (needsAuth) {
+            const token = customToken || accessToken;
+            if (!token) {
+                openAuthModal();
+                throw new Error('Необходима авторизация');
+            }
             headers['Authorization'] = `Bearer ${token}`;
         }
         
@@ -405,13 +542,34 @@ async function initApp() {
         const timeout = setTimeout(() => controller.abort(), 15000);
         
         try {
-            const res = await fetch(url, {
+            let res = await fetch(url, {
                 method,
                 headers,
+                credentials: 'include', // Отправляем cookies
                 body: body ? JSON.stringify(body) : undefined,
                 signal: controller.signal
             });
             clearTimeout(timeout);
+            
+            // Если 401 и запрос требует авторизации, пробуем обновить токен
+            if (res.status === 401 && needsAuth && retry) {
+                console.log('🔄 Получен 401, пробуем обновить access token...');
+                const refreshed = await refreshAccessToken();
+                
+                if (refreshed && accessToken) {
+                    headers['Authorization'] = `Bearer ${accessToken}`;
+                    res = await fetch(url, {
+                        method,
+                        headers,
+                        credentials: 'include',
+                        body: body ? JSON.stringify(body) : undefined,
+                        signal: controller.signal
+                    });
+                } else {
+                    openAuthModal();
+                    throw new Error('Сессия истекла, войдите заново');
+                }
+            }
             
             let data = null;
             const contentType = res.headers.get('content-type');
@@ -434,19 +592,29 @@ async function initApp() {
 
     // ===== АВТОРИЗАЦИЯ =====
     async function register(email, password) {
-        return await apiRequest(API_AUTH_REGISTER, 'POST', { email, password });
+        return await apiRequest(API_AUTH_REGISTER, 'POST', { email, password }, null, false);
     }
 
     async function login(email, password) {
-        return await apiRequest(API_AUTH_LOGIN, 'POST', { email, password });
+        return await apiRequest(API_AUTH_LOGIN, 'POST', { email, password }, null, false);
+    }
+    
+    async function logout() {
+        try {
+            await fetch(API_AUTH_LOGOUT, {
+                method: 'POST',
+                credentials: 'include'
+            });
+        } catch (err) {
+            console.error('Ошибка при выходе:', err);
+        }
     }
 
     // ===== ПРЕСЕТЫ =====
     async function loadPresetsByType(generatorType) {
-        if (!authToken) return [];
         try {
             const url = `${API_SETTINGS_GET}/${generatorType}`;
-            const data = await apiRequest(url, 'GET', null, authToken);
+            const data = await apiRequest(url, 'GET', null, accessToken);
             return data?.settings || [];
         } catch (err) {
             console.error(`Ошибка загрузки ${generatorType}:`, err);
@@ -455,7 +623,7 @@ async function initApp() {
     }
     
     async function loadAllPresets() {
-        if (!currentUser || !authToken) {
+        if (!currentUser || !accessToken) {
             presetsRandom = [];
             presetsPin = [];
             presetsWords = [];
@@ -476,14 +644,14 @@ async function initApp() {
     }
     
     async function savePresetToServer(name, settingsJson) {
-        if (!authToken) return false;
+        if (!accessToken) return false;
         try {
             const body = {
                 generatorType: getGeneratorTypeNumber(),
                 name: name,
                 settingsJson: JSON.stringify(settingsJson)
             };
-            await apiRequest(API_SETTINGS_SAVE, 'POST', body, authToken);
+            await apiRequest(API_SETTINGS_SAVE, 'POST', body, accessToken);
             return true;
         } catch (err) {
             console.error('Ошибка сохранения:', err);
@@ -491,11 +659,10 @@ async function initApp() {
         }
     }
     
-    // ✅ УДАЛЕНИЕ ПРЕСЕТА
     async function deletePresetFromServer(id) {
-        if (!authToken) return false;
+        if (!accessToken) return false;
         try {
-            await apiRequest(API_SETTINGS_DELETE, 'POST', { Id: id }, authToken);
+            await apiRequest(API_SETTINGS_DELETE, 'DELETE', { Id: id }, accessToken);
             return true;
         } catch (err) {
             console.error('Ошибка удаления:', err);
@@ -503,10 +670,109 @@ async function initApp() {
         }
     }
     
+    // ===== СОХРАНЁННЫЕ ПАРОЛИ =====
+    async function savePasswordToServer(password, description) {
+        try {
+            const body = {
+                Id: 0,
+                Password: password,
+                Description: description
+            };
+            await apiRequest(API_SAVED_PASSWORD_SAVE, 'POST', body, accessToken);
+            return true;
+        } catch (err) {
+            console.error('Ошибка сохранения пароля:', err);
+            showToast('❌ ' + err.message);
+            return false;
+        }
+    }
+    
+    async function loadSavedPasswords() {
+        try {
+            const data = await apiRequest(API_SAVED_PASSWORD_GET, 'GET', null, accessToken);
+            return data?.saves || [];
+        } catch (err) {
+            console.error('Ошибка загрузки сохранённых паролей:', err);
+            return [];
+        }
+    }
+    
+    async function deleteSavedPasswordFromServer(id) {
+        if (!accessToken) return false;
+        try {
+            await apiRequest(API_SAVED_PASSWORD_DELETE, 'DELETE', { Id: id }, accessToken);
+            return true;
+        } catch (err) {
+            console.error('Ошибка удаления пароля:', err);
+            return false;
+        }
+    }
+    
+    async function refreshSavedPasswords() {
+        savedPasswords = await loadSavedPasswords();
+        renderSavedPasswordsList();
+    }
+    
+    function renderSavedPasswordsList() {
+        if (!els.savedPasswordsList) return;
+        
+        if (savedPasswords.length === 0) {
+            els.savedPasswordsList.innerHTML = '<div class="saved-passwords-empty">Нет сохранённых паролей</div>';
+            return;
+        }
+        
+        els.savedPasswordsList.innerHTML = savedPasswords.map(item => `
+            <div class="saved-password-item" data-id="${item.id}">
+                <div class="saved-password-info">
+                    ${item.description ? `<div class="saved-password-description">📌 ${escapeHtml(item.description)}</div>` : ''}
+                    <div class="saved-password-value">🔐 ${escapeHtml(item.password)}</div>
+                </div>
+                <div class="saved-password-actions">
+                    <button class="saved-password-copy" data-password="${escapeHtml(item.password)}" title="Копировать">📋</button>
+                    <button class="saved-password-delete" data-id="${item.id}" title="Удалить">🗑️</button>
+                </div>
+            </div>
+        `).join('');
+        
+        document.querySelectorAll('.saved-password-copy').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                const password = btn.dataset.password;
+                await copyToClipboard(password);
+                showToast('📋 Пароль скопирован');
+            });
+        });
+        
+        document.querySelectorAll('.saved-password-delete').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const id = parseInt(btn.dataset.id);
+                pendingDeleteId = id;
+                els.deletePasswordConfirmModal.style.display = 'flex';
+            });
+        });
+    }
+    
+    async function copyToClipboard(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+        } else {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+        }
+    }
+    
+    // ===== UI ФУНКЦИИ =====
     function renderPresets() {
         if (!els.presetsList) return;
         
-        if (!currentUser || !authToken) {
+        if (!currentUser || !accessToken) {
             els.presetsList.innerHTML = '<div class="preset-empty">Авторизуйтесь, чтобы<br>сохранять настройки</div>';
             return;
         }
@@ -644,14 +910,12 @@ async function initApp() {
         showToast(`✅ Применён: ${preset.name}`);
     }
     
-    // ✅ УДАЛЕНИЕ ПРЕСЕТА (с вызовом API)
     async function deletePreset(id) {
         if (!confirm('Удалить этот пресет?')) return;
         
         const success = await deletePresetFromServer(id);
         
         if (success) {
-            // Обновляем локальные массивы
             const currentPresets = getCurrentPresets();
             const newPresets = currentPresets.filter(p => p.id !== id);
             
@@ -702,36 +966,32 @@ async function initApp() {
 
     // ===== УПРАВЛЕНИЕ СЕССИЕЙ =====
     function saveSession(user, token) {
+        console.log('💾 Сохраняем сессию');
         currentUser = user;
-        authToken = token;
+        accessToken = token;
+        // Сохраняем только пользователя, токен не сохраняем в localStorage!
         localStorage.setItem('currentUser', JSON.stringify(user));
-        localStorage.setItem('authToken', token);
+        // Токен хранится только в памяти (переменная accessToken)
         updateProfileUI();
         loadAllPresets();
+        refreshSavedPasswords();
     }
 
     function clearSession() {
+        console.log('🧹 Очищаем сессию');
         currentUser = null;
-        authToken = null;
+        accessToken = null;
         presetsRandom = [];
         presetsPin = [];
         presetsWords = [];
+        savedPasswords = [];
         localStorage.removeItem('currentUser');
-        localStorage.removeItem('authToken');
+        // Токен не удаляем из localStorage (его там нет)
         updateProfileUI();
         renderPresets();
-    }
-
-    function loadSession() {
-        const savedUser = localStorage.getItem('currentUser');
-        const savedToken = localStorage.getItem('authToken');
-        if (savedUser && savedToken) {
-            currentUser = JSON.parse(savedUser);
-            authToken = savedToken;
-            updateProfileUI();
-            return true;
-        }
-        return false;
+        
+        // Вызываем logout на сервере
+        logout();
     }
 
     function updateProfileUI() {
@@ -783,6 +1043,72 @@ async function initApp() {
     
     function closePresetModal() {
         els.presetNameModal.style.display = 'none';
+    }
+    
+    function openSavePasswordModal() {
+        if (!currentUser) {
+            showToast('⚠️ Войдите в аккаунт');
+            openAuthModal();
+            return;
+        }
+        const currentPassword = els.password.textContent;
+        if (!currentPassword || currentPassword === 'Нажмите "генерировать"') {
+            showToast('⚠️ Сначала сгенерируйте пароль');
+            return;
+        }
+        els.savePasswordValue.value = currentPassword;
+        els.savePasswordDescription.value = '';
+        els.savePasswordModal.style.display = 'flex';
+    }
+    
+    function closeSavePasswordModal() {
+        els.savePasswordModal.style.display = 'none';
+    }
+    
+    async function confirmSavePassword() {
+        const password = els.savePasswordValue.value;
+        const description = els.savePasswordDescription.value.trim() || '';
+        
+        const success = await savePasswordToServer(password, description);
+        if (success) {
+            closeSavePasswordModal();
+            await refreshSavedPasswords();
+            showToast('💾 Пароль сохранён');
+        } else {
+            showToast('❌ Ошибка при сохранении');
+        }
+    }
+    
+    async function openSavedPasswordsModal() {
+        if (!currentUser) {
+            showToast('⚠️ Войдите в аккаунт');
+            openAuthModal();
+            return;
+        }
+        await refreshSavedPasswords();
+        els.savedPasswordsModal.style.display = 'flex';
+    }
+    
+    function closeSavedPasswordsModal() {
+        els.savedPasswordsModal.style.display = 'none';
+    }
+    
+    function closeDeleteConfirmModal() {
+        els.deletePasswordConfirmModal.style.display = 'none';
+        pendingDeleteId = null;
+    }
+    
+    async function confirmDeletePassword() {
+        if (pendingDeleteId) {
+            const success = await deleteSavedPasswordFromServer(pendingDeleteId);
+            if (success) {
+                await refreshSavedPasswords();
+                showToast('🗑️ Пароль удалён');
+            } else {
+                showToast('❌ Ошибка при удалении');
+            }
+        }
+        closeDeleteConfirmModal();
     }
 
     // ===== ТЕМА =====
@@ -856,7 +1182,7 @@ async function initApp() {
                 if (els.registerError) els.registerError.textContent = '';
                 await register(email, password);
                 const loginData = await login(email, password);
-                const token = loginData?.token || loginData?.accessToken;
+                const token = loginData?.accessToken || loginData?.token;
                 if (token) {
                     saveSession({ email }, token);
                     closeAuthModal();
@@ -884,7 +1210,7 @@ async function initApp() {
             try {
                 if (els.loginError) els.loginError.textContent = '';
                 const data = await login(email, password);
-                const token = data?.token || data?.accessToken;
+                const token = data?.accessToken || data?.token;
                 if (token) {
                     saveSession({ email }, token);
                     closeAuthModal();
@@ -902,6 +1228,51 @@ async function initApp() {
         els.logoutBtn.onclick = () => {
             clearSession();
             closeAuthModal();
+        };
+    }
+
+    // ===== ОБРАБОТЧИКИ СОХРАНЁННЫХ ПАРОЛЕЙ =====
+    if (els.savePasswordBtn) {
+        els.savePasswordBtn.onclick = () => openSavePasswordModal();
+    }
+    
+    if (els.viewSavedPasswordsBtn) {
+        els.viewSavedPasswordsBtn.onclick = () => openSavedPasswordsModal();
+    }
+    
+    if (els.closeSavePasswordModal) {
+        els.closeSavePasswordModal.onclick = () => closeSavePasswordModal();
+    }
+    
+    if (els.cancelSavePasswordBtn) {
+        els.cancelSavePasswordBtn.onclick = () => closeSavePasswordModal();
+    }
+    
+    if (els.confirmSavePasswordBtn) {
+        els.confirmSavePasswordBtn.onclick = () => confirmSavePassword();
+    }
+    
+    if (els.closeSavedPasswordsModal) {
+        els.closeSavedPasswordsModal.onclick = () => closeSavedPasswordsModal();
+    }
+    
+    if (els.savedPasswordsModal) {
+        els.savedPasswordsModal.onclick = (e) => {
+            if (e.target === els.savedPasswordsModal) closeSavedPasswordsModal();
+        };
+    }
+    
+    if (els.cancelDeleteBtn) {
+        els.cancelDeleteBtn.onclick = () => closeDeleteConfirmModal();
+    }
+    
+    if (els.confirmDeleteBtn) {
+        els.confirmDeleteBtn.onclick = () => confirmDeletePassword();
+    }
+    
+    if (els.deletePasswordConfirmModal) {
+        els.deletePasswordConfirmModal.onclick = (e) => {
+            if (e.target === els.deletePasswordConfirmModal) closeDeleteConfirmModal();
         };
     }
 
@@ -1232,19 +1603,8 @@ async function initApp() {
     async function copyPassword() {
         const text = els.password.textContent;
         if (!text || text === 'Нажмите "генерировать"') return;
-        try {
-            await navigator.clipboard.writeText(text);
-            els.copy.textContent = 'Скопировано';
-            els.passwordBlock.classList.add('copied');
-            setTimeout(() => {
-                els.copy.textContent = 'Копировать';
-                els.passwordBlock.classList.remove('copied');
-            }, 1500);
-        } catch (e) { 
-            console.error(e); 
-            els.copy.textContent = '❌ Ошибка';
-            setTimeout(() => els.copy.textContent = 'Копировать', 1500);
-        }
+        await copyToClipboard(text);
+        showToast('📋 Пароль скопирован');
     }
 
     if (els.copy) {
@@ -1458,9 +1818,23 @@ async function initApp() {
     });
     updateCounterDisplay();
     
-    const hasSession = loadSession();
-    if (hasSession) {
-        await loadAllPresets();
+    // Восстанавливаем только пользователя (токен в памяти не сохраняем)
+    const savedUser = localStorage.getItem('currentUser');
+    
+    if (savedUser) {
+        currentUser = JSON.parse(savedUser);
+        updateProfileUI();
+        
+        // Пытаемся получить новый access token через refresh token
+        const refreshed = await refreshAccessToken();
+        if (refreshed) {
+            await loadAllPresets();
+            await refreshSavedPasswords();
+        } else {
+            // Если не удалось обновить токен, очищаем сессию
+            clearSession();
+            renderPresets();
+        }
     } else {
         renderPresets();
     }

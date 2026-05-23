@@ -1923,3 +1923,811 @@ h1 {
     85% { opacity: 1; transform: translateX(-50%) translateY(0); }
     100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
 }
+
+/* ===== КНОПКИ ДЛЯ СОХРАНЕНИЯ ПАРОЛЕЙ ===== */
+.password-actions {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.save-password-btn, .view-saved-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+}
+
+.save-password-btn {
+    background: #00D9FF;
+    color: #12215E;
+}
+
+.save-password-btn:hover {
+    background: #00b8d9;
+    transform: translateY(-2px);
+}
+
+.view-saved-btn {
+    background: #013CFF;
+    color: white;
+}
+
+.view-saved-btn:hover {
+    background: #0033cc;
+    transform: translateY(-2px);
+}
+
+[data-theme="dark"] .save-password-btn {
+    background: #1C1FC2;
+    color: #BEE3FE;
+}
+
+[data-theme="dark"] .save-password-btn:hover {
+    background: #2528d9;
+}
+
+/* ===== МОДАЛКА СОХРАНЕНИЯ ПАРОЛЯ ===== */
+.save-password-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2500;
+    backdrop-filter: blur(4px);
+}
+
+.save-password-modal-content {
+    background: #ffffff;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 450px;
+    overflow: hidden;
+    animation: modalSlideIn 0.3s ease;
+}
+
+[data-theme="dark"] .save-password-modal-content {
+    background: #000d55;
+}
+
+.save-password-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid #e0f2fe;
+}
+
+.save-password-modal-body {
+    padding: 20px;
+}
+
+.save-password-modal-body .form-group {
+    margin-bottom: 20px;
+}
+
+.save-password-modal-body .form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #12215E;
+}
+
+[data-theme="dark"] .save-password-modal-body .form-group label {
+    color: #BEE3FE;
+}
+
+.save-password-modal-body .form-group input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e0f2fe;
+    border-radius: 12px;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    background: #f5f7fa;
+    color: #12215E;
+}
+
+[data-theme="dark"] .save-password-modal-body .form-group input {
+    background: #000d55;
+    border-color: #1C1FC2;
+    color: #BEE3FE;
+}
+
+.save-password-modal-body .form-group input:focus {
+    outline: none;
+    border-color: #013CFF;
+}
+
+.save-password-modal-footer {
+    display: flex;
+    gap: 12px;
+    padding: 16px 20px;
+    border-top: 1px solid #e0f2fe;
+}
+
+.cancel-save-btn, .confirm-save-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.cancel-save-btn {
+    background: #e0f2fe;
+    color: #12215E;
+}
+
+.cancel-save-btn:hover {
+    background: #ccefff;
+}
+
+.confirm-save-btn {
+    background: #013CFF;
+    color: white;
+}
+
+.confirm-save-btn:hover {
+    background: #0033cc;
+}
+
+/* ===== МОДАЛКА СПИСКА СОХРАНЁННЫХ ПАРОЛЕЙ ===== */
+.saved-passwords-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2500;
+    backdrop-filter: blur(4px);
+}
+
+.saved-passwords-modal-content {
+    background: #ffffff;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 550px;
+    max-height: 80vh;
+    overflow: hidden;
+    animation: modalSlideIn 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+[data-theme="dark"] .saved-passwords-modal-content {
+    background: #000d55;
+}
+
+.saved-passwords-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid #e0f2fe;
+    flex-shrink: 0;
+}
+
+.saved-passwords-modal-body {
+    padding: 20px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.saved-passwords-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.saved-passwords-empty {
+    text-align: center;
+    padding: 40px;
+    color: #12215E;
+    opacity: 0.7;
+}
+
+.saved-password-item {
+    background: #e0f7ff;
+    border: 2px solid #00ffea;
+    border-radius: 12px;
+    padding: 12px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+[data-theme="dark"] .saved-password-item {
+    background: #000d55;
+    border-color: #1C1FC2;
+}
+
+.saved-password-info {
+    flex: 1;
+}
+
+.saved-password-description {
+    font-weight: 600;
+    font-size: 14px;
+    color: #12215E;
+    margin-bottom: 5px;
+}
+
+[data-theme="dark"] .saved-password-description {
+    color: #BEE3FE;
+}
+
+.saved-password-value {
+    font-family: monospace;
+    font-size: 13px;
+    color: #013CFF;
+    word-break: break-all;
+}
+
+.saved-password-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.saved-password-copy, .saved-password-delete {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.saved-password-copy {
+    background: #00D9FF;
+    color: white;
+}
+
+.saved-password-copy:hover {
+    background: #00b8d9;
+    transform: scale(1.05);
+}
+
+.saved-password-delete {
+    background: #ff6b6b;
+    color: white;
+}
+
+.saved-password-delete:hover {
+    background: #e74c3c;
+    transform: scale(1.05);
+}
+
+/* ===== МОДАЛКА ПОДТВЕРЖДЕНИЯ ===== */
+.confirm-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2600;
+    backdrop-filter: blur(4px);
+}
+
+.confirm-modal-content {
+    background: #ffffff;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 350px;
+    overflow: hidden;
+    animation: modalSlideIn 0.3s ease;
+}
+
+[data-theme="dark"] .confirm-modal-content {
+    background: #000d55;
+}
+
+.confirm-modal-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid #e0f2fe;
+}
+
+.confirm-modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #12215E;
+}
+
+[data-theme="dark"] .confirm-modal-header h3 {
+    color: #BEE3FE;
+}
+
+.confirm-modal-body {
+    padding: 20px;
+    text-align: center;
+}
+
+.confirm-modal-body p {
+    color: #12215E;
+}
+
+[data-theme="dark"] .confirm-modal-body p {
+    color: #BEE3FE;
+}
+
+.confirm-modal-footer {
+    display: flex;
+    gap: 12px;
+    padding: 16px 20px;
+    border-top: 1px solid #e0f2fe;
+}
+
+.confirm-cancel-btn, .confirm-delete-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.confirm-cancel-btn {
+    background: #e0f2fe;
+    color: #12215E;
+}
+
+.confirm-cancel-btn:hover {
+    background: #ccefff;
+}
+
+.confirm-delete-btn {
+    background: #e74c3c;
+    color: white;
+}
+
+.confirm-delete-btn:hover {
+    background: #c0392b;
+}
+
+@media (max-width: 768px) {
+    .password-actions {
+        flex-direction: column;
+    }
+    
+    .saved-password-item {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .saved-password-actions {
+        justify-content: center;
+    }
+}
+
+/* ===== КНОПКИ ДЛЯ СОХРАНЕНИЯ ПАРОЛЕЙ ===== */
+.password-actions {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.save-password-btn, .view-saved-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+}
+
+.save-password-btn {
+    background: #00D9FF;
+    color: #12215E;
+}
+
+.save-password-btn:hover {
+    background: #00b8d9;
+    transform: translateY(-2px);
+}
+
+.view-saved-btn {
+    background: #013CFF;
+    color: white;
+}
+
+.view-saved-btn:hover {
+    background: #0033cc;
+    transform: translateY(-2px);
+}
+
+[data-theme="dark"] .save-password-btn {
+    background: #1C1FC2;
+    color: #BEE3FE;
+}
+
+[data-theme="dark"] .save-password-btn:hover {
+    background: #2528d9;
+}
+
+/* ===== МОДАЛКА СОХРАНЕНИЯ ПАРОЛЯ ===== */
+.save-password-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2500;
+    backdrop-filter: blur(4px);
+}
+
+.save-password-modal-content {
+    background: #ffffff;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 450px;
+    overflow: hidden;
+    animation: modalSlideIn 0.3s ease;
+}
+
+[data-theme="dark"] .save-password-modal-content {
+    background: #000d55;
+}
+
+.save-password-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid #e0f2fe;
+}
+
+.save-password-modal-body {
+    padding: 20px;
+}
+
+.save-password-modal-body .form-group {
+    margin-bottom: 20px;
+}
+
+.save-password-modal-body .form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #12215E;
+}
+
+[data-theme="dark"] .save-password-modal-body .form-group label {
+    color: #BEE3FE;
+}
+
+.save-password-modal-body .form-group input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e0f2fe;
+    border-radius: 12px;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    background: #f5f7fa;
+    color: #12215E;
+}
+
+[data-theme="dark"] .save-password-modal-body .form-group input {
+    background: #000d55;
+    border-color: #1C1FC2;
+    color: #BEE3FE;
+}
+
+.save-password-modal-body .form-group input:focus {
+    outline: none;
+    border-color: #013CFF;
+}
+
+.save-password-modal-footer {
+    display: flex;
+    gap: 12px;
+    padding: 16px 20px;
+    border-top: 1px solid #e0f2fe;
+}
+
+.cancel-save-btn, .confirm-save-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.cancel-save-btn {
+    background: #e0f2fe;
+    color: #12215E;
+}
+
+.cancel-save-btn:hover {
+    background: #ccefff;
+}
+
+.confirm-save-btn {
+    background: #013CFF;
+    color: white;
+}
+
+.confirm-save-btn:hover {
+    background: #0033cc;
+}
+
+/* ===== МОДАЛКА СПИСКА СОХРАНЁННЫХ ПАРОЛЕЙ ===== */
+.saved-passwords-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2500;
+    backdrop-filter: blur(4px);
+}
+
+.saved-passwords-modal-content {
+    background: #ffffff;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 550px;
+    max-height: 80vh;
+    overflow: hidden;
+    animation: modalSlideIn 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+[data-theme="dark"] .saved-passwords-modal-content {
+    background: #000d55;
+}
+
+.saved-passwords-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid #e0f2fe;
+    flex-shrink: 0;
+}
+
+.saved-passwords-modal-body {
+    padding: 20px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.saved-passwords-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.saved-passwords-empty {
+    text-align: center;
+    padding: 40px;
+    color: #12215E;
+    opacity: 0.7;
+}
+
+.saved-password-item {
+    background: #e0f7ff;
+    border: 2px solid #00ffea;
+    border-radius: 12px;
+    padding: 12px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+[data-theme="dark"] .saved-password-item {
+    background: #000d55;
+    border-color: #1C1FC2;
+}
+
+.saved-password-info {
+    flex: 1;
+}
+
+.saved-password-description {
+    font-weight: 600;
+    font-size: 14px;
+    color: #12215E;
+    margin-bottom: 5px;
+}
+
+[data-theme="dark"] .saved-password-description {
+    color: #BEE3FE;
+}
+
+.saved-password-value {
+    font-family: monospace;
+    font-size: 13px;
+    color: #013CFF;
+    word-break: break-all;
+}
+
+.saved-password-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.saved-password-copy, .saved-password-delete {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.saved-password-copy {
+    background: #00D9FF;
+    color: white;
+}
+
+.saved-password-copy:hover {
+    background: #00b8d9;
+    transform: scale(1.05);
+}
+
+.saved-password-delete {
+    background: #ff6b6b;
+    color: white;
+}
+
+.saved-password-delete:hover {
+    background: #e74c3c;
+    transform: scale(1.05);
+}
+
+/* ===== МОДАЛКА ПОДТВЕРЖДЕНИЯ ===== */
+.confirm-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2600;
+    backdrop-filter: blur(4px);
+}
+
+.confirm-modal-content {
+    background: #ffffff;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 350px;
+    overflow: hidden;
+    animation: modalSlideIn 0.3s ease;
+}
+
+[data-theme="dark"] .confirm-modal-content {
+    background: #000d55;
+}
+
+.confirm-modal-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid #e0f2fe;
+}
+
+.confirm-modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #12215E;
+}
+
+[data-theme="dark"] .confirm-modal-header h3 {
+    color: #BEE3FE;
+}
+
+.confirm-modal-body {
+    padding: 20px;
+    text-align: center;
+}
+
+.confirm-modal-body p {
+    color: #12215E;
+}
+
+[data-theme="dark"] .confirm-modal-body p {
+    color: #BEE3FE;
+}
+
+.confirm-modal-footer {
+    display: flex;
+    gap: 12px;
+    padding: 16px 20px;
+    border-top: 1px solid #e0f2fe;
+}
+
+.confirm-cancel-btn, .confirm-delete-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.confirm-cancel-btn {
+    background: #e0f2fe;
+    color: #12215E;
+}
+
+.confirm-cancel-btn:hover {
+    background: #ccefff;
+}
+
+.confirm-delete-btn {
+    background: #e74c3c;
+    color: white;
+}
+
+.confirm-delete-btn:hover {
+    background: #c0392b;
+}
+
+@media (max-width: 768px) {
+    .password-actions {
+        flex-direction: column;
+    }
+    
+    .saved-password-item {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .saved-password-actions {
+        justify-content: center;
+    }
+}
