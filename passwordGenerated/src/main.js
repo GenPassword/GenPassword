@@ -1,18 +1,5 @@
 import './style.css'
 
-// ✅ API URLs для сервера УрФУ
-// const API_RANDOM = '/api/password/generate';
-// const API_WORDS = '/api/password/generate-from-words';
-// const API_PIN = '/api/password/generate';
-// const API_AUTH_REGISTER = '/api/Auth/register';
-// const API_AUTH_LOGIN = '/api/Auth/login';
-// const API_SETTINGS_SAVE = '/api/UserSettings/save';
-// const API_SETTINGS_GET = '/api/UserSettings';
-// const API_SETTINGS_DELETE = '/api/UserSettings/delete';
-// const API_SAVED_PASSWORD_SAVE = '/api/UserSavedPassword/save';
-// const API_SAVED_PASSWORD_GET = '/api/UserSavedPassword/getSaves';
-// const API_SAVED_PASSWORD_DELETE = '/api/UserSavedPassword/delete';
-
 // ✅ API URLs
 const API_RANDOM = 'https://myproject24.ru/api/password/generate';
 const API_WORDS = 'https://myproject24.ru/api/password/generate-from-words';
@@ -68,7 +55,7 @@ function getGeneratorTypeNumber() {
     }
 }
 
-// ✅ HTML-шаблон
+// ✅ HTML-шаблон (такой же как был)
 const html = `
 <div class="container">
     <div class="presets-sidebar">
@@ -482,12 +469,50 @@ async function initApp() {
 
     let pendingDeleteId = null;
 
+    // ===== ФУНКЦИЯ ДЛЯ ОБНОВЛЕНИЯ ТОКЕНА =====
+    async function refreshTokenAndSession() {
+        const savedUser = localStorage.getItem('currentUser');
+        const savedPassword = localStorage.getItem('userPassword');
+        
+        console.log('🔄 Проверка сессии...');
+        console.log('Сохранённый пользователь:', savedUser);
+        console.log('Сохранённый пароль:', savedPassword ? 'есть' : 'нет');
+        
+        if (savedUser && savedPassword) {
+            try {
+                const user = JSON.parse(savedUser);
+                console.log('🔄 Получаем новый токен для:', user.email);
+                
+                const data = await login(user.email, savedPassword);
+                const newToken = data?.token || data?.accessToken;
+                
+                if (newToken) {
+                    authToken = newToken;
+                    currentUser = user;
+                    localStorage.setItem('authToken', newToken);
+                    console.log('✅ Токен успешно обновлён');
+                    updateProfileUI();
+                    return true;
+                } else {
+                    console.error('❌ Сервер не вернул токен');
+                    return false;
+                }
+            } catch (err) {
+                console.error('❌ Ошибка обновления токена:', err);
+                return false;
+            }
+        }
+        return false;
+    }
+
     // ===== API ВЫЗОВЫ =====
     async function apiRequest(url, method, body, token = null) {
         const headers = { 'Content-Type': 'application/json' };
         
-        if (token) {
-            headers['Authorization'] = `Bearer ${token}`;
+        const activeToken = token || authToken;
+        
+        if (activeToken) {
+            headers['Authorization'] = `Bearer ${activeToken}`;
         }
         
         const controller = new AbortController();
@@ -532,7 +557,11 @@ async function initApp() {
 
     // ===== ПРЕСЕТЫ =====
     async function loadPresetsByType(generatorType) {
-        if (!authToken) return [];
+        if (!authToken) {
+            console.warn(`⚠️ Нет токена для загрузки ${generatorType}`);
+            return [];
+        }
+        
         try {
             const url = `${API_SETTINGS_GET}/${generatorType}`;
             const data = await apiRequest(url, 'GET', null, authToken);
@@ -887,11 +916,14 @@ async function initApp() {
     }
 
     // ===== УПРАВЛЕНИЕ СЕССИЕЙ =====
-    function saveSession(user, token) {
+    function saveSession(user, token, password) {
         currentUser = user;
         authToken = token;
         localStorage.setItem('currentUser', JSON.stringify(user));
         localStorage.setItem('authToken', token);
+        if (password) {
+            localStorage.setItem('userPassword', password);
+        }
         updateProfileUI();
         loadAllPresets();
         refreshSavedPasswords();
@@ -906,6 +938,7 @@ async function initApp() {
         savedPasswords = [];
         localStorage.removeItem('currentUser');
         localStorage.removeItem('authToken');
+        localStorage.removeItem('userPassword');
         updateProfileUI();
         renderPresets();
     }
@@ -1112,7 +1145,7 @@ async function initApp() {
                 const loginData = await login(email, password);
                 const token = loginData?.token || loginData?.accessToken;
                 if (token) {
-                    saveSession({ email }, token);
+                    saveSession({ email }, token, password);
                     closeAuthModal();
                 } else {
                     throw new Error('Ошибка авторизации');
@@ -1140,7 +1173,7 @@ async function initApp() {
                 const data = await login(email, password);
                 const token = data?.token || data?.accessToken;
                 if (token) {
-                    saveSession({ email }, token);
+                    saveSession({ email }, token, password);
                     closeAuthModal();
                 } else {
                     throw new Error('Неверные учетные данные');
@@ -1746,11 +1779,21 @@ async function initApp() {
     });
     updateCounterDisplay();
     
-    const hasSession = loadSession();
-    if (hasSession) {
+    // ✅ ПЫТАЕМСЯ ОБНОВИТЬ ТОКЕН ПРИ ЗАГРУЗКЕ
+    const tokenRefreshed = await refreshTokenAndSession();
+    
+    if (tokenRefreshed) {
+        console.log('✅ Токен обновлён, загружаем данные');
         await loadAllPresets();
         await refreshSavedPasswords();
     } else {
-        renderPresets();
+        console.log('⚠️ Не удалось обновить токен, проверяем сохранённую сессию');
+        const hasSession = loadSession();
+        if (hasSession) {
+            await loadAllPresets();
+            await refreshSavedPasswords();
+        } else {
+            renderPresets();
+        }
     }
 }
