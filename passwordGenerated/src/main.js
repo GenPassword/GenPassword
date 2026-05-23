@@ -470,54 +470,66 @@ async function initApp() {
     let pendingDeleteId = null;
 
     // ===== ФУНКЦИЯ ДЛЯ ОБНОВЛЕНИЯ ТОКЕНА =====
-    async function refreshToken() {
+    async function ensureValidToken() {
         const savedUser = localStorage.getItem('currentUser');
         const savedPassword = localStorage.getItem('userPassword');
         
-        console.log('🔄 Попытка обновить токен...');
+        if (!savedUser || !savedPassword) {
+            return false;
+        }
         
-        if (savedUser && savedPassword) {
-            try {
-                const user = JSON.parse(savedUser);
-                const data = await fetch(API_AUTH_LOGIN, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: user.email, password: savedPassword })
-                });
+        try {
+            const user = JSON.parse(savedUser);
+            console.log('🔄 Обновляем токен для:', user.email);
+            
+            const response = await fetch(API_AUTH_LOGIN, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: user.email, password: savedPassword })
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                const newToken = data?.token || data?.accessToken;
                 
-                if (data.ok) {
-                    const json = await data.json();
-                    const newToken = json?.token || json?.accessToken;
-                    if (newToken) {
-                        authToken = newToken;
-                        localStorage.setItem('authToken', newToken);
-                        console.log('✅ Токен обновлён');
-                        return true;
-                    }
+                if (newToken) {
+                    authToken = newToken;
+                    currentUser = user;
+                    localStorage.setItem('authToken', newToken);
+                    console.log('✅ Токен успешно обновлён');
+                    updateProfileUI();
+                    return true;
                 }
-            } catch (err) {
-                console.error('❌ Ошибка обновления токена:', err);
+            } else {
+                console.log('❌ Ошибка при обновлении токена:', response.status);
+                clearSession();
             }
+        } catch (err) {
+            console.error('❌ Ошибка обновления токена:', err);
+            clearSession();
         }
         return false;
     }
 
-    // ===== API ВЫЗОВЫ С АВТОМАТИЧЕСКИМ ОБНОВЛЕНИЕМ ТОКЕНА =====
-    async function apiRequest(url, method, body, token = null) {
+    // ===== API ВЫЗОВЫ С АВТОМАТИЧЕСКИМ ОБНОВЛЕНИЕМ =====
+    async function apiRequest(url, method, body, token = null, retry = true) {
         const headers = { 'Content-Type': 'application/json' };
         
-        let activeToken = token || authToken;
+        const needsAuth = !url.includes('/Auth/');
         
-        // Если нет токена, пробуем обновить
-        if (!activeToken) {
-            const refreshed = await refreshToken();
-            if (refreshed) {
-                activeToken = authToken;
+        if (needsAuth) {
+            if (!authToken && !token) {
+                const restored = await ensureValidToken();
+                if (!restored) {
+                    openAuthModal();
+                    throw new Error('Необходима авторизация');
+                }
             }
-        }
-        
-        if (activeToken) {
-            headers['Authorization'] = `Bearer ${activeToken}`;
+            
+            const activeToken = token || authToken;
+            if (activeToken) {
+                headers['Authorization'] = `Bearer ${activeToken}`;
+            }
         }
         
         const controller = new AbortController();
@@ -532,10 +544,9 @@ async function initApp() {
             });
             clearTimeout(timeout);
             
-            // Если 401, пробуем обновить токен и повторить запрос
-            if (res.status === 401) {
-                console.log('🔄 Токен просрочен, пробуем обновить...');
-                const refreshed = await refreshToken();
+            if (res.status === 401 && needsAuth && retry) {
+                console.log('🔄 Получен 401, пробуем обновить токен...');
+                const refreshed = await ensureValidToken();
                 
                 if (refreshed && authToken) {
                     headers['Authorization'] = `Bearer ${authToken}`;
@@ -545,6 +556,9 @@ async function initApp() {
                         body: body ? JSON.stringify(body) : undefined,
                         signal: controller.signal
                     });
+                } else {
+                    openAuthModal();
+                    throw new Error('Сессия истекла, войдите заново');
                 }
             }
             
@@ -569,17 +583,15 @@ async function initApp() {
 
     // ===== АВТОРИЗАЦИЯ =====
     async function register(email, password) {
-        return await apiRequest(API_AUTH_REGISTER, 'POST', { email, password });
+        return await apiRequest(API_AUTH_REGISTER, 'POST', { email, password }, null, false);
     }
 
     async function login(email, password) {
-        return await apiRequest(API_AUTH_LOGIN, 'POST', { email, password });
+        return await apiRequest(API_AUTH_LOGIN, 'POST', { email, password }, null, false);
     }
 
     // ===== ПРЕСЕТЫ =====
     async function loadPresetsByType(generatorType) {
-        if (!authToken && !currentUser) return [];
-        
         try {
             const url = `${API_SETTINGS_GET}/${generatorType}`;
             const data = await apiRequest(url, 'GET', null, authToken);
@@ -640,7 +652,6 @@ async function initApp() {
     
     // ===== СОХРАНЁННЫЕ ПАРОЛИ =====
     async function savePasswordToServer(password, description) {
-        if (!authToken) return false;
         try {
             const body = {
                 Id: 0,
@@ -651,12 +662,12 @@ async function initApp() {
             return true;
         } catch (err) {
             console.error('Ошибка сохранения пароля:', err);
+            showToast('❌ ' + err.message);
             return false;
         }
     }
     
     async function loadSavedPasswords() {
-        if (!authToken) return [];
         try {
             const data = await apiRequest(API_SAVED_PASSWORD_GET, 'GET', null, authToken);
             return data?.saves || [];
@@ -959,18 +970,6 @@ async function initApp() {
         localStorage.removeItem('userPassword');
         updateProfileUI();
         renderPresets();
-    }
-
-    function loadSession() {
-        const savedUser = localStorage.getItem('currentUser');
-        const savedToken = localStorage.getItem('authToken');
-        if (savedUser && savedToken) {
-            currentUser = JSON.parse(savedUser);
-            authToken = savedToken;
-            updateProfileUI();
-            return true;
-        }
-        return false;
     }
 
     function updateProfileUI() {
@@ -1798,10 +1797,22 @@ async function initApp() {
     updateCounterDisplay();
     
     // Восстанавливаем сессию
-    const hasSession = loadSession();
-    if (hasSession) {
-        await loadAllPresets();
-        await refreshSavedPasswords();
+    const savedUser = localStorage.getItem('currentUser');
+    const savedToken = localStorage.getItem('authToken');
+    
+    if (savedUser && savedToken) {
+        currentUser = JSON.parse(savedUser);
+        authToken = savedToken;
+        updateProfileUI();
+        
+        // Проверяем токен
+        const restored = await ensureValidToken();
+        if (restored) {
+            await loadAllPresets();
+            await refreshSavedPasswords();
+        } else {
+            renderPresets();
+        }
     } else {
         renderPresets();
     }
