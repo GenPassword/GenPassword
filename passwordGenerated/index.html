@@ -61,23 +61,20 @@
       
       // Защита от манипуляций через консоль
       (function protectFromConsole() {
-        // Защищаем глобальные объекты от переопределения
         const originalSetItem = localStorage.setItem;
         localStorage.setItem = function(key, value) {
-          if (key === 'authToken' || key === 'userPassword') {
-            console.warn('Операция запрещена: попытка записи в localStorage');
+          if (key === 'accessToken' || key === 'userPassword') {
+            console.warn('Операция запрещена');
             throw new Error('Операция запрещена');
           }
           return originalSetItem.call(this, key, value);
         };
         
-        // Запрещаем eval
         window.eval = function() {
           console.warn('eval запрещён');
           throw new Error('eval запрещён');
         };
         
-        // Мониторим создание скриптов
         const originalCreateElement = document.createElement;
         document.createElement = function(tagName) {
           if (tagName.toLowerCase() === 'script') {
