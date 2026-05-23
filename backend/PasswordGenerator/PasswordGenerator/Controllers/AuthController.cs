@@ -116,8 +116,8 @@ namespace PasswordGenerator.Controllers
             return new CookieOptions
             {
                 HttpOnly = true,
-                Secure = !environment.IsDevelopment(),
-                SameSite = SameSiteMode.Strict,
+                Secure = true,
+                SameSite = SameSiteMode.None,
                 Expires = expires,
                 Path = "/"
             };
