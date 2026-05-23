@@ -2,55 +2,35 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [main]
     paths:
       - 'passwordGenerated/**'
-  workflow_dispatch:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          
-      - name: Check if passwordGenerated exists
-        run: |
-          if [ -d "passwordGenerated" ]; then
-            echo "✅ passwordGenerated directory exists"
-            ls -la passwordGenerated
-          else
-            echo "❌ passwordGenerated directory not found!"
-            exit 1
-          fi
-          
+
       - name: Install dependencies
         run: |
           cd passwordGenerated
-          npm ci || npm install
-          
+          npm install
+
       - name: Build
         run: |
           cd passwordGenerated
-          npm run build || npm run build --if-present
-          
-      - name: List build output
-        run: |
-          echo "Build output:"
-          ls -la passwordGenerated/dist || echo "dist folder not found"
-          
-      - name: Deploy to GitHub Pages
+          npm run build
+
+      - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -59,5 +39,3 @@ jobs:
           force_orphan: true
           user_name: 'github-actions[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
-          commit_message: 'Deploy to GitHub Pages from ${{ github.sha }}'
-          full_commit_message: true
