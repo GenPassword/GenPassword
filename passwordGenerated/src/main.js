@@ -1,24 +1,30 @@
 import './style.css'
 
 // ✅ API URLs для сервера УрФУ
-const API_RANDOM = '/api/password/generate';
-const API_WORDS = '/api/password/generate-from-words';
-const API_PIN = '/api/password/generate';
-const API_AUTH_REGISTER = '/api/Auth/register';
-const API_AUTH_LOGIN = '/api/Auth/login';
-const API_SETTINGS_SAVE = '/api/UserSettings/save';
-const API_SETTINGS_GET = '/api/UserSettings';
-const API_SETTINGS_DELETE = '/api/UserSettings/delete';
+// const API_RANDOM = '/api/password/generate';
+// const API_WORDS = '/api/password/generate-from-words';
+// const API_PIN = '/api/password/generate';
+// const API_AUTH_REGISTER = '/api/Auth/register';
+// const API_AUTH_LOGIN = '/api/Auth/login';
+// const API_SETTINGS_SAVE = '/api/UserSettings/save';
+// const API_SETTINGS_GET = '/api/UserSettings';
+// const API_SETTINGS_DELETE = '/api/UserSettings/delete';
+// const API_SAVED_PASSWORD_SAVE = '/api/UserSavedPassword/save';
+// const API_SAVED_PASSWORD_GET = '/api/UserSavedPassword/getSaves';
+// const API_SAVED_PASSWORD_DELETE = '/api/UserSavedPassword/delete';
 
 // ✅ API URLs
-// const API_RANDOM = 'https://myproject24.ru/api/password/generate';
-// const API_WORDS = 'https://myproject24.ru/api/password/generate-from-words';
-// const API_PIN = 'https://myproject24.ru/api/password/generate';
-// const API_AUTH_REGISTER = 'https://myproject24.ru/api/Auth/register';
-// const API_AUTH_LOGIN = 'https://myproject24.ru/api/Auth/login';
-// const API_SETTINGS_SAVE = 'https://myproject24.ru/api/UserSettings/save';
-// const API_SETTINGS_GET = 'https://myproject24.ru/api/UserSettings';
-// const API_SETTINGS_DELETE = 'https://myproject24.ru/api/UserSettings/delete';
+const API_RANDOM = 'https://myproject24.ru/api/password/generate';
+const API_WORDS = 'https://myproject24.ru/api/password/generate-from-words';
+const API_PIN = 'https://myproject24.ru/api/password/generate';
+const API_AUTH_REGISTER = 'https://myproject24.ru/api/Auth/register';
+const API_AUTH_LOGIN = 'https://myproject24.ru/api/Auth/login';
+const API_SETTINGS_SAVE = 'https://myproject24.ru/api/UserSettings/save';
+const API_SETTINGS_GET = 'https://myproject24.ru/api/UserSettings';
+const API_SETTINGS_DELETE = 'https://myproject24.ru/api/UserSettings/delete';
+const API_SAVED_PASSWORD_SAVE = 'https://myproject24.ru/api/UserSavedPassword/save';
+const API_SAVED_PASSWORD_GET = 'https://myproject24.ru/api/UserSavedPassword/getSaves';
+const API_SAVED_PASSWORD_DELETE = 'https://myproject24.ru/api/UserSavedPassword/delete';
 
 const $ = (id) => document.getElementById(id);
 
@@ -31,6 +37,9 @@ let currentMode = 'random';
 let presetsRandom = [];
 let presetsPin = [];
 let presetsWords = [];
+
+// ===== СОХРАНЁННЫЕ ПАРОЛИ =====
+let savedPasswords = [];
 
 function getCurrentPresets() {
     switch(currentMode) {
@@ -107,6 +116,11 @@ const html = `
         <div class="password-block" id="passwordBlock" title="Нажмите для копирования">
             <div id="password" class="password-text">Нажмите "генерировать"</div>
             <button class="copy-btn" id="copyBtn">Копировать</button>
+        </div>
+        
+        <div class="password-actions">
+            <button id="savePasswordBtn" class="save-password-btn">💾 Сохранить пароль</button>
+            <button id="viewSavedPasswordsBtn" class="view-saved-btn">📋 Мои пароли</button>
         </div>
         
         <div class="strength-container">
@@ -265,6 +279,61 @@ const html = `
     </div>
 </div>
 
+<!-- Модалка для сохранения пароля -->
+<div id="savePasswordModal" class="save-password-modal" style="display: none;">
+    <div class="save-password-modal-content">
+        <div class="save-password-modal-header">
+            <h3>Сохранить пароль</h3>
+            <button id="closeSavePasswordModal" class="close-modal">&times;</button>
+        </div>
+        <div class="save-password-modal-body">
+            <div class="form-group">
+                <label>Пароль</label>
+                <input type="text" id="savePasswordValue" readonly>
+            </div>
+            <div class="form-group">
+                <label>Описание</label>
+                <input type="text" id="savePasswordDescription" maxlength="100">
+            </div>
+        </div>
+        <div class="save-password-modal-footer">
+            <button id="cancelSavePasswordBtn" class="cancel-save-btn">Отмена</button>
+            <button id="confirmSavePasswordBtn" class="confirm-save-btn">Сохранить</button>
+        </div>
+    </div>
+</div>
+
+<!-- Модалка для просмотра сохранённых паролей -->
+<div id="savedPasswordsModal" class="saved-passwords-modal" style="display: none;">
+    <div class="saved-passwords-modal-content">
+        <div class="saved-passwords-modal-header">
+            <h3>Мои сохранённые пароли</h3>
+            <button id="closeSavedPasswordsModal" class="close-modal">&times;</button>
+        </div>
+        <div class="saved-passwords-modal-body">
+            <div id="savedPasswordsList" class="saved-passwords-list">
+                <div class="saved-passwords-empty">Нет сохранённых паролей</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модалка для подтверждения удаления пароля -->
+<div id="deletePasswordConfirmModal" class="confirm-modal" style="display: none;">
+    <div class="confirm-modal-content">
+        <div class="confirm-modal-header">
+            <h3>Подтверждение</h3>
+        </div>
+        <div class="confirm-modal-body">
+            <p>Вы уверены, что хотите удалить этот пароль?</p>
+        </div>
+        <div class="confirm-modal-footer">
+            <button id="cancelDeleteBtn" class="confirm-cancel-btn">Отмена</button>
+            <button id="confirmDeleteBtn" class="confirm-delete-btn">Удалить</button>
+        </div>
+    </div>
+</div>
+
 <div id="authModal" class="auth-modal" style="display: none;">
     <div class="auth-modal-content">
         <div class="auth-modal-header">
@@ -394,8 +463,24 @@ async function initApp() {
         presetNameInput: $('presetNameInput'),
         closePresetModal: $('closePresetModal'),
         cancelPresetBtn: $('cancelPresetBtn'),
-        confirmPresetBtn: $('confirmPresetBtn')
+        confirmPresetBtn: $('confirmPresetBtn'),
+        savePasswordBtn: $('savePasswordBtn'),
+        viewSavedPasswordsBtn: $('viewSavedPasswordsBtn'),
+        savePasswordModal: $('savePasswordModal'),
+        closeSavePasswordModal: $('closeSavePasswordModal'),
+        cancelSavePasswordBtn: $('cancelSavePasswordBtn'),
+        confirmSavePasswordBtn: $('confirmSavePasswordBtn'),
+        savePasswordValue: $('savePasswordValue'),
+        savePasswordDescription: $('savePasswordDescription'),
+        savedPasswordsModal: $('savedPasswordsModal'),
+        closeSavedPasswordsModal: $('closeSavedPasswordsModal'),
+        savedPasswordsList: $('savedPasswordsList'),
+        deletePasswordConfirmModal: $('deletePasswordConfirmModal'),
+        cancelDeleteBtn: $('cancelDeleteBtn'),
+        confirmDeleteBtn: $('confirmDeleteBtn')
     };
+
+    let pendingDeleteId = null;
 
     // ===== API ВЫЗОВЫ =====
     async function apiRequest(url, method, body, token = null) {
@@ -495,11 +580,10 @@ async function initApp() {
         }
     }
     
-    // ✅ УДАЛЕНИЕ ПРЕСЕТА
     async function deletePresetFromServer(id) {
         if (!authToken) return false;
         try {
-            await apiRequest(API_SETTINGS_DELETE, 'POST', { Id: id }, authToken);
+            await apiRequest(API_SETTINGS_DELETE, 'DELETE', { Id: id }, authToken);
             return true;
         } catch (err) {
             console.error('Ошибка удаления:', err);
@@ -507,6 +591,106 @@ async function initApp() {
         }
     }
     
+    // ===== СОХРАНЁННЫЕ ПАРОЛИ =====
+    async function savePasswordToServer(password, description) {
+        if (!authToken) return false;
+        try {
+            const body = {
+                Id: 0,
+                Password: password,
+                Description: description
+            };
+            await apiRequest(API_SAVED_PASSWORD_SAVE, 'POST', body, authToken);
+            return true;
+        } catch (err) {
+            console.error('Ошибка сохранения пароля:', err);
+            return false;
+        }
+    }
+    
+    async function loadSavedPasswords() {
+        if (!authToken) return [];
+        try {
+            const data = await apiRequest(API_SAVED_PASSWORD_GET, 'GET', null, authToken);
+            return data?.saves || [];
+        } catch (err) {
+            console.error('Ошибка загрузки сохранённых паролей:', err);
+            return [];
+        }
+    }
+    
+    async function deleteSavedPasswordFromServer(id) {
+        if (!authToken) return false;
+        try {
+            await apiRequest(API_SAVED_PASSWORD_DELETE, 'DELETE', { Id: id }, authToken);
+            return true;
+        } catch (err) {
+            console.error('Ошибка удаления пароля:', err);
+            return false;
+        }
+    }
+    
+    async function refreshSavedPasswords() {
+        savedPasswords = await loadSavedPasswords();
+        renderSavedPasswordsList();
+    }
+    
+    function renderSavedPasswordsList() {
+        if (!els.savedPasswordsList) return;
+        
+        if (savedPasswords.length === 0) {
+            els.savedPasswordsList.innerHTML = '<div class="saved-passwords-empty">Нет сохранённых паролей</div>';
+            return;
+        }
+        
+        els.savedPasswordsList.innerHTML = savedPasswords.map(item => `
+            <div class="saved-password-item" data-id="${item.id}">
+                <div class="saved-password-info">
+                    ${item.description ? `<div class="saved-password-description">📌 ${escapeHtml(item.description)}</div>` : ''}
+                    <div class="saved-password-value">🔐 ${escapeHtml(item.password)}</div>
+                </div>
+                <div class="saved-password-actions">
+                    <button class="saved-password-copy" data-password="${escapeHtml(item.password)}" title="Копировать">📋</button>
+                    <button class="saved-password-delete" data-id="${item.id}" title="Удалить">🗑️</button>
+                </div>
+            </div>
+        `).join('');
+        
+        document.querySelectorAll('.saved-password-copy').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                const password = btn.dataset.password;
+                await copyToClipboard(password);
+                showToast('📋 Пароль скопирован');
+            });
+        });
+        
+        document.querySelectorAll('.saved-password-delete').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const id = parseInt(btn.dataset.id);
+                pendingDeleteId = id;
+                els.deletePasswordConfirmModal.style.display = 'flex';
+            });
+        });
+    }
+    
+    async function copyToClipboard(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+        } else {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+        }
+    }
+    
+    // ===== UI ФУНКЦИИ =====
     function renderPresets() {
         if (!els.presetsList) return;
         
@@ -648,14 +832,12 @@ async function initApp() {
         showToast(`✅ Применён: ${preset.name}`);
     }
     
-    // ✅ УДАЛЕНИЕ ПРЕСЕТА (с вызовом API)
     async function deletePreset(id) {
         if (!confirm('Удалить этот пресет?')) return;
         
         const success = await deletePresetFromServer(id);
         
         if (success) {
-            // Обновляем локальные массивы
             const currentPresets = getCurrentPresets();
             const newPresets = currentPresets.filter(p => p.id !== id);
             
@@ -712,6 +894,7 @@ async function initApp() {
         localStorage.setItem('authToken', token);
         updateProfileUI();
         loadAllPresets();
+        refreshSavedPasswords();
     }
 
     function clearSession() {
@@ -720,6 +903,7 @@ async function initApp() {
         presetsRandom = [];
         presetsPin = [];
         presetsWords = [];
+        savedPasswords = [];
         localStorage.removeItem('currentUser');
         localStorage.removeItem('authToken');
         updateProfileUI();
@@ -787,6 +971,72 @@ async function initApp() {
     
     function closePresetModal() {
         els.presetNameModal.style.display = 'none';
+    }
+    
+    function openSavePasswordModal() {
+        if (!currentUser) {
+            showToast('⚠️ Войдите в аккаунт');
+            openAuthModal();
+            return;
+        }
+        const currentPassword = els.password.textContent;
+        if (!currentPassword || currentPassword === 'Нажмите "генерировать"') {
+            showToast('⚠️ Сначала сгенерируйте пароль');
+            return;
+        }
+        els.savePasswordValue.value = currentPassword;
+        els.savePasswordDescription.value = '';
+        els.savePasswordModal.style.display = 'flex';
+    }
+    
+    function closeSavePasswordModal() {
+        els.savePasswordModal.style.display = 'none';
+    }
+    
+    async function confirmSavePassword() {
+        const password = els.savePasswordValue.value;
+        const description = els.savePasswordDescription.value.trim() || '';
+        
+        const success = await savePasswordToServer(password, description);
+        if (success) {
+            closeSavePasswordModal();
+            await refreshSavedPasswords();
+            showToast('💾 Пароль сохранён');
+        } else {
+            showToast('❌ Ошибка при сохранении');
+        }
+    }
+    
+    async function openSavedPasswordsModal() {
+        if (!currentUser) {
+            showToast('⚠️ Войдите в аккаунт');
+            openAuthModal();
+            return;
+        }
+        await refreshSavedPasswords();
+        els.savedPasswordsModal.style.display = 'flex';
+    }
+    
+    function closeSavedPasswordsModal() {
+        els.savedPasswordsModal.style.display = 'none';
+    }
+    
+    function closeDeleteConfirmModal() {
+        els.deletePasswordConfirmModal.style.display = 'none';
+        pendingDeleteId = null;
+    }
+    
+    async function confirmDeletePassword() {
+        if (pendingDeleteId) {
+            const success = await deleteSavedPasswordFromServer(pendingDeleteId);
+            if (success) {
+                await refreshSavedPasswords();
+                showToast('🗑️ Пароль удалён');
+            } else {
+                showToast('❌ Ошибка при удалении');
+            }
+        }
+        closeDeleteConfirmModal();
     }
 
     // ===== ТЕМА =====
@@ -906,6 +1156,51 @@ async function initApp() {
         els.logoutBtn.onclick = () => {
             clearSession();
             closeAuthModal();
+        };
+    }
+
+    // ===== ОБРАБОТЧИКИ СОХРАНЁННЫХ ПАРОЛЕЙ =====
+    if (els.savePasswordBtn) {
+        els.savePasswordBtn.onclick = () => openSavePasswordModal();
+    }
+    
+    if (els.viewSavedPasswordsBtn) {
+        els.viewSavedPasswordsBtn.onclick = () => openSavedPasswordsModal();
+    }
+    
+    if (els.closeSavePasswordModal) {
+        els.closeSavePasswordModal.onclick = () => closeSavePasswordModal();
+    }
+    
+    if (els.cancelSavePasswordBtn) {
+        els.cancelSavePasswordBtn.onclick = () => closeSavePasswordModal();
+    }
+    
+    if (els.confirmSavePasswordBtn) {
+        els.confirmSavePasswordBtn.onclick = () => confirmSavePassword();
+    }
+    
+    if (els.closeSavedPasswordsModal) {
+        els.closeSavedPasswordsModal.onclick = () => closeSavedPasswordsModal();
+    }
+    
+    if (els.savedPasswordsModal) {
+        els.savedPasswordsModal.onclick = (e) => {
+            if (e.target === els.savedPasswordsModal) closeSavedPasswordsModal();
+        };
+    }
+    
+    if (els.cancelDeleteBtn) {
+        els.cancelDeleteBtn.onclick = () => closeDeleteConfirmModal();
+    }
+    
+    if (els.confirmDeleteBtn) {
+        els.confirmDeleteBtn.onclick = () => confirmDeletePassword();
+    }
+    
+    if (els.deletePasswordConfirmModal) {
+        els.deletePasswordConfirmModal.onclick = (e) => {
+            if (e.target === els.deletePasswordConfirmModal) closeDeleteConfirmModal();
         };
     }
 
@@ -1234,36 +1529,11 @@ async function initApp() {
 
     // ===== КОПИРОВАНИЕ =====
     async function copyPassword() {
-    const text = document.getElementById('password').textContent;
-    if (!text || text === 'Нажмите "генерировать"') return;
-    
-    function showCopySuccess() {
-    const btn = document.querySelector('.copy-btn');
-    const original = btn.textContent;
-    btn.textContent = 'Скопировано!';
-    setTimeout(() => btn.textContent = original, 1500);
+        const text = els.password.textContent;
+        if (!text || text === 'Нажмите "генерировать"') return;
+        await copyToClipboard(text);
+        showToast('📋 Пароль скопирован');
     }
-
-    // Пробуем современный API
-    if (navigator.clipboard && window.isSecureContext) {
-        try {
-            await navigator.clipboard.writeText(text);
-            showCopySuccess();
-            return;
-        } catch(e) {}
-    }
-    
-    // Fallback для HTTP
-    const textarea = document.createElement('textarea');
-    textarea.value = text;
-    textarea.style.position = 'fixed';
-    textarea.style.opacity = '0';
-    document.body.appendChild(textarea);
-    textarea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textarea);
-    showCopySuccess();
-}
 
     if (els.copy) {
         els.copy.onclick = (e) => {
@@ -1479,6 +1749,7 @@ async function initApp() {
     const hasSession = loadSession();
     if (hasSession) {
         await loadAllPresets();
+        await refreshSavedPasswords();
     } else {
         renderPresets();
     }
