@@ -17,6 +17,90 @@ const API_SAVED_PASSWORD_DELETE = 'https://myproject24.ru/api/UserSavedPassword/
 
 const $ = (id) => document.getElementById(id);
 
+// ===== XSS ЗАЩИТА =====
+function sanitizeHTML(str) {
+    if (!str) return '';
+    return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+        .replace(/\\/g, '&#92;')
+        .replace(/\//g, '&#47;');
+}
+
+function sanitizeAttribute(str) {
+    if (!str) return '';
+    return str.replace(/[^a-zA-Z0-9а-яА-ЯёЁ\s\-_]/g, '');
+}
+
+function validateEmail(email) {
+    const re = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
+    return re.test(email);
+}
+
+function validatePassword(password) {
+    return password && password.length >= 6;
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
+function sanitizeUrl(url) {
+    if (!url) return '';
+    const dangerous = ['javascript:', 'data:', 'vbscript:', 'file:'];
+    const lowerUrl = url.toLowerCase();
+    for (const bad of dangerous) {
+        if (lowerUrl.includes(bad)) {
+            return '#';
+        }
+    }
+    return url;
+}
+
+const rateLimiter = {
+    lastCall: {},
+    limit(key, ms = 1000) {
+        const now = Date.now();
+        if (this.lastCall[key] && now - this.lastCall[key] < ms) {
+            return false;
+        }
+        this.lastCall[key] = now;
+        return true;
+    }
+};
+
+function logSuspiciousActivity(details) {
+    console.warn('⚠️ Подозрительная активность:', details);
+}
+
+function hasDangerousPatterns(str) {
+    if (!str) return false;
+    const dangerousPatterns = [
+        /<script/i, /javascript:/i, /onload=/i, /onerror=/i,
+        /onclick=/i, /onmouseover=/i, /<iframe/i, /<object/i,
+        /<embed/i, /expression\(/i, /alert\(/i, /eval\(/i,
+        /document\./i, /window\./i, /localStorage\./i,
+        /sessionStorage\./i, /fetch\(/i, /XMLHttpRequest/i
+    ];
+    return dangerousPatterns.some(pattern => pattern.test(str));
+}
+
+function getCSRFToken() {
+    const token = sessionStorage.getItem('csrfToken');
+    if (!token) {
+        const newToken = Math.random().toString(36).substring(2) + Date.now().toString(36);
+        sessionStorage.setItem('csrfToken', newToken);
+        return newToken;
+    }
+    return token;
+}
+
 // ===== СОСТОЯНИЕ ПОЛЬЗОВАТЕЛЯ =====
 let currentUser = null;
 let accessToken = null;
@@ -61,7 +145,7 @@ function getGeneratorTypeNumber() {
     }
 }
 
-// ✅ HTML-шаблон (без изменений)
+// ✅ HTML-шаблон
 const html = `
 <div class="container">
     <div class="presets-sidebar">
@@ -475,10 +559,9 @@ async function initApp() {
 
     let pendingDeleteId = null;
 
-    // ===== ФУНКЦИЯ ДЛЯ ОБНОВЛЕНИЯ ACCESS TOKEN ЧЕРЕЗ REFRESH TOKEN =====
+    // ===== ФУНКЦИЯ ДЛЯ ОБНОВЛЕНИЯ ACCESS TOKEN =====
     async function refreshAccessToken() {
         if (isRefreshing) {
-            // Если уже идёт обновление, ждём его завершения
             return new Promise((resolve, reject) => {
                 refreshQueue.push({ resolve, reject });
             });
@@ -490,31 +573,34 @@ async function initApp() {
             console.log('🔄 Обновляем access token через refresh token...');
             const response = await fetch(API_AUTH_REFRESH, {
                 method: 'POST',
-                credentials: 'include' // httpOnly cookie отправляется автоматически
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': getCSRFToken()
+                }
             });
             
             if (response.ok) {
                 const data = await response.json();
-                const newToken = data?.accessToken || data?.token;
+                // Ваш бэкенд возвращает { token: "..." }
+                const newToken = data?.token;
                 
                 if (newToken) {
                     accessToken = newToken;
-                    // Не сохраняем в localStorage - только в памяти
                     console.log('✅ Access token обновлён');
-                    
-                    // Обрабатываем очередь ожидающих запросов
                     refreshQueue.forEach(({ resolve }) => resolve(true));
                     refreshQueue = [];
                     return true;
                 }
+            } else if (response.status === 401) {
+                console.log('❌ Refresh token истёк, требуется повторный вход');
             }
             
-            console.log('❌ Не удалось обновить токен');
             refreshQueue.forEach(({ reject }) => reject(new Error('Сессия истекла')));
             refreshQueue = [];
             return false;
         } catch (err) {
-            console.error('❌ Ошибка обновления токена:', err);
+            console.error('❌ Ошибка при обновлении токена:', err);
             refreshQueue.forEach(({ reject }) => reject(err));
             refreshQueue = [];
             return false;
@@ -523,14 +609,23 @@ async function initApp() {
         }
     }
 
-    // ===== API ВЫЗОВЫ С АВТОМАТИЧЕСКИМ ОБНОВЛЕНИЕМ ТОКЕНА =====
+    // ===== API ВЫЗОВЫ =====
     async function apiRequest(url, method, body, customToken = null, retry = true) {
-        const headers = { 'Content-Type': 'application/json' };
+        const safeUrl = sanitizeUrl(url);
+        if (safeUrl !== url) {
+            throw new Error('Некорректный URL');
+        }
+        
+        const headers = { 
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': getCSRFToken()
+        };
         
         const needsAuth = !url.includes('/Auth/');
         
         if (needsAuth) {
-            const token = customToken || accessToken;
+            let token = customToken || accessToken;
+            
             if (!token) {
                 openAuthModal();
                 throw new Error('Необходима авторизация');
@@ -538,22 +633,43 @@ async function initApp() {
             headers['Authorization'] = `Bearer ${token}`;
         }
         
+        const rateKey = `${method}:${url}`;
+        if (!rateLimiter.limit(rateKey, 500)) {
+            logSuspiciousActivity({ type: 'rate_limit', key: rateKey });
+            throw new Error('Слишком много запросов');
+        }
+        
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 15000);
         
         try {
+            let safeBody = body;
+            if (body && typeof body === 'object') {
+                safeBody = {};
+                for (const [key, value] of Object.entries(body)) {
+                    if (typeof value === 'string') {
+                        if (hasDangerousPatterns(value)) {
+                            logSuspiciousActivity({ type: 'dangerous_pattern', key, value });
+                            throw new Error('Обнаружены подозрительные символы');
+                        }
+                        safeBody[key] = sanitizeHTML(value);
+                    } else {
+                        safeBody[key] = value;
+                    }
+                }
+            }
+            
             let res = await fetch(url, {
                 method,
                 headers,
-                credentials: 'include', // Отправляем cookies
-                body: body ? JSON.stringify(body) : undefined,
+                credentials: 'include',
+                body: safeBody ? JSON.stringify(safeBody) : undefined,
                 signal: controller.signal
             });
             clearTimeout(timeout);
             
-            // Если 401 и запрос требует авторизации, пробуем обновить токен
             if (res.status === 401 && needsAuth && retry) {
-                console.log('🔄 Получен 401, пробуем обновить access token...');
+                console.log('🔄 Получен 401, пробуем обновить токен...');
                 const refreshed = await refreshAccessToken();
                 
                 if (refreshed && accessToken) {
@@ -562,10 +678,11 @@ async function initApp() {
                         method,
                         headers,
                         credentials: 'include',
-                        body: body ? JSON.stringify(body) : undefined,
+                        body: safeBody ? JSON.stringify(safeBody) : undefined,
                         signal: controller.signal
                     });
                 } else {
+                    clearSession();
                     openAuthModal();
                     throw new Error('Сессия истекла, войдите заново');
                 }
@@ -603,7 +720,10 @@ async function initApp() {
         try {
             await fetch(API_AUTH_LOGOUT, {
                 method: 'POST',
-                credentials: 'include'
+                credentials: 'include',
+                headers: {
+                    'X-CSRF-Token': getCSRFToken()
+                }
             });
         } catch (err) {
             console.error('Ошибка при выходе:', err);
@@ -646,9 +766,10 @@ async function initApp() {
     async function savePresetToServer(name, settingsJson) {
         if (!accessToken) return false;
         try {
+            const safeName = sanitizeAttribute(name);
             const body = {
                 generatorType: getGeneratorTypeNumber(),
-                name: name,
+                name: safeName,
                 settingsJson: JSON.stringify(settingsJson)
             };
             await apiRequest(API_SETTINGS_SAVE, 'POST', body, accessToken);
@@ -673,10 +794,11 @@ async function initApp() {
     // ===== СОХРАНЁННЫЕ ПАРОЛИ =====
     async function savePasswordToServer(password, description) {
         try {
+            const safeDescription = sanitizeAttribute(description);
             const body = {
                 Id: 0,
                 Password: password,
-                Description: description
+                Description: safeDescription
             };
             await apiRequest(API_SAVED_PASSWORD_SAVE, 'POST', body, accessToken);
             return true;
@@ -811,15 +933,6 @@ async function initApp() {
                 const id = parseInt(btn.dataset.id);
                 await deletePreset(id);
             });
-        });
-    }
-    
-    function escapeHtml(str) {
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
         });
     }
     
@@ -969,9 +1082,7 @@ async function initApp() {
         console.log('💾 Сохраняем сессию');
         currentUser = user;
         accessToken = token;
-        // Сохраняем только пользователя, токен не сохраняем в localStorage!
         localStorage.setItem('currentUser', JSON.stringify(user));
-        // Токен хранится только в памяти (переменная accessToken)
         updateProfileUI();
         loadAllPresets();
         refreshSavedPasswords();
@@ -986,11 +1097,8 @@ async function initApp() {
         presetsWords = [];
         savedPasswords = [];
         localStorage.removeItem('currentUser');
-        // Токен не удаляем из localStorage (его там нет)
         updateProfileUI();
         renderPresets();
-        
-        // Вызываем logout на сервере
         logout();
     }
 
@@ -1161,20 +1269,32 @@ async function initApp() {
     if (els.registerForm) {
         els.registerForm.onsubmit = async (e) => {
             e.preventDefault();
+            
             const email = $('registerEmail')?.value.trim();
             const password = $('registerPassword')?.value;
             const confirm = $('registerConfirmPassword')?.value;
             
-            if (!email || !password) {
-                if (els.registerError) els.registerError.textContent = 'Заполните все поля';
+            if (!validateEmail(email)) {
+                if (els.registerError) els.registerError.textContent = 'Введите корректный email';
+                return;
+            }
+            if (!validatePassword(password)) {
+                if (els.registerError) els.registerError.textContent = 'Пароль должен быть не менее 6 символов';
                 return;
             }
             if (password !== confirm) {
                 if (els.registerError) els.registerError.textContent = 'Пароли не совпадают';
                 return;
             }
-            if (password.length < 6) {
-                if (els.registerError) els.registerError.textContent = 'Пароль должен быть не менее 6 символов';
+            
+            if (hasDangerousPatterns(email) || hasDangerousPatterns(password)) {
+                logSuspiciousActivity({ type: 'dangerous_input', email });
+                if (els.registerError) els.registerError.textContent = 'Обнаружены недопустимые символы';
+                return;
+            }
+            
+            if (!rateLimiter.limit('register', 2000)) {
+                if (els.registerError) els.registerError.textContent = 'Подождите перед повторной попыткой';
                 return;
             }
             
@@ -1182,7 +1302,7 @@ async function initApp() {
                 if (els.registerError) els.registerError.textContent = '';
                 await register(email, password);
                 const loginData = await login(email, password);
-                const token = loginData?.accessToken || loginData?.token;
+                const token = loginData?.token;
                 if (token) {
                     saveSession({ email }, token);
                     closeAuthModal();
@@ -1199,18 +1319,28 @@ async function initApp() {
     if (els.loginForm) {
         els.loginForm.onsubmit = async (e) => {
             e.preventDefault();
+            
             const email = $('loginEmail')?.value.trim();
             const password = $('loginPassword')?.value;
             
-            if (!email || !password) {
-                if (els.loginError) els.loginError.textContent = 'Заполните все поля';
+            if (!validateEmail(email)) {
+                if (els.loginError) els.loginError.textContent = 'Введите корректный email';
+                return;
+            }
+            if (!validatePassword(password)) {
+                if (els.loginError) els.loginError.textContent = 'Пароль должен быть не менее 6 символов';
+                return;
+            }
+            
+            if (!rateLimiter.limit('login', 1000)) {
+                if (els.loginError) els.loginError.textContent = 'Подождите перед повторной попыткой';
                 return;
             }
             
             try {
                 if (els.loginError) els.loginError.textContent = '';
                 const data = await login(email, password);
-                const token = data?.accessToken || data?.token;
+                const token = data?.token;
                 if (token) {
                     saveSession({ email }, token);
                     closeAuthModal();
@@ -1781,11 +1911,11 @@ async function initApp() {
     if (els.confirmPresetBtn) {
         els.confirmPresetBtn.onclick = () => {
             const name = els.presetNameInput?.value.trim();
-            if (name) {
+            if (name && !hasDangerousPatterns(name)) {
                 addCurrentPreset(name);
                 closePresetModal();
             } else {
-                alert('Введите название');
+                alert('Введите корректное название');
             }
         };
     }
@@ -1800,12 +1930,48 @@ async function initApp() {
         els.presetNameInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 const name = els.presetNameInput.value.trim();
-                if (name) {
+                if (name && !hasDangerousPatterns(name)) {
                     addCurrentPreset(name);
                     closePresetModal();
                 }
             }
         });
+    }
+
+    // ===== ВОССТАНОВЛЕНИЕ СЕССИИ =====
+    async function restoreSession() {
+        const savedUser = localStorage.getItem('currentUser');
+        
+        if (!savedUser) {
+            console.log('❌ Нет сохранённого пользователя');
+            renderPresets();
+            return false;
+        }
+        
+        try {
+            currentUser = JSON.parse(savedUser);
+            updateProfileUI();
+            console.log('👤 Пользователь:', currentUser.email);
+            
+            const refreshed = await refreshAccessToken();
+            
+            if (refreshed && accessToken) {
+                console.log('✅ Сессия восстановлена');
+                await loadAllPresets();
+                await refreshSavedPasswords();
+                return true;
+            } else {
+                console.log('❌ Не удалось восстановить сессию');
+                clearSession();
+                renderPresets();
+                return false;
+            }
+        } catch (err) {
+            console.error('Ошибка восстановления сессии:', err);
+            clearSession();
+            renderPresets();
+            return false;
+        }
     }
 
     // ===== ИНИЦИАЛИЗАЦИЯ =====
@@ -1818,24 +1984,6 @@ async function initApp() {
     });
     updateCounterDisplay();
     
-    // Восстанавливаем только пользователя (токен в памяти не сохраняем)
-    const savedUser = localStorage.getItem('currentUser');
-    
-    if (savedUser) {
-        currentUser = JSON.parse(savedUser);
-        updateProfileUI();
-        
-        // Пытаемся получить новый access token через refresh token
-        const refreshed = await refreshAccessToken();
-        if (refreshed) {
-            await loadAllPresets();
-            await refreshSavedPasswords();
-        } else {
-            // Если не удалось обновить токен, очищаем сессию
-            clearSession();
-            renderPresets();
-        }
-    } else {
-        renderPresets();
-    }
+    // Восстанавливаем сессию
+    await restoreSession();
 }
