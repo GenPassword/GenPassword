@@ -394,11 +394,24 @@ async function initApp() {
     };
 
     // ===== API ВЫЗОВЫ =====
+    function normalizeToken(token) {
+        if (!token || typeof token !== 'string') return null;
+        const cleaned = token.trim().replace(/^Bearer\s+/i, '');
+        return cleaned.length > 0 ? cleaned : null;
+    }
+
+    function handleUnauthorized(message) {
+        clearSession();
+        showToast(message || '⚠️ Сессия истекла — войдите снова');
+        openAuthModal();
+    }
+
     async function apiRequest(url, method, body, token = null) {
         const headers = { 'Content-Type': 'application/json' };
-        
-        if (token) {
-            headers['Authorization'] = `Bearer ${token}`;
+        const bearer = normalizeToken(token ?? authToken);
+
+        if (bearer) {
+            headers['Authorization'] = `Bearer ${bearer}`;
         }
         
         const controller = new AbortController();
@@ -421,6 +434,9 @@ async function initApp() {
             
             if (!res.ok) {
                 const errorMsg = data?.message || data?.error || data?.msg || `Ошибка ${res.status}`;
+                if (res.status === 401) {
+                    handleUnauthorized(errorMsg);
+                }
                 throw new Error(errorMsg);
             }
             
@@ -702,9 +718,9 @@ async function initApp() {
     // ===== УПРАВЛЕНИЕ СЕССИЕЙ =====
     function saveSession(user, token) {
         currentUser = user;
-        authToken = token;
+        authToken = normalizeToken(token);
         localStorage.setItem('currentUser', JSON.stringify(user));
-        localStorage.setItem('authToken', token);
+        localStorage.setItem('authToken', authToken);
         updateProfileUI();
         loadAllPresets();
     }
@@ -723,12 +739,15 @@ async function initApp() {
 
     function loadSession() {
         const savedUser = localStorage.getItem('currentUser');
-        const savedToken = localStorage.getItem('authToken');
+        const savedToken = normalizeToken(localStorage.getItem('authToken'));
         if (savedUser && savedToken) {
             currentUser = JSON.parse(savedUser);
             authToken = savedToken;
             updateProfileUI();
             return true;
+        }
+        if (savedUser || localStorage.getItem('authToken')) {
+            clearSession();
         }
         return false;
     }
