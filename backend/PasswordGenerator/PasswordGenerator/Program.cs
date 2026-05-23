@@ -59,7 +59,12 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend", policy =>
     {
         policy
-            .WithOrigins("https://genpassword.github.io")
+            .WithOrigins(
+                "http://localhost:5173",
+                "http://localhost:3000",
+                "https://genpassword.github.io",
+                "http://10.40.241.58/GenPassword/"
+            )
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
