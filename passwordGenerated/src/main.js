@@ -487,6 +487,7 @@ async function initApp() {
             return true;
         } catch (err) {
             console.error('Ошибка сохранения:', err);
+            showToast(`❌ ${err.message || 'Ошибка при сохранении'}`);
             return false;
         }
     }
@@ -674,8 +675,6 @@ async function initApp() {
         if (success) {
             await loadAllPresets();
             showToast(`💾 Пресет "${name}" сохранён`);
-        } else {
-            showToast('❌ Ошибка при сохранении');
         }
     }
     

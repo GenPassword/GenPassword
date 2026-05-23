@@ -33,10 +33,18 @@ namespace PasswordGenerator.Services.Users.Settings
 
         public async Task SaveSettings(int userId, SaveSettingsRequest saveSettingsRequest)
         {
-            var parsedSettings = settingsFactory.ParseRequest(saveSettingsRequest);
+            if (saveSettingsRequest == null)
+                throw new ArgumentNullException(nameof(saveSettingsRequest));
 
-            if (parsedSettings == null)
-                throw new Exception("Invalid settings");
+            if (string.IsNullOrWhiteSpace(saveSettingsRequest.Name))
+                throw new ArgumentException("Имя пресета не может быть пустым.", nameof(saveSettingsRequest.Name));
+
+            if (!Enum.IsDefined(typeof(GeneratorType), saveSettingsRequest.GeneratorType))
+                throw new ArgumentException(
+                    $"Недопустимый тип генератора: {saveSettingsRequest.GeneratorType}",
+                    nameof(saveSettingsRequest.GeneratorType));
+
+            settingsFactory.ParseRequest(saveSettingsRequest);
 
             var setting = await appDbContext.UserSettings
                 .FirstOrDefaultAsync(s => s.UserId == userId && s.GeneratorType == saveSettingsRequest.GeneratorType && s.Name == saveSettingsRequest.Name);
@@ -56,11 +64,22 @@ namespace PasswordGenerator.Services.Users.Settings
                     SettingJson = saveSettingsRequest.SettingsJson,
                     CreateAt = DateTime.UtcNow,
                     UpdateAt = DateTime.UtcNow,
-                    Name = saveSettingsRequest.Name
+                    Name = saveSettingsRequest.Name.Trim()
                 };
                 await appDbContext.UserSettings.AddAsync(newSetting);
             }
-            await appDbContext.SaveChangesAsync();
+
+            try
+            {
+                await appDbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new InvalidOperationException(
+                    $"Не удалось сохранить настройки в БД (userId={userId}, type={saveSettingsRequest.GeneratorType}, name='{saveSettingsRequest.Name}'). " +
+                    "Проверьте, что применены миграции EF (колонка Name) и что пользователь существует.",
+                    ex);
+            }
         }
 
         public async Task DeleteSettings(int userId, DeleteSettingsRequest deleteSettingsRequest)

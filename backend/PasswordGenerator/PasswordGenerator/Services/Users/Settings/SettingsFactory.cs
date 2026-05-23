@@ -8,19 +8,45 @@ namespace PasswordGenerator.Services.Users.Settings
     {
         public IGeneratorSettings ParseRequest(SaveSettingsRequest request)
         {
+            if (string.IsNullOrWhiteSpace(request.SettingsJson))
+                throw new ArgumentException("SettingsJson пустой или не передан.", nameof(request.SettingsJson));
+
             var type = request.GeneratorType;
             var settings = request.SettingsJson;
-            switch (type)
+
+            try
             {
-                case GeneratorType.Random:      
-                    return JsonSerializer.Deserialize<RandomGeneratorSettings>(settings);
-                case GeneratorType.Pin:
-                    return JsonSerializer.Deserialize<PinGeneratorSettings>(settings);
-                case GeneratorType.Words:
-                    return JsonSerializer.Deserialize<WordGeneratorSettings>(settings);
-                default:
-                    throw new NotSupportedException($"{type} is not supported.");
+                return type switch
+                {
+                    GeneratorType.Random => DeserializeOrThrow<RandomGeneratorSettings>(settings, type),
+                    GeneratorType.Pin => DeserializeOrThrow<PinGeneratorSettings>(settings, type),
+                    GeneratorType.Words => DeserializeOrThrow<WordGeneratorSettings>(settings, type),
+                    _ => throw new NotSupportedException($"Тип генератора '{type}' не поддерживается.")
+                };
             }
+            catch (JsonException ex)
+            {
+                throw new JsonException(
+                    $"Не удалось разобрать JSON настроек для {type}. Фрагмент: {Truncate(settings)}",
+                    ex);
+            }
+        }
+
+        private static T DeserializeOrThrow<T>(string json, GeneratorType type) where T : class, IGeneratorSettings
+        {
+            var result = JsonSerializer.Deserialize<T>(json, SettingsJsonOptions.Deserialize);
+            if (result == null)
+                throw new JsonException($"JSON настроек для {type} десериализовался в null. Фрагмент: {Truncate(json)}");
+
+            return result;
+        }
+
+        private static string Truncate(string value, int maxLength = 120)
+        {
+            if (string.IsNullOrEmpty(value))
+                return "(пусто)";
+
+            return value.Length <= maxLength ? value : value[..maxLength] + "...";
         }
     }
 }

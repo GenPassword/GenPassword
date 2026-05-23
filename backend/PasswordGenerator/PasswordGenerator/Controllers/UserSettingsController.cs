@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using PasswordGenerator.Data;
-using PasswordGenerator.Entities;
+using PasswordGenerator.Helpers;
 using PasswordGenerator.Models.GeneratorSettings;
 using PasswordGenerator.Services.Users.Settings;
-using System.Security.Claims;
+using System.Text.Json;
 
 namespace PasswordGenerator.Controllers
 {
@@ -15,49 +13,120 @@ namespace PasswordGenerator.Controllers
     public class UserSettingsController : ControllerBase
     {
         private readonly IUserSettingsService userSettingsService;
+        private readonly ILogger<UserSettingsController> logger;
 
-        public UserSettingsController(IUserSettingsService userSettingsService)
+        public UserSettingsController(
+            IUserSettingsService userSettingsService,
+            ILogger<UserSettingsController> logger)
         {
             this.userSettingsService = userSettingsService;
+            this.logger = logger;
         }
 
         [HttpGet("{generatorType}")]
         public async Task<IActionResult> GetSettings(GeneratorType generatorType)
         {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            try
+            {
+                var userId = GetUserIdOrError(out var errorResult);
+                if (errorResult != null)
+                    return errorResult;
 
-            if (userIdClaim == null)
-                return Unauthorized();
-            if (!int.TryParse(userIdClaim.Value, out var userId))
-                return Unauthorized();
-            var settings = await userSettingsService.GetAllSettings(userId, generatorType);
-            return Ok(new { Settings = settings });
+                var settings = await userSettingsService.GetAllSettings(userId!.Value, generatorType);
+                return Ok(new { Settings = settings });
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex, "получении настроек");
+            }
         }
 
         [HttpPost("save")]
-        public async Task<IActionResult> SaveSettings([FromBody] SaveSettingsRequest saveSettingsRequest)
+        public async Task<IActionResult> SaveSettings([FromBody] SaveSettingsRequest? saveSettingsRequest)
         {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            try
+            {
+                if (saveSettingsRequest == null)
+                    throw new ArgumentException("Тело запроса пустое или JSON не распознан.");
 
-            if (userIdClaim == null)
-                return Unauthorized();
-            if (!int.TryParse(userIdClaim.Value, out var userId))
-                return Unauthorized();
-            await userSettingsService.SaveSettings(userId, saveSettingsRequest);
-            return Ok(new { Message = "Настройки сохранены" });
+                if (!ModelState.IsValid)
+                    throw new ArgumentException($"Невалидная модель: {string.Join("; ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage))}");
+
+                var userId = GetUserIdOrError(out var errorResult);
+                if (errorResult != null)
+                    return errorResult;
+
+                await userSettingsService.SaveSettings(userId!.Value, saveSettingsRequest);
+                return Ok(new { Message = "Настройки сохранены" });
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex, "сохранении настроек");
+            }
         }
 
+        [HttpPost("delete")]
         [HttpDelete("delete")]
-        public async Task<IActionResult> DeleteSettings(DeleteSettingsRequest deleteSettingsRequest)
+        public async Task<IActionResult> DeleteSettings([FromBody] DeleteSettingsRequest? deleteSettingsRequest)
         {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            try
+            {
+                if (deleteSettingsRequest == null)
+                    throw new ArgumentException("Тело запроса пустое или JSON не распознан.");
 
-            if (userIdClaim == null)
-                return Unauthorized();
-            if (!int.TryParse(userIdClaim.Value, out var userId))
-                return Unauthorized();
-            await userSettingsService.DeleteSettings(userId, deleteSettingsRequest);
-            return Ok(new { Message = "Настройки удалены" });
+                var userId = GetUserIdOrError(out var errorResult);
+                if (errorResult != null)
+                    return errorResult;
+
+                await userSettingsService.DeleteSettings(userId!.Value, deleteSettingsRequest);
+                return Ok(new { Message = "Настройки удалены" });
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex, "удалении настроек");
+            }
+        }
+
+        private int? GetUserIdOrError(out IActionResult? errorResult)
+        {
+            errorResult = null;
+            var userId = UserClaimsHelper.TryGetUserId(User);
+
+            if (userId != null)
+                return userId;
+
+            var claimTypes = UserClaimsHelper.GetAvailableClaimTypes(User);
+            logger.LogWarning("Не удалось получить userId из JWT. Доступные claims: {Claims}", claimTypes);
+            errorResult = Unauthorized(new
+            {
+                message = "Не удалось определить пользователя из токена. Войдите снова.",
+                debug = $"Claims в токене: {claimTypes}"
+            });
+            return null;
+        }
+
+        private IActionResult HandleException(Exception ex, string action)
+        {
+            logger.LogError(ex, "Ошибка при {Action}", action);
+
+            var message = ex switch
+            {
+                ArgumentException => ex.Message,
+                JsonException => ex.Message,
+                InvalidOperationException => ex.Message,
+                UnauthorizedAccessException => ex.Message,
+                _ => $"Ошибка при {action}: {ex.Message}"
+            };
+
+            var statusCode = ex switch
+            {
+                ArgumentException => StatusCodes.Status400BadRequest,
+                JsonException => StatusCodes.Status400BadRequest,
+                UnauthorizedAccessException => StatusCodes.Status401Unauthorized,
+                _ => StatusCodes.Status500InternalServerError
+            };
+
+            return StatusCode(statusCode, new { message });
         }
     }
 }
