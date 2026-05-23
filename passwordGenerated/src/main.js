@@ -55,7 +55,7 @@ function getGeneratorTypeNumber() {
     }
 }
 
-// ✅ HTML-шаблон (такой же как был)
+// ✅ HTML-шаблон
 const html = `
 <div class="container">
     <div class="presets-sidebar">
@@ -470,46 +470,51 @@ async function initApp() {
     let pendingDeleteId = null;
 
     // ===== ФУНКЦИЯ ДЛЯ ОБНОВЛЕНИЯ ТОКЕНА =====
-    async function refreshTokenAndSession() {
+    async function refreshToken() {
         const savedUser = localStorage.getItem('currentUser');
         const savedPassword = localStorage.getItem('userPassword');
         
-        console.log('🔄 Проверка сессии...');
-        console.log('Сохранённый пользователь:', savedUser);
-        console.log('Сохранённый пароль:', savedPassword ? 'есть' : 'нет');
+        console.log('🔄 Попытка обновить токен...');
         
         if (savedUser && savedPassword) {
             try {
                 const user = JSON.parse(savedUser);
-                console.log('🔄 Получаем новый токен для:', user.email);
+                const data = await fetch(API_AUTH_LOGIN, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: user.email, password: savedPassword })
+                });
                 
-                const data = await login(user.email, savedPassword);
-                const newToken = data?.token || data?.accessToken;
-                
-                if (newToken) {
-                    authToken = newToken;
-                    currentUser = user;
-                    localStorage.setItem('authToken', newToken);
-                    console.log('✅ Токен успешно обновлён');
-                    updateProfileUI();
-                    return true;
-                } else {
-                    console.error('❌ Сервер не вернул токен');
-                    return false;
+                if (data.ok) {
+                    const json = await data.json();
+                    const newToken = json?.token || json?.accessToken;
+                    if (newToken) {
+                        authToken = newToken;
+                        localStorage.setItem('authToken', newToken);
+                        console.log('✅ Токен обновлён');
+                        return true;
+                    }
                 }
             } catch (err) {
                 console.error('❌ Ошибка обновления токена:', err);
-                return false;
             }
         }
         return false;
     }
 
-    // ===== API ВЫЗОВЫ =====
+    // ===== API ВЫЗОВЫ С АВТОМАТИЧЕСКИМ ОБНОВЛЕНИЕМ ТОКЕНА =====
     async function apiRequest(url, method, body, token = null) {
         const headers = { 'Content-Type': 'application/json' };
         
-        const activeToken = token || authToken;
+        let activeToken = token || authToken;
+        
+        // Если нет токена, пробуем обновить
+        if (!activeToken) {
+            const refreshed = await refreshToken();
+            if (refreshed) {
+                activeToken = authToken;
+            }
+        }
         
         if (activeToken) {
             headers['Authorization'] = `Bearer ${activeToken}`;
@@ -519,13 +524,29 @@ async function initApp() {
         const timeout = setTimeout(() => controller.abort(), 15000);
         
         try {
-            const res = await fetch(url, {
+            let res = await fetch(url, {
                 method,
                 headers,
                 body: body ? JSON.stringify(body) : undefined,
                 signal: controller.signal
             });
             clearTimeout(timeout);
+            
+            // Если 401, пробуем обновить токен и повторить запрос
+            if (res.status === 401) {
+                console.log('🔄 Токен просрочен, пробуем обновить...');
+                const refreshed = await refreshToken();
+                
+                if (refreshed && authToken) {
+                    headers['Authorization'] = `Bearer ${authToken}`;
+                    res = await fetch(url, {
+                        method,
+                        headers,
+                        body: body ? JSON.stringify(body) : undefined,
+                        signal: controller.signal
+                    });
+                }
+            }
             
             let data = null;
             const contentType = res.headers.get('content-type');
@@ -557,10 +578,7 @@ async function initApp() {
 
     // ===== ПРЕСЕТЫ =====
     async function loadPresetsByType(generatorType) {
-        if (!authToken) {
-            console.warn(`⚠️ Нет токена для загрузки ${generatorType}`);
-            return [];
-        }
+        if (!authToken && !currentUser) return [];
         
         try {
             const url = `${API_SETTINGS_GET}/${generatorType}`;
@@ -1779,21 +1797,12 @@ async function initApp() {
     });
     updateCounterDisplay();
     
-    // ✅ ПЫТАЕМСЯ ОБНОВИТЬ ТОКЕН ПРИ ЗАГРУЗКЕ
-    const tokenRefreshed = await refreshTokenAndSession();
-    
-    if (tokenRefreshed) {
-        console.log('✅ Токен обновлён, загружаем данные');
+    // Восстанавливаем сессию
+    const hasSession = loadSession();
+    if (hasSession) {
         await loadAllPresets();
         await refreshSavedPasswords();
     } else {
-        console.log('⚠️ Не удалось обновить токен, проверяем сохранённую сессию');
-        const hasSession = loadSession();
-        if (hasSession) {
-            await loadAllPresets();
-            await refreshSavedPasswords();
-        } else {
-            renderPresets();
-        }
+        renderPresets();
     }
 }
