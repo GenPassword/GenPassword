@@ -28,6 +28,7 @@ builder.Services.AddScoped<PasswordOptionsValidator>();
 builder.Services.AddScoped<IPasswordGeneratorService, PasswordGeneratorService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<UpdateTokens>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddSingleton<IWordlistService, WordlistService>();
 builder.Services.AddScoped<IPassphraseGeneratorService, PassphraseGeneratorService>();

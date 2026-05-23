@@ -14,14 +14,23 @@ namespace PasswordGenerator.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        
-        private readonly AuthService authService;
-        private readonly IConfiguration configuration;
+        private const string RefreshTokenCookieName = "refreshToken";
 
-        public AuthController(AuthService authService, IConfiguration configuration)
+        private readonly AuthService authService;
+        private readonly UpdateTokens updateTokens;
+        private readonly IConfiguration configuration;
+        private readonly IWebHostEnvironment environment;
+
+        public AuthController(
+            AuthService authService,
+            UpdateTokens updateTokens,
+            IConfiguration configuration,
+            IWebHostEnvironment environment)
         {
             this.authService = authService;
+            this.updateTokens = updateTokens;
             this.configuration = configuration;
+            this.environment = environment;
         }
 
         [HttpPost("register")]
@@ -49,8 +58,10 @@ namespace PasswordGenerator.Controllers
             try
             {
                 var userInBd = await authService.Login(loginUserRequest.Email, loginUserRequest.Password);
-                var token = GenerateJwtToken(userInBd);
-                return Ok(new { token });
+                var accessToken = GenerateJwtToken(userInBd);
+                var refreshToken = await updateTokens.CreateRefreshTokenAsync(userInBd.Id);
+                SetRefreshTokenCookie(refreshToken);
+                return Ok(new { token = accessToken });
             }
             catch (AuthenticationException)
             {
@@ -60,6 +71,56 @@ namespace PasswordGenerator.Controllers
             {
                 return BadRequest(new { message = ex.Message });
             }
+        }
+
+        [HttpPost("refresh")]
+        public async Task<IActionResult> RefreshToken()
+        {
+            var token = Request.Cookies[RefreshTokenCookieName];
+            if (string.IsNullOrEmpty(token))
+                return Unauthorized(new { message = "Пользователь не авторизован" });
+
+            var refreshToken = await updateTokens.GetValidTokenAsync(token);
+            if (refreshToken == null)
+                return Unauthorized(new { message = "Недействительный refresh token" });
+
+            var accessToken = GenerateJwtToken(refreshToken.User);
+            var newRefreshToken = await updateTokens.RotateRefreshTokenAsync(refreshToken);
+            SetRefreshTokenCookie(newRefreshToken);
+
+            return Ok(new { token = accessToken });
+        }
+
+        [HttpPost("logout")]
+        public async Task<IActionResult> LogoutToken()
+        {
+            var token = Request.Cookies[RefreshTokenCookieName];
+            if (!string.IsNullOrEmpty(token))
+                await updateTokens.RevokeRefreshTokenAsync(token);
+
+            Response.Cookies.Delete(RefreshTokenCookieName, BuildRefreshTokenCookieOptions(DateTime.UtcNow.AddDays(-1)));
+
+            return Ok(new { message = "Вы вышли из аккаунта" });
+        }
+
+        private void SetRefreshTokenCookie(string refreshToken)
+        {
+            Response.Cookies.Append(
+                RefreshTokenCookieName,
+                refreshToken,
+                BuildRefreshTokenCookieOptions(DateTime.UtcNow.AddDays(7)));
+        }
+
+        private CookieOptions BuildRefreshTokenCookieOptions(DateTime expires)
+        {
+            return new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = !environment.IsDevelopment(),
+                SameSite = SameSiteMode.Strict,
+                Expires = expires,
+                Path = "/"
+            };
         }
 
         private string GenerateJwtToken(User user)
