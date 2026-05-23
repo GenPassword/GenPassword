@@ -1,20 +1,24 @@
 import './style.css'
 
-// ✅ API URLs
-// Для работы на сервере УрФУ
-// const API_RANDOM = '/api/password/generate';
-// const API_WORDS = '/api/password/generate-from-words';
-// const API_PIN = '/api/password/generate';
+// ✅ API URLs для сервера УрФУ
+const API_RANDOM = '/api/password/generate';
+const API_WORDS = '/api/password/generate-from-words';
+const API_PIN = '/api/password/generate';
+const API_AUTH_REGISTER = '/api/Auth/register';
+const API_AUTH_LOGIN = '/api/Auth/login';
+const API_SETTINGS_SAVE = '/api/UserSettings/save';
+const API_SETTINGS_GET = '/api/UserSettings';
+const API_SETTINGS_DELETE = '/api/UserSettings/delete';
 
 // ✅ API URLs
-const API_RANDOM = 'https://myproject24.ru/api/password/generate';
-const API_WORDS = 'https://myproject24.ru/api/password/generate-from-words';
-const API_PIN = 'https://myproject24.ru/api/password/generate';
-const API_AUTH_REGISTER = 'https://myproject24.ru/api/Auth/register';
-const API_AUTH_LOGIN = 'https://myproject24.ru/api/Auth/login';
-const API_SETTINGS_SAVE = 'https://myproject24.ru/api/UserSettings/save';
-const API_SETTINGS_GET = 'https://myproject24.ru/api/UserSettings';
-const API_SETTINGS_DELETE = 'https://myproject24.ru/api/UserSettings/delete';
+// const API_RANDOM = 'https://myproject24.ru/api/password/generate';
+// const API_WORDS = 'https://myproject24.ru/api/password/generate-from-words';
+// const API_PIN = 'https://myproject24.ru/api/password/generate';
+// const API_AUTH_REGISTER = 'https://myproject24.ru/api/Auth/register';
+// const API_AUTH_LOGIN = 'https://myproject24.ru/api/Auth/login';
+// const API_SETTINGS_SAVE = 'https://myproject24.ru/api/UserSettings/save';
+// const API_SETTINGS_GET = 'https://myproject24.ru/api/UserSettings';
+// const API_SETTINGS_DELETE = 'https://myproject24.ru/api/UserSettings/delete';
 
 const $ = (id) => document.getElementById(id);
 
@@ -1230,22 +1234,36 @@ async function initApp() {
 
     // ===== КОПИРОВАНИЕ =====
     async function copyPassword() {
-        const text = els.password.textContent;
-        if (!text || text === 'Нажмите "генерировать"') return;
+    const text = document.getElementById('password').textContent;
+    if (!text || text === 'Нажмите "генерировать"') return;
+    
+    function showCopySuccess() {
+    const btn = document.querySelector('.copy-btn');
+    const original = btn.textContent;
+    btn.textContent = 'Скопировано!';
+    setTimeout(() => btn.textContent = original, 1500);
+    }
+
+    // Пробуем современный API
+    if (navigator.clipboard && window.isSecureContext) {
         try {
             await navigator.clipboard.writeText(text);
-            els.copy.textContent = 'Скопировано';
-            els.passwordBlock.classList.add('copied');
-            setTimeout(() => {
-                els.copy.textContent = 'Копировать';
-                els.passwordBlock.classList.remove('copied');
-            }, 1500);
-        } catch (e) { 
-            console.error(e); 
-            els.copy.textContent = '❌ Ошибка';
-            setTimeout(() => els.copy.textContent = 'Копировать', 1500);
-        }
+            showCopySuccess();
+            return;
+        } catch(e) {}
     }
+    
+    // Fallback для HTTP
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    showCopySuccess();
+}
 
     if (els.copy) {
         els.copy.onclick = (e) => {
