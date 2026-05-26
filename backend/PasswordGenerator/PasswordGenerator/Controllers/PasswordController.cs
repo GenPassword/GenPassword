@@ -12,13 +12,15 @@ public class PasswordController : ControllerBase
     private readonly IPasswordGeneratorService generator;
     private readonly IPassphraseGeneratorService passphraseGenerator;
     private readonly IRequestRateLimiter rateLimiter;
+    private readonly ILogger<PasswordController> logger;
     private static int countRequest = 0;
 
-    public PasswordController(IPasswordGeneratorService generator, IPassphraseGeneratorService passphraseGenerator, IRequestRateLimiter rateLimiter)
+    public PasswordController(IPasswordGeneratorService generator, IPassphraseGeneratorService passphraseGenerator, IRequestRateLimiter rateLimiter, ILogger<PasswordController> logger)
     {
         this.generator = generator;
         this.passphraseGenerator = passphraseGenerator;
         this.rateLimiter = rateLimiter;
+        this.logger = logger;
     }
 
     /// <summary>
@@ -31,17 +33,24 @@ public class PasswordController : ControllerBase
     public IActionResult Generate([FromBody] GeneratePasswordRequest request)
     {
         var key = GetClientKey();
-        Console.Write("User: " + key + " ");
-        Console.WriteLine("Запрос номер " + countRequest++);
+        logger.LogInformation($"Password generation request started. Client: {key}");
 
 
         if (request == null)
+        {
+            logger.LogWarning($"Password generation failed: empty request. Client: {key}");
             return BadRequest(new GeneratePasswordResponse { Message = "Тело запроса не может быть пустым." });
+        }
+            
 
         var response = generator.Generate(request);
 
         if (!string.IsNullOrEmpty(response.Message) && string.IsNullOrEmpty(response.Password))
+        {
+            logger.LogWarning($"Password generation failed validation. Client: {key}");
             return BadRequest(response);
+        }
+        logger.LogInformation($"Password generated successfully. Client: {key}, Length: {request.Length}");
 
         return Ok(response);
     }
@@ -52,21 +61,23 @@ public class PasswordController : ControllerBase
     public IActionResult GenerateFromWords([FromBody] GeneratePasswordFromWordsRequest request)
     {
         var key = GetClientKey();
-        Console.Write("User ip: " + key + " ");
-        Console.WriteLine("Запрос номер " + countRequest++);
+        logger.LogInformation($"Passphrase generation request started. Client: {key}");
 
 
         if (request == null)
         {
+            logger.LogWarning($"Passphrase generation failed: empty request. Client: {key}");
             return BadRequest(new GeneratePasswordResponse { Message = "Тело запроса не может быть пустым." });
         }
         var result = passphraseGenerator.Generate(request);
 
         if(!string.IsNullOrEmpty(result.Message) && string.IsNullOrEmpty(result.Password))
         {
+            logger.LogWarning($"Passphrase generation failed validation. Client: {key}");
+
             return BadRequest(result);
         }
-
+        logger.LogInformation($"Passphrase generated successfully. Client: {key}");
         return Ok(result);
     }
 

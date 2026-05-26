@@ -17,8 +17,12 @@ using PasswordGenerator.Services.Users.Settings;
 using PasswordGenerator.Services.Wordlist;
 using PasswordGenerator.Validators;
 using System.Text;
+using NLog;
+using NLog.Web;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseNLog();
 
 builder.Services.AddControllersWithViews();
 
@@ -48,7 +52,6 @@ builder.Services.AddScoped<IEncryptionService>(provider =>
     return new EncryptionService(key);
 });
 builder.Services.AddScoped<SettingsFactory>();
-
 
 // Регистрация DbContext
 var connectionStr = builder.Configuration.GetConnectionString("DefaultConnection");
