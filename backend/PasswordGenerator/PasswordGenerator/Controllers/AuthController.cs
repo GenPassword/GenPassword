@@ -93,7 +93,6 @@ namespace PasswordGenerator.Controllers
         [HttpPost("refresh")]
         public async Task<IActionResult> RefreshToken()
         {
-            logger.LogInformation($"Обновление токена пользователя");
             var token = Request.Cookies[RefreshTokenCookieName];
 
             if (string.IsNullOrEmpty(token))
@@ -121,7 +120,6 @@ namespace PasswordGenerator.Controllers
         public async Task<IActionResult> LogoutToken()
         {
             var token = Request.Cookies[RefreshTokenCookieName];
-            logger.LogInformation($"Logout request received");
             if (!string.IsNullOrEmpty(token))
             {
                 logger.LogInformation("Refresh token revoked");
