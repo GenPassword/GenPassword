@@ -17,8 +17,12 @@ using PasswordGenerator.Services.Users.Settings;
 using PasswordGenerator.Services.Wordlist;
 using PasswordGenerator.Validators;
 using System.Text;
+using NLog;
+using NLog.Web;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseNLog();
 
 builder.Services.AddControllersWithViews();
 
@@ -49,7 +53,6 @@ builder.Services.AddScoped<IEncryptionService>(provider =>
 });
 builder.Services.AddScoped<SettingsFactory>();
 
-
 // Регистрация DbContext
 var connectionStr = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionStr));
@@ -59,7 +62,12 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend", policy =>
     {
         policy
-            .WithOrigins("https://genpassword.github.io")
+            .WithOrigins(
+                "http://localhost:5173",
+                "http://localhost:3000",
+                "https://genpassword.github.io",
+                "http://10.40.241.58"
+            )
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();

@@ -47,6 +47,7 @@ packages/
 *.opencover.xml
 *.trx
 [Ll]og/
+*.log
 
 # ============ Конфигурация и секреты ============
 appsettings.Development.json

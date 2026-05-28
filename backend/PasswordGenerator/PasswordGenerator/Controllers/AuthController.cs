@@ -15,7 +15,8 @@ namespace PasswordGenerator.Controllers
     public class AuthController : ControllerBase
     {
         private const string RefreshTokenCookieName = "refreshToken";
-
+        
+        private readonly ILogger<AuthController> logger;
         private readonly AuthService authService;
         private readonly UpdateTokens updateTokens;
         private readonly IConfiguration configuration;
@@ -25,50 +26,66 @@ namespace PasswordGenerator.Controllers
             AuthService authService,
             UpdateTokens updateTokens,
             IConfiguration configuration,
-            IWebHostEnvironment environment)
+            IWebHostEnvironment environment,
+            ILogger<AuthController> logger)
         {
             this.authService = authService;
             this.updateTokens = updateTokens;
             this.configuration = configuration;
             this.environment = environment;
+            this.logger = logger;
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterUserRequest registerUserRequest)
         {
+            logger.LogInformation($"Register attempt started. Email: {registerUserRequest.Email}");
             if (!ModelState.IsValid)
             {
+                logger.LogWarning($"Register failed due to invalid model state. Email: {registerUserRequest.Email}");
                 return ValidationProblem(ModelState);
             }
             var email = registerUserRequest.Email;
             var password = registerUserRequest.Password;
             var result = await authService.RegisterUser(email, password);
-            if(result)
+            if (result)
+            {
+                logger.LogInformation($"User registered successfully. Email: {registerUserRequest.Email}");
                 return Ok(new { message = "User registered" });
+            }
+            logger.LogWarning($"Register failed: email already exists. Email: {registerUserRequest.Email}");
             return Conflict(new { message = "Email уже существует" });
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginUserRequest loginUserRequest)
         {
+            logger.LogInformation("Login attempt started. Email: {Email}", loginUserRequest.Email);
             if (!ModelState.IsValid)
             {
+                logger.LogWarning($"Login failed due to invalid model state. Email: {loginUserRequest.Email}");
                 return ValidationProblem(ModelState);
             }
             try
             {
-                var userInBd = await authService.Login(loginUserRequest.Email, loginUserRequest.Password);
-                var accessToken = GenerateJwtToken(userInBd);
-                var refreshToken = await updateTokens.CreateRefreshTokenAsync(userInBd.Id);
+                var userInDb = await authService.Login(loginUserRequest.Email, loginUserRequest.Password);
+
+                logger.LogInformation($"Login successful. UserId: {userInDb.Id}, Email: {userInDb.Email}");
+
+                var accessToken = GenerateJwtToken(userInDb);
+                var refreshToken = await updateTokens.CreateRefreshTokenAsync(userInDb.Id);
                 SetRefreshTokenCookie(refreshToken);
                 return Ok(new { token = accessToken });
             }
             catch (AuthenticationException)
             {
+                logger.LogWarning($"Login failed: invalid credentials. Email: {loginUserRequest.Email}, IP: {HttpContext.Connection.RemoteIpAddress?.ToString()}");
                 return Unauthorized(new { message = "Неверный email или пароль" });
             }
             catch (ArgumentException ex)
             {
+                logger.LogWarning(ex,
+                    $"Login failed due to argument error. Email: {loginUserRequest.Email}");
                 return BadRequest(new { message = ex.Message });
             }
         }
@@ -77,17 +94,25 @@ namespace PasswordGenerator.Controllers
         public async Task<IActionResult> RefreshToken()
         {
             var token = Request.Cookies[RefreshTokenCookieName];
+
             if (string.IsNullOrEmpty(token))
+            {
+                logger.LogWarning("Refresh token missing in request");
                 return Unauthorized(new { message = "Пользователь не авторизован" });
+            }
 
             var refreshToken = await updateTokens.GetValidTokenAsync(token);
             if (refreshToken == null)
+            {
+                logger.LogWarning("Invalid refresh token used");
                 return Unauthorized(new { message = "Недействительный refresh token" });
+            }
 
             var accessToken = GenerateJwtToken(refreshToken.User);
             var newRefreshToken = await updateTokens.RotateRefreshTokenAsync(refreshToken);
             SetRefreshTokenCookie(newRefreshToken);
 
+            logger.LogInformation($"Token refreshed successfully. UserId: {refreshToken.UserId}");
             return Ok(new { token = accessToken });
         }
 
@@ -96,10 +121,13 @@ namespace PasswordGenerator.Controllers
         {
             var token = Request.Cookies[RefreshTokenCookieName];
             if (!string.IsNullOrEmpty(token))
+            {
+                logger.LogInformation("Refresh token revoked");
                 await updateTokens.RevokeRefreshTokenAsync(token);
+            }
 
             Response.Cookies.Delete(RefreshTokenCookieName, BuildRefreshTokenCookieOptions(DateTime.UtcNow.AddDays(-1)));
-
+            logger.LogInformation("User logged out successfully");
             return Ok(new { message = "Вы вышли из аккаунта" });
         }
 
