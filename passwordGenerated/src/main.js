@@ -646,8 +646,14 @@ async function initApp() {
             let safeBody = body;
             if (body && typeof body === 'object') {
                 safeBody = {};
+                const rawJsonStringFields = new Set(['settingsJson']);
                 for (const [key, value] of Object.entries(body)) {
                     if (typeof value === 'string') {
+                        // settingsJson должен оставаться валидной JSON-строкой для бэкенда
+                        if (rawJsonStringFields.has(key)) {
+                            safeBody[key] = value;
+                            continue;
+                        }
                         if (hasDangerousPatterns(value)) {
                             logSuspiciousActivity({ type: 'dangerous_pattern', key, value });
                             throw new Error('Обнаружены подозрительные символы');
@@ -1083,6 +1089,9 @@ async function initApp() {
         currentUser = user;
         accessToken = token;
         localStorage.setItem('currentUser', JSON.stringify(user));
+        // access token нужен, чтобы не "разлогинивало" при F5,
+        // когда refresh cookie временно недоступна (CORS/SameSite/сеть)
+        localStorage.setItem('accessToken', token);
         updateProfileUI();
         loadAllPresets();
         refreshSavedPasswords();
@@ -1097,9 +1106,11 @@ async function initApp() {
         presetsWords = [];
         savedPasswords = [];
         localStorage.removeItem('currentUser');
+        localStorage.removeItem('accessToken');
         updateProfileUI();
         renderPresets();
-        logout();
+        // ВАЖНО: не делаем logout автоматически при ошибке восстановления.
+        // logout должен быть только по действию пользователя.
     }
 
     function updateProfileUI() {
@@ -1941,6 +1952,7 @@ async function initApp() {
     // ===== ВОССТАНОВЛЕНИЕ СЕССИИ =====
     async function restoreSession() {
         const savedUser = localStorage.getItem('currentUser');
+        const savedAccessToken = localStorage.getItem('accessToken');
         
         if (!savedUser) {
             console.log('❌ Нет сохранённого пользователя');
@@ -1950,22 +1962,33 @@ async function initApp() {
         
         try {
             currentUser = JSON.parse(savedUser);
+            if (savedAccessToken) accessToken = savedAccessToken;
             updateProfileUI();
             console.log('👤 Пользователь:', currentUser.email);
             
-            const refreshed = await refreshAccessToken();
-            
-            if (refreshed && accessToken) {
-                console.log('✅ Сессия восстановлена');
+            // Если access token есть — считаем сессию "условно восстановленной" сразу,
+            // а refresh пробуем мягко (не разлогиниваем при неудаче).
+            if (accessToken) {
+                console.log('✅ Сессия восстановлена (по access token)');
+                // refresh в фоне, чтобы обновить токен если cookie доступна
+                refreshAccessToken().catch(() => {});
                 await loadAllPresets();
                 await refreshSavedPasswords();
                 return true;
-            } else {
-                console.log('❌ Не удалось восстановить сессию');
-                clearSession();
-                renderPresets();
-                return false;
             }
+
+            const refreshed = await refreshAccessToken();
+            if (refreshed && accessToken) {
+                console.log('✅ Сессия восстановлена (через refresh)');
+                await loadAllPresets();
+                await refreshSavedPasswords();
+                return true;
+            }
+
+            console.log('❌ Не удалось восстановить сессию');
+            clearSession();
+            renderPresets();
+            return false;
         } catch (err) {
             console.error('Ошибка восстановления сессии:', err);
             clearSession();

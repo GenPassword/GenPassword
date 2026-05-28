@@ -66,7 +66,7 @@ builder.Services.AddCors(options =>
                 "http://localhost:5173",
                 "http://localhost:3000",
                 "https://genpassword.github.io",
-                "http://10.40.241.58/GenPassword/"
+                "http://10.40.241.58"
             )
             .AllowAnyHeader()
             .AllowAnyMethod()
