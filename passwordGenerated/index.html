@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Генератор паролей</title>
     
-    <!-- CSP Заголовки для защиты от XSS (исправленные) -->
+    <!-- CSP Заголовки для защиты от XSS -->
     <meta http-equiv="Content-Security-Policy" content="
       default-src 'self';
       script-src 'self' 'unsafe-inline' 'unsafe-eval';
@@ -28,7 +28,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-      /* Анимация для уведомлений */
       @keyframes fadeInOut {
         0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
         15% { opacity: 1; transform: translateX(-50%) translateY(0); }
@@ -51,7 +50,6 @@
         return token;
       }
       
-      // Устанавливаем CSRF токен при загрузке
       if (!sessionStorage.getItem('csrfToken')) {
         generateCSRFToken();
       } else {
@@ -63,27 +61,31 @@
       (function protectFromConsole() {
         const originalSetItem = localStorage.setItem;
         localStorage.setItem = function(key, value) {
-          if (key === 'accessToken' || key === 'userPassword') {
-            console.warn('Операция запрещена');
-            throw new Error('Операция запрещена');
+          // Запрещаем ТОЛЬКО сохранение пароля
+          if (key === 'userPassword') {
+            console.warn('⚠️ Операция запрещена: попытка сохранить пароль в localStorage');
+            throw new Error('Сохранение пароля в localStorage запрещено');
           }
+          // accessToken и всё остальное разрешено
           return originalSetItem.call(this, key, value);
         };
         
         window.eval = function() {
-          console.warn('eval запрещён');
+          console.warn('⚠️ eval запрещён');
           throw new Error('eval запрещён');
         };
         
         const originalCreateElement = document.createElement;
         document.createElement = function(tagName) {
           if (tagName.toLowerCase() === 'script') {
-            console.warn('Создание скриптов запрещено');
+            console.warn('⚠️ Создание скриптов запрещено');
             throw new Error('Создание скриптов запрещено');
           }
           return originalCreateElement.call(document, tagName);
         };
       })();
+      
+      console.log('🛡️ Защита активирована');
     </script>
   </body>
 </html>

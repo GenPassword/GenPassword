@@ -1,5 +1,12 @@
 import './style.css'
-
+//const API_RANDOM = '/api/password/generate';
+//const API_WORDS = '/api/password/generate-from-words';
+//const API_PIN = '/api/password/generate';
+//const API_AUTH_REGISTER = '/api/Auth/register';
+//const API_AUTH_LOGIN = '/api/Auth/login';
+//const API_SETTINGS_SAVE = '/api/UserSettings/save';
+//const API_SETTINGS_GET = '/api/UserSettings';
+//const API_SETTINGS_DELETE = '/api/UserSettings/delete'
 // ✅ API URLs
 const API_RANDOM = 'https://myproject24.ru/api/password/generate';
 const API_WORDS = 'https://myproject24.ru/api/password/generate-from-words';
