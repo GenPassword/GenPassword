@@ -1,12 +1,5 @@
 import './style.css'
-//const API_RANDOM = '/api/password/generate';
-//const API_WORDS = '/api/password/generate-from-words';
-//const API_PIN = '/api/password/generate';
-//const API_AUTH_REGISTER = '/api/Auth/register';
-//const API_AUTH_LOGIN = '/api/Auth/login';
-//const API_SETTINGS_SAVE = '/api/UserSettings/save';
-//const API_SETTINGS_GET = '/api/UserSettings';
-//const API_SETTINGS_DELETE = '/api/UserSettings/delete'
+
 // ✅ API URLs
 const API_RANDOM = 'https://myproject24.ru/api/password/generate';
 const API_WORDS = 'https://myproject24.ru/api/password/generate-from-words';
@@ -155,17 +148,16 @@ function getGeneratorTypeNumber() {
 // ✅ HTML-шаблон
 const html = `
 <div class="container">
-    <div class="presets-sidebar">
-        <div class="presets-header">
-            <h3>💾 Сохранённые настройки</h3>
-            <button id="saveCurrentPresetBtn" class="save-preset-btn" title="Сохранить текущие настройки">+</button>
-        </div>
-        <div id="presetsList" class="presets-list">
-            <div class="preset-empty">Авторизуйтесь, чтобы<br>сохранять настройки</div>
-        </div>
-    </div>
-
     <div class="main-content">
+        <div class="generator-logo">
+            <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="2.5" y="2.5" width="59" height="59" rx="3.5" fill="#D9D9D9" stroke="#00D9FF" stroke-width="5"/>
+                <rect width="55" height="55" transform="translate(5 5)" fill="#1C1FC2"/>
+                <path d="M39.375 25.625L30.2083 34.7917L25.625 30.2083M50.8333 28.2949C50.8333 43.3472 39.4482 50.0956 34.6216 52.2803L34.6155 52.2829C34.1079 52.5127 33.8534 52.6279 33.2766 52.7269C32.9113 52.7896 32.091 52.7896 31.7257 52.7269C31.1466 52.6275 30.8895 52.5119 30.3778 52.2803C25.5512 50.0956 14.1667 43.3471 14.1667 28.2949V19.2088C14.1667 16.6419 14.1667 15.3575 14.6662 14.377C15.1056 13.5146 15.8063 12.814 16.6687 12.3746C17.6491 11.875 18.9335 11.875 21.5005 11.875H43.5005C46.0674 11.875 47.349 11.875 48.3295 12.3746C49.1919 12.814 49.8949 13.5146 50.3343 14.377C50.8333 15.3565 50.8333 16.6394 50.8333 19.2013V28.2949Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <h1>GenPass</h1>
+        </div>
+
         <button id="themeToggle" class="theme-toggle" title="Сменить тему">
             <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="98" height="98" viewBox="0 0 98 98" fill="none">
                 <path fill="#013374" d="M47.468 20.457q.76-.04 1.532-.04c15.786 0 28.583 12.797 28.583 28.583S64.786 77.583 49 77.583a28.45 28.45 0 0 1-14.802-4.126c15.074-.796 27.052-13.27 27.052-28.543 0-10.368-5.52-19.446-13.782-24.457M5.4 10.2c.101.304.152.456.203.523a.5.5 0 0 0 .794 0c.05-.067.102-.219.203-.523.082-.245.123-.368.176-.479a2 2 0 0 1 .945-.945c.111-.053.234-.094.479-.176.304-.101.456-.152.523-.203a.5.5 0 0 0 0-.794c-.067-.05-.219-.102-.523-.203-.245-.082-.368-.123-.479-.176a2 2 0 0 1-.945-.945A4 4 0 0 1 6.6 5.8c-.101-.304-.152-.456-.203-.522a.5.5 0 0 0-.794 0c-.05.066-.102.218-.203.522a4 4 0 0 1-.176.479 2 2 0 0 1-.945.945A4 4 0 0 1 3.8 7.4c-.304.101-.456.152-.522.203a.5.5 0 0 0 0 .794c.066.05.218.102.522.203.245.082.368.123.479.176a2 2 0 0 1 .945.945c.053.111.094.234.176.479"/>
@@ -178,7 +170,9 @@ const html = `
         
         <div class="profile-menu">
             <button id="profileBtn" class="profile-btn">
-                <span>👤</span>
+                <svg width="18" height="23" viewBox="0 0 18 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16.75 21.25C16.75 16.9008 13.2242 13.375 8.875 13.375C4.52576 13.375 1 16.9008 1 21.25M8.875 10C6.38972 10 4.375 7.98528 4.375 5.5C4.375 3.01472 6.38972 1 8.875 1C11.3603 1 13.375 3.01472 13.375 5.5C13.375 7.98528 11.3603 10 8.875 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
                 <span id="profileEmail" class="profile-email">Войти</span>
             </button>
         </div>
@@ -203,8 +197,8 @@ const html = `
         </div>
         
         <div class="password-actions">
-            <button id="savePasswordBtn" class="save-password-btn">💾 Сохранить пароль</button>
-            <button id="viewSavedPasswordsBtn" class="view-saved-btn">📋 Мои пароли</button>
+            <button id="savePasswordBtn" class="save-password-btn">Сохранить пароль</button>
+            <button id="viewSavedPasswordsBtn" class="view-saved-btn">Мои пароли</button>
         </div>
         
         <div class="strength-container">
@@ -361,6 +355,16 @@ const html = `
             <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
         </button>
     </div>
+
+    <div class="presets-sidebar">
+        <div class="presets-header">
+            <h3>Сохранённые настройки</h3>
+            <button id="saveCurrentPresetBtn" class="save-preset-btn" title="Сохранить текущие настройки">+</button>
+        </div>
+        <div id="presetsList" class="presets-list">
+            <div class="preset-empty">Авторизуйтесь, чтобы<br>сохранять настройки</div>
+        </div>
+    </div>
 </div>
 
 <!-- Модалка для сохранения пароля -->
@@ -368,7 +372,12 @@ const html = `
     <div class="save-password-modal-content">
         <div class="save-password-modal-header">
             <h3>Сохранить пароль</h3>
-            <button id="closeSavePasswordModal" class="close-modal">&times;</button>
+            <button id="closeSavePasswordModal" class="close-modal">
+                <svg width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="31" height="31" fill="transparent"/>
+                    <path d="M27.1249 27.1249L15.5 15.5M15.5 15.5L3.875 3.875M15.5 15.5L27.1251 3.875M15.5 15.5L3.875 27.1251" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
         </div>
         <div class="save-password-modal-body">
             <div class="form-group">
@@ -392,7 +401,12 @@ const html = `
     <div class="saved-passwords-modal-content">
         <div class="saved-passwords-modal-header">
             <h3>Мои сохранённые пароли</h3>
-            <button id="closeSavedPasswordsModal" class="close-modal">&times;</button>
+            <button id="closeSavedPasswordsModal" class="close-modal">
+                <svg width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="31" height="31" fill="transparent"/>
+                    <path d="M27.1249 27.1249L15.5 15.5M15.5 15.5L3.875 3.875M15.5 15.5L27.1251 3.875M15.5 15.5L3.875 27.1251" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
         </div>
         <div class="saved-passwords-modal-body">
             <div id="savedPasswordsList" class="saved-passwords-list">
@@ -406,7 +420,19 @@ const html = `
 <div id="deletePasswordConfirmModal" class="confirm-modal" style="display: none;">
     <div class="confirm-modal-content">
         <div class="confirm-modal-header">
-            <h3>Подтверждение</h3>
+            <div class="confirm-modal-warning-icon">
+                <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="38" height="38" fill="transparent"/>
+                    <path d="M19 14.25V20.5833M6.93327 24.0664C5.49333 26.5604 4.77357 27.8079 4.88112 28.8312C4.97493 29.7237 5.44337 30.5346 6.16943 31.0621C7.00156 31.6667 8.4406 31.6667 11.3185 31.6667H26.6815C29.5594 31.6667 30.9982 31.6667 31.8303 31.0621C32.5564 30.5346 33.0251 29.7237 33.1189 28.8312C33.2264 27.8079 32.5069 26.5604 31.0669 24.0664L23.3882 10.7664C21.9483 8.27233 21.228 7.02552 20.288 6.60702C19.4681 6.24199 18.5313 6.24199 17.7115 6.60702C16.7719 7.02535 16.0521 8.27216 14.6133 10.7641L6.93327 24.0664ZM19.0804 25.3333V25.4917L18.9211 25.492V25.3333H19.0804Z" stroke="#FFCC00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <h3>Подтверждение удаления</h3>
+            <button class="close-modal close-delete-modal" aria-label="Закрыть">
+                <svg width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="31" height="31" fill="transparent"/>
+                    <path d="M27.1249 27.1249L15.5 15.5M15.5 15.5L3.875 3.875M15.5 15.5L27.1251 3.875M15.5 15.5L3.875 27.1251" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
         </div>
         <div class="confirm-modal-body">
             <p>Вы уверены, что хотите удалить этот пароль?</p>
@@ -414,6 +440,34 @@ const html = `
         <div class="confirm-modal-footer">
             <button id="cancelDeleteBtn" class="confirm-cancel-btn">Отмена</button>
             <button id="confirmDeleteBtn" class="confirm-delete-btn">Удалить</button>
+        </div>
+    </div>
+</div>
+
+<!-- Модалка для подтверждения удаления пресета -->
+<div id="deletePresetConfirmModal" class="delete-confirm-modal" style="display: none;">
+    <div class="delete-confirm-modal-content">
+        <div class="delete-confirm-modal-header">
+            <div class="confirm-modal-warning-icon">
+                <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="38" height="38" fill="transparent"/>
+                    <path d="M19 14.25V20.5833M6.93327 24.0664C5.49333 26.5604 4.77357 27.8079 4.88112 28.8312C4.97493 29.7237 5.44337 30.5346 6.16943 31.0621C7.00156 31.6667 8.4406 31.6667 11.3185 31.6667H26.6815C29.5594 31.6667 30.9982 31.6667 31.8303 31.0621C32.5564 30.5346 33.0251 29.7237 33.1189 28.8312C33.2264 27.8079 32.5069 26.5604 31.0669 24.0664L23.3882 10.7664C21.9483 8.27233 21.228 7.02552 20.288 6.60702C19.4681 6.24199 18.5313 6.24199 17.7115 6.60702C16.7719 7.02535 16.0521 8.27216 14.6133 10.7641L6.93327 24.0664ZM19.0804 25.3333V25.4917L18.9211 25.492V25.3333H19.0804Z" stroke="#FFCC00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <h3>Подтверждение удаления</h3>
+            <button id="closeDeletePresetModal" class="close-modal close-delete-modal">
+                <svg width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="31" height="31" fill="transparent"/>
+                    <path d="M27.1249 27.1249L15.5 15.5M15.5 15.5L3.875 3.875M15.5 15.5L27.1251 3.875M15.5 15.5L3.875 27.1251" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+        <div class="delete-confirm-modal-body">
+            <p>Вы уверены, что хотите удалить этот пресет?</p>
+        </div>
+        <div class="delete-confirm-modal-footer">
+            <button id="cancelDeletePresetBtn" class="delete-cancel-btn">Отмена</button>
+            <button id="confirmDeletePresetBtn" class="delete-confirm-btn">Удалить</button>
         </div>
     </div>
 </div>
@@ -468,11 +522,17 @@ const html = `
     </div>
 </div>
 
+<!-- Модалка для сохранения настроек -->
 <div id="presetNameModal" class="preset-modal" style="display: none;">
     <div class="preset-modal-content">
         <div class="preset-modal-header">
             <h3>Сохранить настройки</h3>
-            <button id="closePresetModal" class="close-modal">&times;</button>
+            <button id="closePresetModal" class="close-modal">
+                <svg width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="31" height="31" fill="transparent"/>
+                    <path d="M27.1249 27.1249L15.5 15.5M15.5 15.5L3.875 3.875M15.5 15.5L27.1251 3.875M15.5 15.5L3.875 27.1251" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
         </div>
         <div class="preset-modal-body">
             <input type="text" id="presetNameInput" placeholder="Введите название" maxlength="30">
@@ -561,10 +621,15 @@ async function initApp() {
         savedPasswordsList: $('savedPasswordsList'),
         deletePasswordConfirmModal: $('deletePasswordConfirmModal'),
         cancelDeleteBtn: $('cancelDeleteBtn'),
-        confirmDeleteBtn: $('confirmDeleteBtn')
+        confirmDeleteBtn: $('confirmDeleteBtn'),
+        deletePresetConfirmModal: $('deletePresetConfirmModal'),
+        closeDeletePresetModal: $('closeDeletePresetModal'),
+        cancelDeletePresetBtn: $('cancelDeletePresetBtn'),
+        confirmDeletePresetBtn: $('confirmDeletePresetBtn')
     };
 
     let pendingDeleteId = null;
+    let pendingDeletePresetId = null;
 
     // ===== ФУНКЦИЯ ДЛЯ ОБНОВЛЕНИЯ ACCESS TOKEN =====
     async function refreshAccessToken() {
@@ -589,7 +654,6 @@ async function initApp() {
             
             if (response.ok) {
                 const data = await response.json();
-                // Ваш бэкенд возвращает { token: "..." }
                 const newToken = data?.token;
                 
                 if (newToken) {
@@ -656,7 +720,6 @@ async function initApp() {
                 const rawJsonStringFields = new Set(['settingsJson']);
                 for (const [key, value] of Object.entries(body)) {
                     if (typeof value === 'string') {
-                        // settingsJson должен оставаться валидной JSON-строкой для бэкенда
                         if (rawJsonStringFields.has(key)) {
                             safeBody[key] = value;
                             continue;
@@ -859,12 +922,16 @@ async function initApp() {
         els.savedPasswordsList.innerHTML = savedPasswords.map(item => `
             <div class="saved-password-item" data-id="${item.id}">
                 <div class="saved-password-info">
-                    ${item.description ? `<div class="saved-password-description">📌 ${escapeHtml(item.description)}</div>` : ''}
-                    <div class="saved-password-value">🔐 ${escapeHtml(item.password)}</div>
+                    ${item.description ? `<div class="saved-password-description">${escapeHtml(item.description)}</div>` : ''}
+                    <div class="saved-password-value">${escapeHtml(item.password)}</div>
                 </div>
                 <div class="saved-password-actions">
-                    <button class="saved-password-copy" data-password="${escapeHtml(item.password)}" title="Копировать">📋</button>
-                    <button class="saved-password-delete" data-id="${item.id}" title="Удалить">🗑️</button>
+                    <button class="saved-password-copy" data-password="${escapeHtml(item.password)}" title="Копировать"></button>
+                    <button class="saved-password-delete" data-id="${item.id}" title="Удалить">
+                        <svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M11 7.61828V14.2366M7 7.61828V14.2366M3 3.83641V14.9929C3 16.052 3 16.5811 3.21799 16.9856C3.40973 17.3414 3.71547 17.6312 4.0918 17.8125C4.5192 18.0184 5.07899 18.0184 6.19691 18.0184H11.8031C12.921 18.0184 13.48 18.0184 13.9074 17.8125C14.2837 17.6312 14.5905 17.3414 14.7822 16.9856C15 16.5815 15 16.0528 15 14.9959V3.83641M3 3.83641H5M3 3.83641H1M5 3.83641H13M5 3.83641C5 2.95534 5 2.51502 5.15224 2.16752C5.35523 1.70419 5.74432 1.33586 6.23438 1.14394C6.60192 1 7.06812 1 8 1H10C10.9319 1 11.3978 1 11.7654 1.14394C12.2554 1.33586 12.6447 1.70419 12.8477 2.16752C12.9999 2.51502 13 2.95534 13 3.83641M13 3.83641H15M15 3.83641H17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
                 </div>
             </div>
         `).join('');
@@ -923,11 +990,15 @@ async function initApp() {
             <div class="preset-item" data-id="${preset.id}">
                 <div class="preset-info">
                     <div class="preset-name">${escapeHtml(preset.name)}</div>
-                    <div class="preset-mode">${currentMode === 'random' ? '🎲 Случайный' : currentMode === 'pin' ? '🔢 PIN' : '📝 Слова'}</div>
+                    <div class="preset-mode">${currentMode === 'random' ? 'Случайный' : currentMode === 'pin' ? 'PIN' : 'Слова'}</div>
                 </div>
                 <div class="preset-actions">
-                    <button class="preset-apply" data-id="${preset.id}" title="Применить">✅</button>
-                    <button class="preset-delete" data-id="${preset.id}" title="Удалить">🗑️</button>
+                    <button class="preset-apply" data-id="${preset.id}" title="Применить"></button>
+                    <button class="preset-delete" data-id="${preset.id}" title="Удалить">
+                        <svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M11 7.61828V14.2366M7 7.61828V14.2366M3 3.83641V14.9929C3 16.052 3 16.5811 3.21799 16.9856C3.40973 17.3414 3.71547 17.6312 4.0918 17.8125C4.5192 18.0184 5.07899 18.0184 6.19691 18.0184H11.8031C12.921 18.0184 13.48 18.0184 13.9074 17.8125C14.2837 17.6312 14.5905 17.3414 14.7822 16.9856C15 16.5815 15 16.0528 15 14.9959V3.83641M3 3.83641H5M3 3.83641H1M5 3.83641H13M5 3.83641C5 2.95534 5 2.51502 5.15224 2.16752C5.35523 1.70419 5.74432 1.33586 6.23438 1.14394C6.60192 1 7.06812 1 8 1H10C10.9319 1 11.3978 1 11.7654 1.14394C12.2554 1.33586 12.6447 1.70419 12.8477 2.16752C12.9999 2.51502 13 2.95534 13 3.83641M13 3.83641H15M15 3.83641H17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
                 </div>
             </div>
         `).join('');
@@ -944,7 +1015,8 @@ async function initApp() {
             btn.addEventListener('click', async (e) => {
                 e.stopPropagation();
                 const id = parseInt(btn.dataset.id);
-                await deletePreset(id);
+                pendingDeletePresetId = id;
+                els.deletePresetConfirmModal.style.display = 'flex';
             });
         });
     }
@@ -1036,28 +1108,6 @@ async function initApp() {
         showToast(`✅ Применён: ${preset.name}`);
     }
     
-    async function deletePreset(id) {
-        if (!confirm('Удалить этот пресет?')) return;
-        
-        const success = await deletePresetFromServer(id);
-        
-        if (success) {
-            const currentPresets = getCurrentPresets();
-            const newPresets = currentPresets.filter(p => p.id !== id);
-            
-            switch(currentMode) {
-                case 'random': presetsRandom = newPresets; break;
-                case 'pin': presetsPin = newPresets; break;
-                case 'words': presetsWords = newPresets; break;
-            }
-            
-            renderPresets();
-            showToast('🗑️ Пресет удалён');
-        } else {
-            showToast('❌ Ошибка при удалении');
-        }
-    }
-    
     async function addCurrentPreset(name) {
         const settings = getCurrentSettingsForPreset();
         const success = await savePresetToServer(name, settings);
@@ -1096,8 +1146,6 @@ async function initApp() {
         currentUser = user;
         accessToken = token;
         localStorage.setItem('currentUser', JSON.stringify(user));
-        // access token нужен, чтобы не "разлогинивало" при F5,
-        // когда refresh cookie временно недоступна (CORS/SameSite/сеть)
         localStorage.setItem('accessToken', token);
         updateProfileUI();
         loadAllPresets();
@@ -1116,8 +1164,6 @@ async function initApp() {
         localStorage.removeItem('accessToken');
         updateProfileUI();
         renderPresets();
-        // ВАЖНО: не делаем logout автоматически при ошибке восстановления.
-        // logout должен быть только по действию пользователя.
     }
 
     function updateProfileUI() {
@@ -1235,6 +1281,56 @@ async function initApp() {
             }
         }
         closeDeleteConfirmModal();
+    }
+
+    // ===== МОДАЛКА ПОДТВЕРЖДЕНИЯ УДАЛЕНИЯ ПРЕСЕТА =====
+    if (els.closeDeletePresetModal) {
+        els.closeDeletePresetModal.onclick = () => {
+            els.deletePresetConfirmModal.style.display = 'none';
+            pendingDeletePresetId = null;
+        };
+    }
+    
+    if (els.cancelDeletePresetBtn) {
+        els.cancelDeletePresetBtn.onclick = () => {
+            els.deletePresetConfirmModal.style.display = 'none';
+            pendingDeletePresetId = null;
+        };
+    }
+    
+    if (els.confirmDeletePresetBtn) {
+        els.confirmDeletePresetBtn.onclick = async () => {
+            if (pendingDeletePresetId) {
+                const success = await deletePresetFromServer(pendingDeletePresetId);
+                
+                if (success) {
+                    const currentPresets = getCurrentPresets();
+                    const newPresets = currentPresets.filter(p => p.id !== pendingDeletePresetId);
+                    
+                    switch(currentMode) {
+                        case 'random': presetsRandom = newPresets; break;
+                        case 'pin': presetsPin = newPresets; break;
+                        case 'words': presetsWords = newPresets; break;
+                    }
+                    
+                    renderPresets();
+                    showToast('🗑️ Пресет удалён');
+                } else {
+                    showToast('❌ Ошибка при удалении');
+                }
+            }
+            els.deletePresetConfirmModal.style.display = 'none';
+            pendingDeletePresetId = null;
+        };
+    }
+    
+    if (els.deletePresetConfirmModal) {
+        els.deletePresetConfirmModal.onclick = (e) => {
+            if (e.target === els.deletePresetConfirmModal) {
+                els.deletePresetConfirmModal.style.display = 'none';
+                pendingDeletePresetId = null;
+            }
+        };
     }
 
     // ===== ТЕМА =====
@@ -1973,11 +2069,8 @@ async function initApp() {
             updateProfileUI();
             console.log('👤 Пользователь:', currentUser.email);
             
-            // Если access token есть — считаем сессию "условно восстановленной" сразу,
-            // а refresh пробуем мягко (не разлогиниваем при неудаче).
             if (accessToken) {
                 console.log('✅ Сессия восстановлена (по access token)');
-                // refresh в фоне, чтобы обновить токен если cookie доступна
                 refreshAccessToken().catch(() => {});
                 await loadAllPresets();
                 await refreshSavedPasswords();
@@ -2014,6 +2107,5 @@ async function initApp() {
     });
     updateCounterDisplay();
     
-    // Восстанавливаем сессию
     await restoreSession();
 }
