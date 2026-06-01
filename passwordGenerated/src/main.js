@@ -941,7 +941,14 @@ async function initApp() {
                 e.stopPropagation();
                 const password = btn.dataset.password;
                 await copyToClipboard(password);
-                showToast('📋 Пароль скопирован');
+                
+                // Анимация галочки
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.classList.remove('copied');
+                }, 500);
+                
+                showToast('✓ Пароль скопирован');
             });
         });
         
@@ -1008,6 +1015,12 @@ async function initApp() {
                 e.stopPropagation();
                 const id = parseInt(btn.dataset.id);
                 await applyPreset(id);
+                
+                // Анимация галочки
+                btn.classList.add('applied');
+                setTimeout(() => {
+                    btn.classList.remove('applied');
+                }, 300);
             });
         });
         
