@@ -25,6 +25,7 @@
   --error: #ff6b6b;
   --error-bg: #2d1a1a;
 }
+
 /* ===== Базовые стили ===== */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -40,18 +41,20 @@ body {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: 42px 20px;
+  padding: 0;
+  margin: 0;
 }
 #app {
   width: 100%;
-  max-width: 1100px;
-  margin: 0 auto; /* Центрирование по горизонтали */
+  max-width: 1200px;
+  margin: 0 auto;
   position: relative;
 }
 .container {
   background: transparent;
   padding: 0;
   max-width: 100%;
+  position: relative;
 }
 h1 {
   font-size: 2em;
@@ -71,17 +74,66 @@ h1 {
   letter-spacing: 0%;
   text-align: center;
   display: block;
+  margin-top: 20px;
 }
+
+/* ===== ПРОФИЛЬ (ВОЙТИ) ===== */
+.profile-menu {
+    position: fixed;
+    top: 0;
+    right: 20px;
+    z-index: 1001;
+}
+.profile-btn {
+    background: #CEFFF7;
+    border: none;
+    border-radius: 56px;
+    padding: 11px 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    font-family: 'Inter', sans-serif;
+    font-size: 20px;
+    color: #12215E;
+    transition: all 0.2s;
+}
+.profile-btn:hover {
+    background: #b8e6de;
+    transform: scale(1.05);
+}
+.profile-email {
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+[data-theme="dark"] .profile-btn {
+    background: #013CFF;
+    color: #BEE3FE;
+}
+[data-theme="dark"] .profile-btn:hover {
+    background: #0028b3;
+}
+.profile-btn svg {
+    width: 25px;
+    height: 32px;
+    stroke: #12215E;
+}
+[data-theme="dark"] .profile-btn svg {
+    stroke: #BEE3FE;
+}
+
 /* ===== Кнопка смены темы ===== */
 .theme-toggle {
   position: fixed;
-  top: -5px;
+  top: 75px;
   right: 20px;
   background: transparent;
   border: none;
   border-radius: 0;
-  width: 98px;
-  height: 98px;
+  width: 84px;
+  height: 84px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -92,8 +144,8 @@ h1 {
   padding: 0;
 }
 .theme-toggle svg {
-  width: 98px;
-  height: 98px;
+  width: 84px;
+  height: 84px;
   position: absolute;
   transition: all 0.3s ease;
 }
@@ -102,7 +154,8 @@ h1 {
 [data-theme="dark"] .icon-moon { opacity: 0; transform: rotate(-90deg) scale(0); }
 [data-theme="dark"] .icon-sun { opacity: 1; transform: rotate(0deg) scale(1); }
 .theme-toggle:hover { transform: scale(1.1); }
-/* ===== ВЫПАДАЮЩЕЕ МЕНЮ ===== */
+
+/* ===== ВЫПАДАЮЩЕЕ МЕНЮ (СПОСОБ ГЕНЕРАЦИИ) ===== */
 .generation-menu {
   position: fixed;
   top: 0;
@@ -154,7 +207,6 @@ h1 {
   margin-top: -3px;
   pointer-events: none;
 }
-/* ✅ ОТКРЫТИЕ МЕНЮ ПРИ НАВЕДЕНИИ (ТОЛЬКО Desktop > 768px) */
 @media (min-width: 769px) {
     .generation-menu:hover .mode-dropdown {
         opacity: 1;
@@ -179,6 +231,172 @@ h1 {
 .dropdown-item:first-child { border-top: 1px solid #000000; }
 .dropdown-item:hover { background: #b2ebf2; }
 .dropdown-item.selected { background: #013CFF; color: #FFFFFF; }
+
+/* ===== БОКОВАЯ ПАНЕЛЬ ПРЕСЕТОВ ===== */
+.presets-sidebar {
+    position: fixed;
+    top: 85px;
+    left: 0;
+    width: 260px;
+    height: fit-content;
+    background: #AEDBE5;
+    border: 3px solid #00ffea;
+    border-radius: 16px;
+    overflow: hidden;
+    flex-shrink: 0;
+    z-index: 998;
+}
+[data-theme="dark"] .presets-sidebar {
+    background: #000d55;
+    border-color: #1C1FC2;
+}
+.presets-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: #CEFFF7;
+    border-bottom: 2px solid #00ffea;
+}
+[data-theme="dark"] .presets-header {
+    background: #1C1FC2;
+    border-bottom-color: #BEE3FE;
+}
+.presets-header h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #12215E;
+    margin: 0;
+}
+[data-theme="dark"] .presets-header h3 {
+    color: #BEE3FE;
+}
+.save-preset-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: #013CFF;
+    color: white;
+    border: none;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+.save-preset-btn:hover {
+    background: #0033cc;
+    transform: scale(1.05);
+}
+.presets-list {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 10px;
+    background: #AEDBE5;
+}
+[data-theme="dark"] .presets-list {
+    background: #000d55;
+}
+.preset-empty {
+    text-align: center;
+    padding: 30px 15px;
+    color: #12215E;
+    font-size: 13px;
+    opacity: 0.7;
+}
+.preset-item {
+    background: #ffffff;
+    border: 2px solid #00ffea;
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s;
+}
+[data-theme="dark"] .preset-item {
+    background: #000d55;
+    border-color: #1C1FC2;
+}
+.preset-item:hover {
+    transform: translateX(-3px);
+    border-color: #013CFF;
+}
+.preset-info {
+    flex: 1;
+}
+.preset-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: #12215E;
+    margin-bottom: 4px;
+    word-break: break-word;
+}
+[data-theme="dark"] .preset-name {
+    color: #BEE3FE;
+}
+.preset-mode {
+    font-size: 11px;
+    color: #013CFF;
+    opacity: 0.8;
+}
+.preset-actions {
+    display: flex;
+    gap: 8px;
+}
+.preset-apply, .preset-delete {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.preset-apply {
+    background: #00FFEA;
+}
+.preset-apply:hover {
+    background: #00e6d4;
+    transform: scale(1.05);
+}
+.preset-delete {
+    background: #ff6b6b;
+    color: white;
+}
+.preset-delete svg {
+    width: 16px;
+    height: 16px;
+}
+.preset-delete:hover {
+    background: #e74c3c;
+    transform: scale(1.05);
+}
+[data-theme="dark"] .preset-apply {
+    background: #1C1FC2;
+}
+[data-theme="dark"] .preset-apply:hover {
+    background: #2528d9;
+}
+[data-theme="dark"] .preset-delete {
+    background: #e74c3c;
+    color: white;
+}
+[data-theme="dark"] .preset-delete:hover {
+    background: #c0392b;
+}
+
+/* ===== ОСНОВНОЙ КОНТЕНТ ===== */
+.main-content {
+    margin-left: 280px;
+    padding-top: 20px;
+}
+
 /* ===== БЛОК ПАРОЛЯ ===== */
 .password-block {
   background: #CEFFF7;
@@ -209,6 +427,55 @@ h1 {
 }
 .copy-btn:hover { background: #00b8d9; transform: scale(1.05); }
 .copy-btn:active { transform: scale(0.95); }
+
+/* ===== КНОПКИ ДЛЯ СОХРАНЕНИЯ ПАРОЛЕЙ ===== */
+.password-actions {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+.save-password-btn, .view-saved-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+}
+.save-password-btn {
+    background: #00FFEA;
+    color: #12215E;
+}
+.save-password-btn:hover {
+    background: #00e6d4;
+    transform: translateY(-2px);
+}
+.view-saved-btn {
+    background: #013CFF;
+    color: white;
+}
+.view-saved-btn:hover {
+    background: #0033cc;
+    transform: translateY(-2px);
+}
+[data-theme="dark"] .save-password-btn {
+    background: #1C1FC2;
+    color: #BEE3FE;
+}
+[data-theme="dark"] .save-password-btn:hover {
+    background: #2528d9;
+}
+[data-theme="dark"] .view-saved-btn {
+    background: #013CFF;
+    color: #BEE3FE;
+}
+[data-theme="dark"] .view-saved-btn:hover {
+    background: #0028b3;
+}
+
 /* ===== Индикатор надежности ===== */
 .strength-container { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; padding: 0; background: transparent; }
 .strength-bar { flex: 1; height: 17px; background: #e0f2fe; border-radius: 10px; overflow: hidden; position: relative; }
@@ -222,6 +489,7 @@ h1 {
 .strength-container.medium .strength-bar::after { background: #f39c12; width: 50%; }
 .strength-container.strong .strength-bar::after { background: #2ecc71; width: 75%; }
 .strength-container.very-strong .strength-bar::after { background: #27ae60; width: 100%; }
+
 /* ===== КАСТОМНЫЙ СЛАЙДЕР ===== */
 .custom-slider-wrapper { margin-bottom: 30px; position: relative; }
 .slider-title { font-family: 'Inter', sans-serif; font-weight: 400; font-style: normal; font-size: 20px; line-height: 100%; letter-spacing: 0%; color: #12215E; margin-bottom: 15px; display: block; }
@@ -238,6 +506,7 @@ h1 {
 .slider-labels { margin-top: -28px; font-family: 'Inter', sans-serif; font-weight: 400; font-size: 20px; display: flex; justify-content: space-between; color: #013CFF; }
 .slider-labels span:first-child { margin-left: -5px; }
 .slider-labels span:last-child { margin-right: -20px; }
+
 /* ===== Кнопка "Выбрать все параметры" ===== */
 .select-all-btn {
   display: block; width: 100%; background: #e0f7ff; border: 2px solid #00ffea; color: #12215E;
@@ -246,6 +515,7 @@ h1 {
 }
 .select-all-btn:hover { background: #b3efff; transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0, 255, 234, 0.3); }
 .select-all-btn:active { transform: translateY(1px); }
+
 /* ===== Настройки со счетчиками ===== */
 .settings-with-counters { display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; }
 .setting-item {
@@ -261,6 +531,7 @@ h1 {
 .setting-item.with-counter { flex-wrap: wrap; }
 .setting-item.no-counter { flex-wrap: nowrap; }
 .checkbox-item { display: flex; align-items: center; gap: 12px; cursor: pointer; color: #12215E; font-size: 15px; flex: 1; }
+
 /* ===== Чекбоксы ===== */
 .checkbox-item input {
   -webkit-appearance: none; appearance: none; width: 24px; height: 24px; background-color: #ffffff;
@@ -271,8 +542,7 @@ h1 {
   width: 14px; height: 14px; background-color: #12215E; clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%); transition: transform 0.2s ease-in-out;
 }
 .checkbox-item input[type="checkbox"]:checked::before { transform: translate(-50%, -50%) scale(1); }
-.checkbox-item input[type="checkbox"]:focus,
-.checkbox-item input[type="checkbox"]:active { outline: none; box-shadow: none; }
+
 /* ===== Контейнер счетчика ===== */
 .counter-control { display: flex; align-items: center; gap: 10px; background: transparent; padding: 0; border-radius: 0; border: none; }
 .counter-label { color: #013CFF; font-size: 14px; font-weight: 500; font-family: 'Inter', sans-serif; }
@@ -286,15 +556,7 @@ h1 {
 .counter-btn:disabled { background: #ccefff; color: #00D9FF; cursor: not-allowed; opacity: 0.5; }
 .counter-value { font-weight: 700; font-size: 16px; color: #00D9FF; min-width: 24px; text-align: center; font-family: 'Inter', monospace; }
 .additional-section { display: flex; flex-direction: column; gap: 12px; margin-top: 0; background: transparent; padding: 0; border-radius: 0; }
-.pin-info { background: rgba(52, 152, 219, 0.1); border-left: 4px solid var(--accent); padding: 15px; border-radius: 8px; margin-bottom: 20px; color: #12215E; }
-.pin-info p { margin: 0; font-size: 15px; }
-.form-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-.form-row label { color: #12215E; font-size: 15px; }
-.form-row select, .setting-item select {
-  padding: 8px 12px; border: 3px solid #00ffea; border-radius: 8px; background: #01AAFF; color: #12215E;
-  font-size: 14px; width: 140px; font-family: 'Inter', sans-serif; font-weight: 600; cursor: pointer;
-}
-.form-row select option, .setting-item select option { background: #01AAFF; color: #12215E; }
+
 .generate-btn {
   width: 100%; padding: 16px; background: #013CFF; color: #FFFFFF; border: none; border-radius: 12px;
   cursor: pointer; margin-top: 10px; font-family: 'Inter', sans-serif; font-weight: 400; font-style: normal;
@@ -305,7 +567,7 @@ h1 {
 .error-message { color: var(--error); background: var(--error-bg); border-radius: 12px; padding: 15px; margin-top: 20px; text-align: center; display: none; }
 .loading { text-align: center; color: var(--text-secondary); margin: 20px 0; display: none; }
 
-/* ===== 🔽 КНОПКА ПРОКРУТКИ К ГЕНЕРАЦИИ ===== */
+/* ===== КНОПКА ПРОКРУТКИ ===== */
 .scroll-to-generate {
   display: none;
   position: fixed;
@@ -342,9 +604,7 @@ h1 {
 }
 [data-theme="dark"] .scroll-to-generate:hover { background: #2528d9; }
 
-/* ========================================================
-✅ АДАПТАЦИЯ ТЕМНОЙ ТЕМЫ (ФОН #000642, ТЕКСТ #BEE3FE)
-======================================================== */
+/* ===== АДАПТАЦИЯ ТЕМНОЙ ТЕМЫ ===== */
 [data-theme="dark"] {
   --bg-body: #000642;
   --text-primary: #BEE3FE;
@@ -411,81 +671,58 @@ h1 {
 [data-theme="dark"] .select-all-btn:hover { background: rgba(28, 31, 194, 0.3); }
 [data-theme="dark"] .pin-info { background: rgba(190, 227, 254, 0.08); border-color: #1C1FC2; }
 
-/* ========================================================
-✅ АДАПТИВНОСТЬ (MOBILE & TABLET)
-======================================================== */
-@media (max-width: 768px) {
-  .generation-menu { top: 10px; left: 10px; width: 50%; }
-  .mode-select-btn { width: 100%; height: 50px; font-size: 14px; }
-  .mode-dropdown { width: 100%; }
-  .dropdown-item { width: 100%; height: 44px; }
-  .theme-toggle { top: 5px; right: 10px; width: 60px; height: 60px; }
-  .theme-toggle svg { width: 60px; height: 60px; }
-  #app { margin-left: 0; padding-top: 75px; display: flex; flex-direction: column; }
-  .title_Text { order: 1; font-size: 24px; margin-bottom: 15px; }
-  .password-block { order: 2; margin-bottom: 10px; flex-direction: column; align-items: stretch; }
-  .generate-btn { order: 3; margin: 10px 0 20px; font-size: 24px; padding: 14px; }
-  .strength-container { order: 4; margin-bottom: 10px; }
-  .strength-percent { order: 5; margin-top: 0; margin-bottom: 20px; }
-  .settings-section { order: 6; }
-  #loading, #error { order: 7; }
-  .setting-item { flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px 15px; }
-  .counter-control { width: 100%; justify-content: flex-start; margin-top: 5px; margin-left: 36px; }
-  .form-row select, .setting-item select { width: 100%; }
-  .password-text { font-size: 20px; white-space: normal; margin-bottom: 10px; }
-  .copy-btn { width: 100%; padding: 10px; }
-  
-  /* 🔽 Показываем кнопку прокрутки только на мобильных */
-  .scroll-to-generate { display: flex; }
-}
-@media (max-width: 480px) {
-  body { padding: 10px; }
-  .title_Text { font-size: 20px; }
-  .slider-title { font-size: 16px; }
-  .custom-slider { height: 35px; }
-  .slider-thumb { width: 20px; height: 20px; }
-}
-
-/* ===== ПРОФИЛЬ И АВТОРИЗАЦИЯ ===== */
-.profile-menu {
+/* ===== GenPass логотип - на 6px правее от способа генерации ===== */
+.generator-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     position: fixed;
-    top: 20px;
-    right: 130px;
+    top: 12px;
+    left: 225px;
     z-index: 1000;
 }
 
-.profile-btn {
-    background: transparent;
-    border: none;
-    border-radius: 40px;
-    padding: 8px 16px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    color: #12215E;
-    transition: all 0.2s;
+.generator-logo svg {
+    width: 40px;
+    height: 40px;
 }
 
-.profile-btn:hover {
-    background: rgba(0, 255, 234, 0.2);
-    transform: scale(1.05);
+.generator-logo h1 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #013CFF, #00D9FF);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
-.profile-email {
-    max-width: 100px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+[data-theme="dark"] .generator-logo h1 {
+    background: linear-gradient(135deg, #00D9FF, #01AAFF);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
-[data-theme="dark"] .profile-btn {
-    color: #BEE3FE;
+/* Адаптация для мобильных устройств */
+@media (max-width: 768px) {
+    .generator-logo {
+        position: relative;
+        top: 0;
+        left: 0;
+        justify-content: center;
+        margin: 10px 0;
+    }
+    .generator-logo svg {
+        width: 32px;
+        height: 32px;
+    }
+    .generator-logo h1 {
+        font-size: 20px;
+    }
 }
 
-/* ===== МОДАЛЬНОЕ ОКНО АВТОРИЗАЦИИ ===== */
+/* ===== МОДАЛЬНЫЕ ОКНА ===== */
 .auth-modal {
     position: fixed;
     top: 0;
@@ -499,7 +736,6 @@ h1 {
     z-index: 2000;
     backdrop-filter: blur(4px);
 }
-
 .auth-modal-content {
     background: #ffffff;
     border-radius: 20px;
@@ -509,22 +745,13 @@ h1 {
     overflow: hidden;
     animation: modalSlideIn 0.3s ease;
 }
-
 [data-theme="dark"] .auth-modal-content {
     background: #000d55;
 }
-
 @keyframes modalSlideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
 }
-
 .auth-modal-header {
     display: flex;
     justify-content: space-between;
@@ -532,22 +759,18 @@ h1 {
     padding: 20px 24px;
     border-bottom: 1px solid #e0f2fe;
 }
-
 [data-theme="dark"] .auth-modal-header {
     border-bottom-color: #1C1FC2;
 }
-
 .auth-modal-header h2 {
     margin: 0;
     font-size: 24px;
     font-weight: 600;
     color: #12215E;
 }
-
 [data-theme="dark"] .auth-modal-header h2 {
     color: #BEE3FE;
 }
-
 .close-modal {
     background: none;
     border: none;
@@ -556,30 +779,24 @@ h1 {
     color: #12215E;
     transition: transform 0.2s;
 }
-
 [data-theme="dark"] .close-modal {
     color: #BEE3FE;
 }
-
 .close-modal:hover {
     transform: scale(1.1);
 }
-
 .auth-modal-body {
     padding: 24px;
 }
-
 .auth-tabs {
     display: flex;
     gap: 16px;
     margin-bottom: 24px;
     border-bottom: 2px solid #e0f2fe;
 }
-
 [data-theme="dark"] .auth-tabs {
     border-bottom-color: #1C1FC2;
 }
-
 .auth-tab {
     background: none;
     border: none;
@@ -592,39 +809,32 @@ h1 {
     transition: all 0.2s;
     font-family: 'Inter', sans-serif;
 }
-
 [data-theme="dark"] .auth-tab {
     color: #BEE3FE;
 }
-
 .auth-tab.active {
     opacity: 1;
     border-bottom: 2px solid #013CFF;
     margin-bottom: -2px;
 }
-
 .auth-form {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
-
 .auth-input-group {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
-
 .auth-input-group label {
     font-size: 14px;
     font-weight: 500;
     color: #12215E;
 }
-
 [data-theme="dark"] .auth-input-group label {
     color: #BEE3FE;
 }
-
 .auth-input-group input {
     padding: 12px 16px;
     border: 2px solid #e0f2fe;
@@ -635,25 +845,21 @@ h1 {
     color: #12215E;
     transition: border-color 0.2s;
 }
-
 [data-theme="dark"] .auth-input-group input {
     background: #000d55;
     border-color: #1C1FC2;
     color: #BEE3FE;
 }
-
 .auth-input-group input:focus {
     outline: none;
     border-color: #013CFF;
 }
-
 .auth-error {
     color: #e74c3c;
     font-size: 13px;
     text-align: center;
     min-height: 40px;
 }
-
 .auth-submit-btn {
     background: #013CFF;
     color: white;
@@ -666,10 +872,896 @@ h1 {
     transition: all 0.2s;
     font-family: 'Inter', sans-serif;
 }
-
 .auth-submit-btn:hover {
     background: #0033cc;
     transform: translateY(-1px);
+}
+.auth-submit-btn:active {
+    transform: translateY(1px);
+}
+.logout-btn {
+    background: #e74c3c;
+}
+.logout-btn:hover {
+    background: #c0392b;
+}
+.auth-logout-info {
+    text-align: center;
+}
+.auth-logout-info p {
+    margin-bottom: 20px;
+    color: #12215E;
+}
+[data-theme="dark"] .auth-logout-info p {
+    color: #BEE3FE;
+}
+
+/* ===== МОДАЛКА СОХРАНЕНИЯ НАСТРОЕК ===== */
+.preset-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2500;
+    backdrop-filter: blur(4px);
+}
+.preset-modal-content {
+    background: #ffffff;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 450px;
+    overflow: hidden;
+    animation: modalSlideIn 0.3s ease;
+}
+[data-theme="dark"] .preset-modal-content {
+    background: #000d55;
+}
+.preset-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e0f2fe;
+}
+.preset-modal-header h3 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 30px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    color: #12215E;
+    margin: 0;
+}
+[data-theme="dark"] .preset-modal-header h3 {
+    color: #BEE3FE;
+}
+.preset-modal-body {
+    padding: 24px;
+}
+.preset-modal-body input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #e0f2fe;
+    border-radius: 0;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    background: #f5f7fa;
+    color: #12215E;
+}
+.preset-modal-body input::placeholder {
+    color: #999;
+    font-weight: 400;
+}
+[data-theme="dark"] .preset-modal-body input {
+    background: #000d55;
+    border-color: #1C1FC2;
+    color: #BEE3FE;
+}
+[data-theme="dark"] .preset-modal-body input::placeholder {
+    color: #5a60c4;
+}
+.preset-modal-body input:focus {
+    outline: none;
+    border-color: #013CFF;
+}
+.preset-modal-footer {
+    display: flex;
+    gap: 15px;
+    padding: 20px 24px;
+    border-top: 1px solid #e0f2fe;
+}
+.preset-cancel-btn {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 0;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+    background: #CEFFF7;
+    color: #12215E;
+}
+.preset-cancel-btn:hover {
+    background: #b8e6de;
+    transform: translateY(-1px);
+}
+.preset-confirm-btn {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 0;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+    background: #013CFF;
+    color: white;
+}
+.preset-confirm-btn:hover {
+    background: #0033cc;
+    transform: translateY(-1px);
+}
+[data-theme="dark"] .preset-cancel-btn {
+    background: #1C1FC2;
+    color: #BEE3FE;
+}
+[data-theme="dark"] .preset-cancel-btn:hover {
+    background: #2528d9;
+}
+[data-theme="dark"] .preset-confirm-btn {
+    background: #013CFF;
+    color: #BEE3FE;
+}
+[data-theme="dark"] .preset-confirm-btn:hover {
+    background: #0028b3;
+}
+
+/* ===== МОДАЛКА СОХРАНЕНИЯ ПАРОЛЯ ===== */
+.save-password-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2500;
+    backdrop-filter: blur(4px);
+}
+.save-password-modal-content {
+    background: #ffffff;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 450px;
+    overflow: hidden;
+    animation: modalSlideIn 0.3s ease;
+}
+[data-theme="dark"] .save-password-modal-content {
+    background: #000d55;
+}
+.save-password-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e0f2fe;
+}
+.save-password-modal-header h3 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 30px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    color: #12215E;
+    margin: 0;
+}
+[data-theme="dark"] .save-password-modal-header h3 {
+    color: #BEE3FE;
+}
+.save-password-modal-body {
+    padding: 24px;
+}
+.save-password-modal-body .form-group {
+    margin-bottom: 24px;
+}
+.save-password-modal-body .form-group label {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 30px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    margin-bottom: 12px;
+    color: #12215E;
+}
+[data-theme="dark"] .save-password-modal-body .form-group label {
+    color: #BEE3FE;
+}
+.save-password-modal-body .form-group input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #e0f2fe;
+    border-radius: 0;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    background: #f5f7fa;
+    color: #12215E;
+}
+[data-theme="dark"] .save-password-modal-body .form-group input {
+    background: #000d55;
+    border-color: #1C1FC2;
+    color: #BEE3FE;
+}
+.save-password-modal-body .form-group input:focus {
+    outline: none;
+    border-color: #013CFF;
+}
+.save-password-modal-footer {
+    display: flex;
+    gap: 15px;
+    padding: 20px 24px;
+    border-top: 1px solid #e0f2fe;
+}
+.cancel-save-btn {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 0;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+    background: #CEFFF7;
+    color: #12215E;
+}
+.cancel-save-btn:hover {
+    background: #b8e6de;
+    transform: translateY(-1px);
+}
+.confirm-save-btn {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 0;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+    background: #013CFF;
+    color: white;
+}
+.confirm-save-btn:hover {
+    background: #0033cc;
+    transform: translateY(-1px);
+}
+[data-theme="dark"] .cancel-save-btn {
+    background: #1C1FC2;
+    color: #BEE3FE;
+}
+[data-theme="dark"] .cancel-save-btn:hover {
+    background: #2528d9;
+}
+[data-theme="dark"] .confirm-save-btn {
+    background: #013CFF;
+    color: #BEE3FE;
+}
+[data-theme="dark"] .confirm-save-btn:hover {
+    background: #0028b3;
+}
+
+/* ===== МОДАЛКА СПИСКА СОХРАНЁННЫХ ПАРОЛЕЙ ===== */
+.saved-passwords-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2500;
+    backdrop-filter: blur(4px);
+}
+.saved-passwords-modal-content {
+    background: #AEDBE5;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 550px;
+    max-height: 80vh;
+    overflow: hidden;
+    animation: modalSlideIn 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    border: 3px solid #00ffea;
+}
+[data-theme="dark"] .saved-passwords-modal-content {
+    background: #000d55;
+    border-color: #1C1FC2;
+}
+.saved-passwords-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid #00ffea;
+    flex-shrink: 0;
+    background: #CEFFF7;
+}
+[data-theme="dark"] .saved-passwords-modal-header {
+    background: #1C1FC2;
+    border-bottom-color: #BEE3FE;
+}
+.saved-passwords-modal-header h3 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 30px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    color: #12215E;
+    margin: 0;
+}
+[data-theme="dark"] .saved-passwords-modal-header h3 {
+    color: #BEE3FE;
+}
+.saved-passwords-modal-body {
+    padding: 20px;
+    overflow-y: auto;
+    flex: 1;
+}
+.saved-passwords-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.saved-passwords-empty {
+    text-align: center;
+    padding: 40px;
+    color: #12215E;
+    font-size: 16px;
+    opacity: 0.7;
+}
+.saved-password-item {
+    background: #ffffff;
+    border: 2px solid #00ffea;
+    border-radius: 12px;
+    padding: 12px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    transition: all 0.2s;
+}
+.saved-password-item:hover {
+    transform: translateX(-3px);
+    border-color: #013CFF;
+}
+[data-theme="dark"] .saved-password-item {
+    background: #000d55;
+    border-color: #1C1FC2;
+}
+.saved-password-info {
+    flex: 1;
+}
+.saved-password-description {
+    font-weight: 600;
+    font-size: 14px;
+    color: #12215E;
+    margin-bottom: 5px;
+    word-break: break-word;
+}
+[data-theme="dark"] .saved-password-description {
+    color: #BEE3FE;
+}
+.saved-password-value {
+    font-family: monospace;
+    font-size: 13px;
+    color: #013CFF;
+    word-break: break-all;
+}
+.saved-password-actions {
+    display: flex;
+    gap: 8px;
+}
+.saved-password-copy {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #00FFEA;
+}
+.saved-password-copy:hover {
+    background: #00e6d4;
+    transform: scale(1.05);
+}
+.saved-password-delete {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ff6b6b;
+    color: white;
+}
+.saved-password-delete svg {
+    width: 16px;
+    height: 16px;
+}
+.saved-password-delete:hover {
+    background: #e74c3c;
+    transform: scale(1.05);
+}
+[data-theme="dark"] .saved-password-copy {
+    background: #1C1FC2;
+}
+[data-theme="dark"] .saved-password-copy:hover {
+    background: #2528d9;
+}
+[data-theme="dark"] .saved-password-delete {
+    background: #e74c3c;
+    color: white;
+}
+[data-theme="dark"] .saved-password-delete:hover {
+    background: #c0392b;
+}
+
+/* ===== МОДАЛКА ПОДТВЕРЖДЕНИЯ УДАЛЕНИЯ ===== */
+.confirm-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2600;
+    backdrop-filter: blur(4px);
+}
+.confirm-modal-content {
+    background: #ffffff;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 350px;
+    overflow: hidden;
+    animation: modalSlideIn 0.3s ease;
+}
+[data-theme="dark"] .confirm-modal-content {
+    background: #000d55;
+}
+.confirm-modal-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid #e0f2fe;
+}
+.confirm-modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #12215E;
+}
+[data-theme="dark"] .confirm-modal-header h3 {
+    color: #BEE3FE;
+}
+.confirm-modal-body {
+    padding: 20px;
+    text-align: center;
+}
+.confirm-modal-body p {
+    color: #12215E;
+}
+[data-theme="dark"] .confirm-modal-body p {
+    color: #BEE3FE;
+}
+.confirm-modal-footer {
+    display: flex;
+    gap: 12px;
+    padding: 16px 20px;
+    border-top: 1px solid #e0f2fe;
+}
+.confirm-cancel-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 0;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: #CEFFF7;
+    color: #12215E;
+}
+.confirm-cancel-btn:hover {
+    background: #b8e6de;
+}
+.confirm-delete-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 0;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: #e74c3c;
+    color: white;
+}
+.confirm-delete-btn:hover {
+    background: #c0392b;
+}
+[data-theme="dark"] .confirm-cancel-btn {
+    background: #1C1FC2;
+    color: #BEE3FE;
+}
+[data-theme="dark"] .confirm-cancel-btn:hover {
+    background: #2528d9;
+}
+[data-theme="dark"] .confirm-delete-btn {
+    background: #e74c3c;
+    color: white;
+}
+[data-theme="dark"] .confirm-delete-btn:hover {
+    background: #c0392b;
+}
+
+/* ===== АНИМАЦИИ ===== */
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+    15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    85% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+}
+
+/* ===== МОБИЛЬНАЯ АДАПТАЦИЯ ===== */
+@media (max-width: 768px) {
+  body { padding: 10px; }
+  .profile-menu {
+    position: relative;
+    top: 0;
+    right: 0;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .profile-btn {
+    padding: 8px 16px;
+    font-size: 16px;
+  }
+  .profile-btn svg {
+    width: 18px;
+    height: 23px;
+  }
+  .profile-email { max-width: 100px; }
+  .theme-toggle {
+    position: relative;
+    top: 0;
+    right: 0;
+    margin-bottom: 10px;
+    width: 60px;
+    height: 60px;
+  }
+  .theme-toggle svg {
+    width: 60px;
+    height: 60px;
+  }
+  .generation-menu {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  .mode-select-btn {
+    width: 100%;
+    height: 50px;
+    font-size: 14px;
+  }
+  .mode-dropdown { width: 100%; }
+  .dropdown-item { width: 100%; height: 44px; }
+  .presets-sidebar {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  .main-content {
+    margin-left: 0;
+    padding-top: 0;
+  }
+  .title_Text {
+    font-size: 24px;
+    margin-top: 0;
+  }
+  .password-block {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .password-text {
+    font-size: 20px;
+    white-space: normal;
+    margin-bottom: 10px;
+  }
+  .copy-btn { width: 100%; padding: 10px; }
+  .generate-btn {
+    font-size: 24px;
+    padding: 14px;
+  }
+  .setting-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px 15px;
+  }
+  .counter-control {
+    width: 100%;
+    justify-content: flex-start;
+    margin-top: 5px;
+    margin-left: 36px;
+  }
+  .form-row select, .setting-item select { width: 100%; }
+  .scroll-to-generate { display: flex; }
+  .password-actions { flex-direction: column; }
+  .saved-password-item {
+    flex-direction: column;
+    text-align: center;
+  }
+  .saved-password-actions { justify-content: center; }
+  .auth-modal-content {
+    width: 95%;
+    margin: 20px;
+  }
+  .auth-modal-header h2 { font-size: 20px; }
+}
+@media (max-width: 480px) {
+  .title_Text { font-size: 20px; }
+  .slider-title { font-size: 16px; }
+  .custom-slider { height: 35px; }
+  .slider-thumb { width: 20px; height: 20px; }
+}
+
+/* ===== МОДАЛКИ ПОДТВЕРЖДЕНИЯ С ИКОНКОЙ ===== */
+.confirm-modal-header,
+.delete-confirm-modal-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e0f2fe;
+    position: relative;
+}
+
+.confirm-modal-header h3,
+.delete-confirm-modal-header h3 {
+    flex: 1;
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #12215E;
+}
+
+[data-theme="dark"] .confirm-modal-header h3,
+[data-theme="dark"] .delete-confirm-modal-header h3 {
+    color: #BEE3FE;
+}
+
+.confirm-modal-warning-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.confirm-modal-warning-icon svg {
+    width: 32px;
+    height: 32px;
+    display: block;
+}
+
+.confirm-modal-header .close-modal,
+.delete-confirm-modal-header .close-modal {
+    position: relative;
+    top: auto;
+    right: auto;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.confirm-modal-header .close-modal svg,
+.delete-confirm-modal-header .close-modal svg {
+    width: 24px;
+    height: 24px;
+    stroke: #12215E;
+}
+
+[data-theme="dark"] .confirm-modal-header .close-modal svg,
+[data-theme="dark"] .delete-confirm-modal-header .close-modal svg {
+    stroke: #BEE3FE;
+}
+
+.confirm-modal-header .close-modal:hover,
+.delete-confirm-modal-header .close-modal:hover {
+    background: rgba(0, 0, 0, 0.1);
+    transform: scale(1.05);
+}
+
+[data-theme="dark"] .confirm-modal-header .close-modal:hover,
+[data-theme="dark"] .delete-confirm-modal-header .close-modal:hover {
+    background: rgba(190, 227, 254, 0.1);
+}
+
+/* Стили для кнопок удаления в пресетах - фикс отображения */
+.preset-delete svg,
+.saved-password-delete svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    fill: none;
+}
+
+.preset-delete svg path,
+.saved-password-delete svg path {
+    stroke: currentColor;
+}
+
+/* Дополнительные стили для модалок удаления */
+.delete-confirm-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2600;
+    backdrop-filter: blur(4px);
+}
+
+.delete-confirm-modal-content {
+    background: #ffffff;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 380px;
+    overflow: hidden;
+    animation: modalSlideIn 0.3s ease;
+}
+
+[data-theme="dark"] .delete-confirm-modal-content {
+    background: #000d55;
+}
+
+.delete-confirm-modal-body {
+    padding: 24px;
+    text-align: center;
+}
+
+.delete-confirm-modal-body p {
+    margin: 0;
+    font-size: 16px;
+    color: #12215E;
+    line-height: 1.5;
+}
+
+[data-theme="dark"] .delete-confirm-modal-body p {
+    color: #BEE3FE;
+}
+
+.delete-confirm-modal-footer {
+    display: flex;
+    gap: 12px;
+    padding: 16px 24px 24px;
+    border-top: none;
+}
+
+.delete-cancel-btn {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: #CEFFF7;
+    color: #12215E;
+}
+
+.delete-cancel-btn:hover {
+    background: #b8e6de;
+    transform: translateY(-1px);
+}
+
+.delete-confirm-btn {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: #e74c3c;
+    color: white;
+}
+
+.delete-confirm-btn:hover {
+    background: #c0392b;
+    transform: translateY(-1px);
+}
+
+[data-theme="dark"] .delete-cancel-btn {
+    background: #1C1FC2;
+    color: #BEE3FE;
+}
+
+[data-theme="dark"] .delete-cancel-btn:hover {
+    background: #2528d9;
+}
+
+[data-theme="dark"] .delete-confirm-btn {
+    background: #e74c3c;
+    color: white;
+}
+
+[data-theme="dark"] .delete-confirm-btn:hover {
+    background: #c0392b;
+}
+
+/* ===== УЛУЧШЕННЫЕ КНОПКИ В МОДАЛКЕ АВТОРИЗАЦИИ ===== */
+.auth-submit-btn {
+    background: #013CFF;
+    color: white;
+    border: none;
+    padding: 16px 24px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+    width: 100%;
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.auth-submit-btn:hover {
+    background: #0033cc;
+    transform: translateY(-2px);
 }
 
 .auth-submit-btn:active {
@@ -684,2050 +1776,1128 @@ h1 {
     background: #c0392b;
 }
 
-.auth-logout-info {
-    text-align: center;
-}
-
-.auth-logout-info p {
-    margin-bottom: 20px;
-    color: #12215E;
-}
-
-[data-theme="dark"] .auth-logout-info p {
-    color: #BEE3FE;
-}
-
-/* ===== АДАПТАЦИЯ ДЛЯ МОБИЛЬНЫХ ===== */
-@media (max-width: 768px) {
-    .profile-menu {
-        top: 10px;
-        right: 80px;
-    }
-    
-    .profile-btn {
-        padding: 4px 12px;
-        font-size: 12px;
-    }
-    
-    .profile-email {
-        max-width: 80px;
-    }
-    
-    .auth-modal-content {
-        width: 95%;
-        margin: 20px;
-    }
-    
-    .auth-modal-header h2 {
-        font-size: 20px;
-    }
-}
-/* ===== ПРОФИЛЬ И АВТОРИЗАЦИЯ ===== */
-.profile-menu {
-    position: fixed;
-    top: 20px;
-    right: 130px;
-    z-index: 1000;
-}
-
-.profile-btn {
-    background: transparent;
-    border: none;
-    border-radius: 40px;
-    padding: 8px 16px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    color: #12215E;
-    transition: all 0.2s;
-}
-
-.profile-btn:hover {
-    background: rgba(0, 255, 234, 0.2);
-    transform: scale(1.05);
-}
-
-.profile-email {
-    max-width: 100px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-[data-theme="dark"] .profile-btn {
-    color: #BEE3FE;
-}
-
-/* ===== МОДАЛЬНОЕ ОКНО ===== */
-.auth-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
-    backdrop-filter: blur(4px);
-}
-
-.auth-modal-content {
-    background: #ffffff;
-    border-radius: 20px;
-    width: 90%;
-    max-width: 420px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-    overflow: hidden;
-    animation: modalSlideIn 0.3s ease;
-}
-
-[data-theme="dark"] .auth-modal-content {
-    background: #000d55;
-}
-
-@keyframes modalSlideIn {
-    from { opacity: 0; transform: translateY(-30px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.auth-modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 24px;
-    border-bottom: 1px solid #e0f2fe;
-}
-
-[data-theme="dark"] .auth-modal-header {
-    border-bottom-color: #1C1FC2;
-}
-
-.auth-modal-header h2 {
-    margin: 0;
-    font-size: 24px;
-    font-weight: 600;
-    color: #12215E;
-}
-
-[data-theme="dark"] .auth-modal-header h2 {
-    color: #BEE3FE;
-}
-
-.close-modal {
-    background: none;
-    border: none;
-    font-size: 28px;
-    cursor: pointer;
-    color: #12215E;
-    transition: transform 0.2s;
-}
-
-.close-modal:hover { transform: scale(1.1); }
-
-.auth-modal-body {
-    padding: 24px;
-}
-
-.auth-tabs {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 24px;
-    border-bottom: 2px solid #e0f2fe;
-}
-
-.auth-tab {
-    background: none;
-    border: none;
-    padding: 8px 16px;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    color: #12215E;
-    opacity: 0.6;
-    transition: all 0.2s;
-}
-
-.auth-tab.active {
-    opacity: 1;
-    border-bottom: 2px solid #013CFF;
-    margin-bottom: -2px;
-}
-
+/* Дополнительно - центрирование формы */
 .auth-form {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    width: 100%;
 }
 
-.auth-input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.auth-input-group label {
-    font-size: 14px;
-    font-weight: 500;
-    color: #12215E;
+/* Увеличение отступов для лучшего вида */
+.auth-modal-body {
+    padding: 24px;
 }
 
 .auth-input-group input {
-    padding: 12px 16px;
-    border: 2px solid #e0f2fe;
-    border-radius: 12px;
+    padding: 14px 16px;
     font-size: 16px;
-    background: #f5f7fa;
-    color: #12215E;
 }
 
-[data-theme="dark"] .auth-input-group input {
-    background: #000d55;
-    border-color: #1C1FC2;
-    color: #BEE3FE;
+.auth-input-group label {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 5px;
+    display: block;
 }
 
-.auth-input-group input:focus {
-    outline: none;
-    border-color: #013CFF;
+/* Кнопки табов тоже сделаем чуть крупнее */
+.auth-tab {
+    font-size: 17px;
+    padding: 10px 20px;
 }
 
-.auth-error {
-    color: #e74c3c;
-    font-size: 13px;
-    text-align: center;
-    min-height: 40px;
+/* Заголовок модалки */
+.auth-modal-header h2 {
+    font-size: 26px;
 }
 
+/* ===== АЛЬТЕРНАТИВНЫЙ ВАРИАНТ С ГРАДИЕНТОМ (опционально) ===== */
 .auth-submit-btn {
-    background: #013CFF;
+    background: linear-gradient(135deg, #013CFF 0%, #0066FF 100%);
     color: white;
     border: none;
-    padding: 14px;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: 600;
+    padding: 16px 24px;
+    border-radius: 14px;
+    font-size: 18px;
+    font-weight: 700;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.3s ease;
+    font-family: 'Inter', sans-serif;
+    width: 100%;
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 12px rgba(1, 60, 255, 0.3);
 }
 
 .auth-submit-btn:hover {
-    background: #0033cc;
-    transform: translateY(-1px);
+    background: linear-gradient(135deg, #0033cc 0%, #0055dd 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(1, 60, 255, 0.4);
 }
 
-.logout-btn {
+.auth-submit-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 8px rgba(1, 60, 255, 0.3);
+}
+
+[data-theme="dark"] .auth-submit-btn {
+    background: #013CFF;
+    color: #BEE3FE;
+    box-shadow: 0 4px 12px rgba(28, 31, 194, 0.4);
+}
+
+[data-theme="dark"] .auth-submit-btn:hover {
+    background: #0028b3;
+    box-shadow: 0 6px 16px rgba(28, 31, 194, 0.5);
+}
+
+/* ===== ТЕМНАЯ ТЕМА ДЛЯ МОДАЛКИ АВТОРИЗАЦИИ ===== */
+[data-theme="dark"] .auth-modal-content {
+    background: #001E96;
+    border: 2px solid #00D9FF;
+    border-radius: 20px;
+}
+
+[data-theme="dark"] .auth-modal-header {
+    border-bottom-color: #00D9FF;
+}
+
+[data-theme="dark"] .auth-modal-header h2 {
+    color: #01AAFF;
+}
+
+[data-theme="dark"] .close-modal {
+    color: #01AAFF;
+}
+
+[data-theme="dark"] .close-modal:hover {
+    color: #00D9FF;
+}
+
+/* Табы */
+[data-theme="dark"] .auth-tabs {
+    border-bottom-color: #00D9FF;
+}
+
+[data-theme="dark"] .auth-tab {
+    color: #01AAFF;
+}
+
+[data-theme="dark"] .auth-tab.active {
+    color: #00D9FF;
+    border-bottom-color: #00D9FF;
+}
+
+/* Поля ввода */
+[data-theme="dark"] .auth-input-group label {
+    color: #01AAFF;
+}
+
+[data-theme="dark"] .auth-input-group input {
+    background: #1C1FC2;
+    border: 2px solid #00D9FF;
+    border-radius: 12px;
+    color: #01AAFF;
+    padding: 14px 16px;
+}
+
+[data-theme="dark"] .auth-input-group input:focus {
+    outline: none;
+    border-color: #01AAFF;
+}
+
+[data-theme="dark"] .auth-input-group input::placeholder {
+    color: rgba(1, 170, 255, 0.5);
+}
+
+/* Кнопка Войти / Зарегистрироваться */
+[data-theme="dark"] .auth-submit-btn {
+    background: #00D9FF;
+    color: #000000;
+    border: none;
+    padding: 16px 24px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+    width: 100%;
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+}
+
+[data-theme="dark"] .auth-submit-btn:hover {
+    background: #00b8d9;
+    transform: translateY(-2px);
+}
+
+[data-theme="dark"] .auth-submit-btn:active {
+    transform: translateY(1px);
+}
+
+/* Кнопка Выйти */
+[data-theme="dark"] .logout-btn {
     background: #e74c3c;
+    color: white;
 }
 
-.logout-btn:hover {
+[data-theme="dark"] .logout-btn:hover {
     background: #c0392b;
+    color: white;
 }
 
-.auth-logout-info {
+/* Текст в модалке выхода */
+[data-theme="dark"] .auth-logout-info p {
+    color: #01AAFF;
+}
+
+[data-theme="dark"] .auth-logout-info strong {
+    color: #00D9FF;
+}
+
+/* Ошибки */
+[data-theme="dark"] .auth-error {
+    color: #ff6b6b;
+}
+
+/* Для формы регистрации */
+[data-theme="dark"] #registerForm .auth-input-group input {
+    background: #1C1FC2;
+    border: 2px solid #00D9FF;
+    color: #01AAFF;
+}
+
+/* Общие стили для кнопок в темной теме */
+[data-theme="dark"] .auth-submit-btn {
+    background: #00D9FF;
+    color: #000000;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* ===== ТЕМНАЯ ТЕМА ДЛЯ МОДАЛКИ АВТОРИЗАЦИИ (ПОЛНОСТЬЮ) ===== */
+[data-theme="dark"] .auth-modal-content {
+    background: #001E96;
+    border: 2px solid #00D9FF;
+    border-radius: 20px;
+}
+
+[data-theme="dark"] .auth-modal-header {
+    border-bottom-color: #00D9FF;
+}
+
+[data-theme="dark"] .auth-modal-header h2 {
+    color: #01AAFF;
+}
+
+[data-theme="dark"] .close-modal {
+    color: #01AAFF;
+}
+
+[data-theme="dark"] .close-modal:hover {
+    color: #00D9FF;
+}
+
+/* Табы */
+[data-theme="dark"] .auth-tabs {
+    border-bottom-color: #00D9FF;
+}
+
+[data-theme="dark"] .auth-tab {
+    color: #01AAFF;
+}
+
+[data-theme="dark"] .auth-tab.active {
+    color: #00D9FF;
+    border-bottom-color: #00D9FF;
+}
+
+/* Поля ввода - ВАЖНО: конкретные ID */
+[data-theme="dark"] .auth-input-group label {
+    color: #01AAFF;
+}
+
+[data-theme="dark"] #loginEmail,
+[data-theme="dark"] #loginPassword,
+[data-theme="dark"] #registerEmail,
+[data-theme="dark"] #registerPassword,
+[data-theme="dark"] #registerConfirmPassword {
+    background: #1C1FC2 !important;
+    border: 2px solid #00D9FF !important;
+    border-radius: 12px;
+    color: #01AAFF !important;
+    padding: 14px 16px;
+}
+
+[data-theme="dark"] #loginEmail:focus,
+[data-theme="dark"] #loginPassword:focus,
+[data-theme="dark"] #registerEmail:focus,
+[data-theme="dark"] #registerPassword:focus,
+[data-theme="dark"] #registerConfirmPassword:focus {
+    outline: none;
+    border-color: #01AAFF !important;
+}
+
+[data-theme="dark"] #loginEmail::placeholder,
+[data-theme="dark"] #loginPassword::placeholder,
+[data-theme="dark"] #registerEmail::placeholder,
+[data-theme="dark"] #registerPassword::placeholder,
+[data-theme="dark"] #registerConfirmPassword::placeholder {
+    color: rgba(1, 170, 255, 0.5);
+}
+
+/* Кнопка Войти / Зарегистрироваться */
+[data-theme="dark"] .auth-submit-btn {
+    background: #00D9FF;
+    color: #000000;
+    border: none;
+    padding: 16px 24px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+    width: 100%;
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+}
+
+[data-theme="dark"] .auth-submit-btn:hover {
+    background: #00b8d9;
+    transform: translateY(-2px);
+}
+
+[data-theme="dark"] .auth-submit-btn:active {
+    transform: translateY(1px);
+}
+
+/* Кнопка Выйти */
+[data-theme="dark"] .logout-btn {
+    background: #e74c3c;
+    color: white;
+}
+
+[data-theme="dark"] .logout-btn:hover {
+    background: #c0392b;
+    color: white;
+}
+
+/* Текст в модалке выхода */
+[data-theme="dark"] .auth-logout-info p {
+    color: #01AAFF;
+}
+
+[data-theme="dark"] .auth-logout-info strong {
+    color: #00D9FF;
+}
+
+/* Ошибки */
+[data-theme="dark"] .auth-error {
+    color: #ff6b6b;
+}
+
+/* ===== ТЕМНАЯ ТЕМА ДЛЯ МОДАЛКИ АВТОРИЗАЦИИ (ФИКС) ===== */
+[data-theme="dark"] .auth-modal-content {
+    background: #001E96;
+    border: 2px solid #00D9FF;
+    border-radius: 20px;
+}
+
+[data-theme="dark"] .auth-modal-header {
+    border-bottom-color: #00D9FF;
+}
+
+[data-theme="dark"] .auth-modal-header h2 {
+    color: #01AAFF;
+}
+
+[data-theme="dark"] .close-modal {
+    color: #01AAFF;
+}
+
+/* Табы */
+[data-theme="dark"] .auth-tabs {
+    border-bottom-color: #00D9FF;
+}
+
+[data-theme="dark"] .auth-tab {
+    color: #01AAFF;
+}
+
+[data-theme="dark"] .auth-tab.active {
+    color: #00D9FF;
+    border-bottom-color: #00D9FF;
+}
+
+/* Лейблы */
+[data-theme="dark"] .auth-input-group label {
+    color: #01AAFF;
+}
+
+/* ПОЛЯ ВВОДА - исправлено */
+[data-theme="dark"] .auth-input-group input,
+[data-theme="dark"] #loginEmail,
+[data-theme="dark"] #loginPassword,
+[data-theme="dark"] #registerEmail,
+[data-theme="dark"] #registerPassword,
+[data-theme="dark"] #registerConfirmPassword,
+[data-theme="dark"] input[type="email"],
+[data-theme="dark"] input[type="password"] {
+    background: #1C1FC2 !important;
+    border: 2px solid #00D9FF !important;
+    border-radius: 12px;
+    color: #01AAFF !important;
+    padding: 14px 16px;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+}
+
+[data-theme="dark"] .auth-input-group input:focus,
+[data-theme="dark"] #loginEmail:focus,
+[data-theme="dark"] #loginPassword:focus,
+[data-theme="dark"] #registerEmail:focus,
+[data-theme="dark"] #registerPassword:focus,
+[data-theme="dark"] #registerConfirmPassword:focus {
+    outline: none;
+    border-color: #01AAFF !important;
+}
+
+[data-theme="dark"] .auth-input-group input::placeholder,
+[data-theme="dark"] #loginEmail::placeholder,
+[data-theme="dark"] #loginPassword::placeholder,
+[data-theme="dark"] #registerEmail::placeholder,
+[data-theme="dark"] #registerPassword::placeholder,
+[data-theme="dark"] #registerConfirmPassword::placeholder {
+    color: rgba(1, 170, 255, 0.5);
+}
+
+/* Кнопка Войти */
+[data-theme="dark"] .auth-submit-btn {
+    background: #00D9FF !important;
+    color: #000000 !important;
+    border: none;
+    padding: 16px 24px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
     text-align: center;
 }
 
-.auth-logout-info p {
-    margin-bottom: 20px;
-    color: #12215E;
+[data-theme="dark"] .auth-submit-btn:hover {
+    background: #00b8d9 !important;
+    transform: translateY(-2px);
+}
+
+/* Кнопка Выйти */
+[data-theme="dark"] .logout-btn {
+    background: #e74c3c !important;
+    color: white !important;
+}
+
+[data-theme="dark"] .logout-btn:hover {
+    background: #c0392b !important;
+}
+
+/* Текст выхода */
+[data-theme="dark"] .auth-logout-info p {
+    color: #01AAFF;
+}
+
+[data-theme="dark"] .auth-logout-info strong {
+    color: #00D9FF;
+}
+
+/* Ошибки */
+[data-theme="dark"] .auth-error {
+    color: #ff6b6b;
+}
+
+/* ===== ТЕМНАЯ ТЕМА ДЛЯ МОДАЛКИ АВТОРИЗАЦИИ (ФИКС ЦВЕТА ТЕКСТА) ===== */
+[data-theme="dark"] .auth-modal-content {
+    background: #001E96;
+    border: 2px solid #00D9FF;
+    border-radius: 20px;
+}
+
+[data-theme="dark"] .auth-modal-header {
+    border-bottom-color: #00D9FF;
+}
+
+[data-theme="dark"] .auth-modal-header h2 {
+    color: #01AAFF;
+}
+
+[data-theme="dark"] .close-modal {
+    color: #01AAFF;
+}
+
+/* Табы */
+[data-theme="dark"] .auth-tabs {
+    border-bottom-color: #00D9FF;
+}
+
+[data-theme="dark"] .auth-tab {
+    color: #01AAFF;
+}
+
+[data-theme="dark"] .auth-tab.active {
+    color: #00D9FF;
+    border-bottom-color: #00D9FF;
+}
+
+/* Лейблы */
+[data-theme="dark"] .auth-input-group label {
+    color: #01AAFF;
+}
+
+/* ПОЛЯ ВВОДА - фон #1C1FC2, текст #01AAFF */
+[data-theme="dark"] .auth-input-group input,
+[data-theme="dark"] #loginEmail,
+[data-theme="dark"] #loginPassword,
+[data-theme="dark"] #registerEmail,
+[data-theme="dark"] #registerPassword,
+[data-theme="dark"] #registerConfirmPassword,
+[data-theme="dark"] input[type="email"],
+[data-theme="dark"] input[type="password"] {
+    background: #1C1FC2 !important;
+    border: 2px solid #00D9FF !important;
+    border-radius: 12px;
+    color: #01AAFF !important;
+    padding: 14px 16px;
+}
+
+/* Цвет текста при вводе (печатании) */
+[data-theme="dark"] .auth-input-group input:focus,
+[data-theme="dark"] #loginEmail:focus,
+[data-theme="dark"] #loginPassword:focus,
+[data-theme="dark"] #registerEmail:focus,
+[data-theme="dark"] #registerPassword:focus,
+[data-theme="dark"] #registerConfirmPassword:focus {
+    outline: none;
+    border-color: #01AAFF !important;
+    color: #01AAFF !important;
+}
+
+/* Цвет текста при автозаполнении (важно!) */
+[data-theme="dark"] .auth-input-group input:-webkit-autofill,
+[data-theme="dark"] .auth-input-group input:-webkit-autofill:hover,
+[data-theme="dark"] .auth-input-group input:-webkit-autofill:focus,
+[data-theme="dark"] .auth-input-group input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #1C1FC2 inset !important;
+    -webkit-text-fill-color: #01AAFF !important;
+    caret-color: #01AAFF !important;
+}
+
+/* Плейсхолдер */
+[data-theme="dark"] .auth-input-group input::placeholder,
+[data-theme="dark"] #loginEmail::placeholder,
+[data-theme="dark"] #loginPassword::placeholder,
+[data-theme="dark"] #registerEmail::placeholder,
+[data-theme="dark"] #registerPassword::placeholder,
+[data-theme="dark"] #registerConfirmPassword::placeholder {
+    color: rgba(1, 170, 255, 0.5);
+}
+
+/* Кнопка Войти */
+[data-theme="dark"] .auth-submit-btn {
+    background: #00D9FF !important;
+    color: #000000 !important;
+    border: none;
+    padding: 16px 24px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+}
+
+[data-theme="dark"] .auth-submit-btn:hover {
+    background: #00b8d9 !important;
+    transform: translateY(-2px);
+}
+
+/* Кнопка Выйти */
+[data-theme="dark"] .logout-btn {
+    background: #e74c3c !important;
+    color: white !important;
+}
+
+[data-theme="dark"] .logout-btn:hover {
+    background: #c0392b !important;
+}
+
+/* Текст выхода */
+[data-theme="dark"] .auth-logout-info p {
+    color: #01AAFF;
+}
+
+[data-theme="dark"] .auth-logout-info strong {
+    color: #00D9FF;
+}
+
+/* Ошибки */
+[data-theme="dark"] .auth-error {
+    color: #ff6b6b;
+}
+
+/* ===== ТЕМНАЯ ТЕМА ДЛЯ МОДАЛКИ АВТОРИЗАЦИИ (БЕЛЫЙ ТЕКСТ) ===== */
+[data-theme="dark"] .auth-modal-content {
+    background: #001E96;
+    border: 2px solid #00D9FF;
+    border-radius: 20px;
+}
+
+[data-theme="dark"] .auth-modal-header {
+    border-bottom-color: #00D9FF;
+}
+
+[data-theme="dark"] .auth-modal-header h2 {
+    color: #FFFFFF;
+}
+
+[data-theme="dark"] .close-modal {
+    color: #FFFFFF;
+}
+
+[data-theme="dark"] .close-modal:hover {
+    color: #00D9FF;
+}
+
+/* Табы */
+[data-theme="dark"] .auth-tabs {
+    border-bottom-color: #00D9FF;
+}
+
+[data-theme="dark"] .auth-tab {
+    color: #FFFFFF;
+}
+
+[data-theme="dark"] .auth-tab.active {
+    color: #00D9FF;
+    border-bottom-color: #00D9FF;
+}
+
+/* Лейблы (Email, Пароль) */
+[data-theme="dark"] .auth-input-group label {
+    color: #FFFFFF;
+}
+
+/* ПОЛЯ ВВОДА */
+[data-theme="dark"] .auth-input-group input,
+[data-theme="dark"] #loginEmail,
+[data-theme="dark"] #loginPassword,
+[data-theme="dark"] #registerEmail,
+[data-theme="dark"] #registerPassword,
+[data-theme="dark"] #registerConfirmPassword,
+[data-theme="dark"] input[type="email"],
+[data-theme="dark"] input[type="password"] {
+    background: #1C1FC2 !important;
+    border: 2px solid #00D9FF !important;
+    border-radius: 12px;
+    color: #FFFFFF !important;
+    padding: 14px 16px;
+}
+
+[data-theme="dark"] .auth-input-group input:focus,
+[data-theme="dark"] #loginEmail:focus,
+[data-theme="dark"] #loginPassword:focus,
+[data-theme="dark"] #registerEmail:focus,
+[data-theme="dark"] #registerPassword:focus,
+[data-theme="dark"] #registerConfirmPassword:focus {
+    outline: none;
+    border-color: #01AAFF !important;
+    color: #FFFFFF !important;
+}
+
+/* Автозаполнение */
+[data-theme="dark"] .auth-input-group input:-webkit-autofill,
+[data-theme="dark"] .auth-input-group input:-webkit-autofill:hover,
+[data-theme="dark"] .auth-input-group input:-webkit-autofill:focus,
+[data-theme="dark"] .auth-input-group input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #1C1FC2 inset !important;
+    -webkit-text-fill-color: #FFFFFF !important;
+    caret-color: #FFFFFF !important;
+}
+
+/* Плейсхолдер */
+[data-theme="dark"] .auth-input-group input::placeholder,
+[data-theme="dark"] #loginEmail::placeholder,
+[data-theme="dark"] #loginPassword::placeholder,
+[data-theme="dark"] #registerEmail::placeholder,
+[data-theme="dark"] #registerPassword::placeholder,
+[data-theme="dark"] #registerConfirmPassword::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Кнопка Войти */
+[data-theme="dark"] .auth-submit-btn {
+    background: #00D9FF !important;
+    color: #000000 !important;
+    border: none;
+    padding: 16px 24px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+}
+
+[data-theme="dark"] .auth-submit-btn:hover {
+    background: #00b8d9 !important;
+    transform: translateY(-2px);
+}
+
+/* Кнопка Выйти */
+[data-theme="dark"] .logout-btn {
+    background: #e74c3c !important;
+    color: white !important;
+}
+
+[data-theme="dark"] .logout-btn:hover {
+    background: #c0392b !important;
+}
+
+/* Текст выхода */
+[data-theme="dark"] .auth-logout-info p {
+    color: #FFFFFF;
+}
+
+[data-theme="dark"] .auth-logout-info strong {
+    color: #00D9FF;
+}
+
+/* Ошибки */
+[data-theme="dark"] .auth-error {
+    color: #ff6b6b;
+}
+
+/* ===== ТЕМНАЯ ТЕМА ДЛЯ МОДАЛКИ АВТОРИЗАЦИИ ===== */
+[data-theme="dark"] .auth-modal-content {
+    background: #001E96;
+    border: 2px solid #00D9FF;
+    border-radius: 20px;
+}
+
+[data-theme="dark"] .auth-modal-header {
+    border-bottom-color: #00D9FF;
+}
+
+[data-theme="dark"] .auth-modal-header h2 {
+    color: #01AAFF;
+}
+
+[data-theme="dark"] .close-modal {
+    color: #01AAFF;
+}
+
+[data-theme="dark"] .close-modal:hover {
+    color: #00D9FF;
+}
+
+/* Табы - ТОЛЬКО ЗДЕСЬ БЕЛЫЙ ТЕКСТ */
+[data-theme="dark"] .auth-tabs {
+    border-bottom-color: #00D9FF;
+}
+
+[data-theme="dark"] .auth-tab {
+    color: #FFFFFF !important;  /* БЕЛЫЙ */
+}
+
+[data-theme="dark"] .auth-tab.active {
+    color: #00D9FF !important;
+    border-bottom-color: #00D9FF;
+}
+
+/* Лейблы (Email, Пароль) - #01AAFF */
+[data-theme="dark"] .auth-input-group label {
+    color: #01AAFF;
+}
+
+/* ПОЛЯ ВВОДА */
+[data-theme="dark"] .auth-input-group input,
+[data-theme="dark"] #loginEmail,
+[data-theme="dark"] #loginPassword,
+[data-theme="dark"] #registerEmail,
+[data-theme="dark"] #registerPassword,
+[data-theme="dark"] #registerConfirmPassword,
+[data-theme="dark"] input[type="email"],
+[data-theme="dark"] input[type="password"] {
+    background: #1C1FC2 !important;
+    border: 2px solid #00D9FF !important;
+    border-radius: 12px;
+    color: #01AAFF !important;
+    padding: 14px 16px;
+}
+
+[data-theme="dark"] .auth-input-group input:focus,
+[data-theme="dark"] #loginEmail:focus,
+[data-theme="dark"] #loginPassword:focus,
+[data-theme="dark"] #registerEmail:focus,
+[data-theme="dark"] #registerPassword:focus,
+[data-theme="dark"] #registerConfirmPassword:focus {
+    outline: none;
+    border-color: #01AAFF !important;
+    color: #01AAFF !important;
+}
+
+/* Автозаполнение */
+[data-theme="dark"] .auth-input-group input:-webkit-autofill,
+[data-theme="dark"] .auth-input-group input:-webkit-autofill:hover,
+[data-theme="dark"] .auth-input-group input:-webkit-autofill:focus,
+[data-theme="dark"] .auth-input-group input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #1C1FC2 inset !important;
+    -webkit-text-fill-color: #01AAFF !important;
+    caret-color: #01AAFF !important;
+}
+
+/* Плейсхолдер */
+[data-theme="dark"] .auth-input-group input::placeholder,
+[data-theme="dark"] #loginEmail::placeholder,
+[data-theme="dark"] #loginPassword::placeholder,
+[data-theme="dark"] #registerEmail::placeholder,
+[data-theme="dark"] #registerPassword::placeholder,
+[data-theme="dark"] #registerConfirmPassword::placeholder {
+    color: rgba(1, 170, 255, 0.5);
+}
+
+/* Кнопка Войти */
+[data-theme="dark"] .auth-submit-btn {
+    background: #00D9FF !important;
+    color: #000000 !important;
+    border: none;
+    padding: 16px 24px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+}
+
+[data-theme="dark"] .auth-submit-btn:hover {
+    background: #00b8d9 !important;
+    transform: translateY(-2px);
+}
+
+/* Кнопка Выйти */
+[data-theme="dark"] .logout-btn {
+    background: #e74c3c !important;
+    color: white !important;
+}
+
+[data-theme="dark"] .logout-btn:hover {
+    background: #c0392b !important;
+}
+
+/* Текст выхода */
+[data-theme="dark"] .auth-logout-info p {
+    color: #01AAFF;
+}
+
+[data-theme="dark"] .auth-logout-info strong {
+    color: #00D9FF;
+}
+
+/* Ошибки */
+[data-theme="dark"] .auth-error {
+    color: #ff6b6b;
+}
+
+/* ===== ТЕМНАЯ ТЕМА ДЛЯ МОДАЛКИ АВТОРИЗАЦИИ ===== */
+[data-theme="dark"] .auth-modal-content {
+    background: #001E96;
+    border: 2px solid #00D9FF;
+    border-radius: 20px;
+}
+
+[data-theme="dark"] .auth-modal-header {
+    border-bottom-color: #00D9FF;
+}
+
+[data-theme="dark"] .auth-modal-header h2 {
+    color: #01AAFF;
+}
+
+[data-theme="dark"] .close-modal {
+    color: #01AAFF;
+}
+
+[data-theme="dark"] .close-modal:hover {
+    color: #00D9FF;
+}
+
+/* Табы - ТОЛЬКО ЭТОТ ТЕКСТ БЕЛЫЙ */
+[data-theme="dark"] .auth-tabs {
+    border-bottom-color: #00D9FF;
+}
+
+[data-theme="dark"] .auth-tab {
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .auth-tab.active {
+    color: #00D9FF !important;
+    border-bottom-color: #00D9FF;
+}
+
+/* Лейблы (Email, Пароль) */
+[data-theme="dark"] .auth-input-group label {
+    color: #01AAFF;
+}
+
+/* ПОЛЯ ВВОДА */
+[data-theme="dark"] .auth-input-group input,
+[data-theme="dark"] #loginEmail,
+[data-theme="dark"] #loginPassword,
+[data-theme="dark"] #registerEmail,
+[data-theme="dark"] #registerPassword,
+[data-theme="dark"] #registerConfirmPassword {
+    background: #1C1FC2 !important;
+    border: 2px solid #00D9FF !important;
+    border-radius: 12px;
+    color: #01AAFF !important;
+    padding: 14px 16px;
+}
+
+[data-theme="dark"] .auth-input-group input:focus,
+[data-theme="dark"] #loginEmail:focus,
+[data-theme="dark"] #loginPassword:focus,
+[data-theme="dark"] #registerEmail:focus,
+[data-theme="dark"] #registerPassword:focus,
+[data-theme="dark"] #registerConfirmPassword:focus {
+    outline: none;
+    border-color: #01AAFF !important;
+    color: #01AAFF !important;
+}
+
+[data-theme="dark"] .auth-input-group input::placeholder,
+[data-theme="dark"] #loginEmail::placeholder,
+[data-theme="dark"] #loginPassword::placeholder,
+[data-theme="dark"] #registerEmail::placeholder,
+[data-theme="dark"] #registerPassword::placeholder,
+[data-theme="dark"] #registerConfirmPassword::placeholder {
+    color: rgba(1, 170, 255, 0.5);
+}
+
+/* Кнопка Войти */
+[data-theme="dark"] .auth-submit-btn {
+    background: #00D9FF !important;
+    color: #000000 !important;
+    border: none;
+    padding: 16px 24px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+}
+
+[data-theme="dark"] .auth-submit-btn:hover {
+    background: #00b8d9 !important;
+    transform: translateY(-2px);
+}
+
+/* Кнопка Выйти */
+[data-theme="dark"] .logout-btn {
+    background: #e74c3c !important;
+    color: white !important;
+}
+
+[data-theme="dark"] .logout-btn:hover {
+    background: #c0392b !important;
 }
 
 [data-theme="dark"] .auth-logout-info p {
-    color: #BEE3FE;
+    color: #01AAFF;
 }
 
-@media (max-width: 768px) {
-    .profile-menu {
-        top: 10px;
-        right: 80px;
-    }
-    .profile-btn {
-        padding: 4px 12px;
-        font-size: 12px;
-    }
-    .profile-email {
-        max-width: 80px;
-    }
-}
-/* ===== БОКОВАЯ ПАНЕЛЬ ПРЕСЕТОВ ===== */
-.container {
-    display: flex;
-    gap: 30px;
-    position: relative;
+[data-theme="dark"] .auth-error {
+    color: #ff6b6b;
 }
 
-.presets-sidebar {
-    position: sticky;
-    top: 20px;
-    width: 260px;
-    height: fit-content;
-    background: #e0f7ff;
-    border: 3px solid #00ffea;
-    border-radius: 16px;
-    overflow: hidden;
-    flex-shrink: 0;
-}
-
+/* ===== Стили для боковой панели пресетов ===== */
 [data-theme="dark"] .presets-sidebar {
     background: #000d55;
-    border-color: #1C1FC2;
+    border-color: #00D9FF;
 }
 
-.presets-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    background: #CEFFF7;
-    border-bottom: 2px solid #00ffea;
+[data-theme="dark"] .preset-empty {
+    color: #BEE3FE;
 }
 
 [data-theme="dark"] .presets-header {
     background: #1C1FC2;
-    border-bottom-color: #BEE3FE;
-}
-
-.presets-header h3 {
-    font-size: 16px;
-    font-weight: 600;
-    color: #12215E;
-    margin: 0;
+    border-bottom-color: #00D9FF;
 }
 
 [data-theme="dark"] .presets-header h3 {
     color: #BEE3FE;
 }
 
-.save-preset-btn {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    background: #013CFF;
-    color: white;
-    border: none;
-    font-size: 20px;
-    font-weight: bold;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-}
-
-.save-preset-btn:hover {
-    background: #0033cc;
-    transform: scale(1.05);
-}
-
-.presets-list {
-    max-height: 400px;
-    overflow-y: auto;
-    padding: 10px;
-}
-
-.preset-empty {
-    text-align: center;
-    padding: 30px 15px;
-    color: #12215E;
-    font-size: 13px;
-    opacity: 0.7;
-}
-
-.preset-item {
-    background: #ffffff;
-    border: 2px solid #00ffea;
-    border-radius: 12px;
-    padding: 12px;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: all 0.2s;
-}
-
-[data-theme="dark"] .preset-item {
-    background: #000d55;
-    border-color: #1C1FC2;
-}
-
-.preset-item:hover {
-    transform: translateX(-3px);
-    border-color: #013CFF;
-}
-
-.preset-info {
-    flex: 1;
-}
-
-.preset-name {
-    font-weight: 600;
-    font-size: 14px;
-    color: #12215E;
-    margin-bottom: 4px;
-    word-break: break-word;
-}
-
-[data-theme="dark"] .preset-name {
-    color: #BEE3FE;
-}
-
-.preset-mode {
-    font-size: 11px;
-    color: #013CFF;
-    opacity: 0.8;
-}
-
-.preset-actions {
-    display: flex;
-    gap: 8px;
-}
-
-.preset-apply, .preset-delete {
-    width: 32px;
-    height: 32px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
+/* Стили для кнопки "Применить" с галочкой */
 .preset-apply {
-    background: #00D9FF;
-    color: white;
-}
-
-.preset-apply:hover {
-    background: #00b8d9;
-    transform: scale(1.05);
-}
-
-.preset-delete {
-    background: #ff6b6b;
-    color: white;
-}
-
-.preset-delete:hover {
-    background: #e74c3c;
-    transform: scale(1.05);
-}
-
-/* ===== МОДАЛКА ДЛЯ НАЗВАНИЯ ПРЕСЕТА ===== */
-.preset-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2500;
-    backdrop-filter: blur(4px);
-}
-
-.preset-modal-content {
-    background: #ffffff;
-    border-radius: 20px;
-    width: 90%;
-    max-width: 380px;
-    overflow: hidden;
-    animation: modalSlideIn 0.3s ease;
-}
-
-[data-theme="dark"] .preset-modal-content {
-    background: #000d55;
-}
-
-.preset-modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 20px;
-    border-bottom: 1px solid #e0f2fe;
-}
-
-[data-theme="dark"] .preset-modal-header {
-    border-bottom-color: #1C1FC2;
-}
-
-.preset-modal-header h3 {
-    margin: 0;
-    font-size: 18px;
-    color: #12215E;
-}
-
-[data-theme="dark"] .preset-modal-header h3 {
-    color: #BEE3FE;
-}
-
-.preset-modal-body {
-    padding: 20px;
-}
-
-.preset-modal-body input {
-    width: 100%;
-    padding: 12px 16px;
-    border: 2px solid #e0f2fe;
-    border-radius: 12px;
-    font-size: 16px;
-    font-family: 'Inter', sans-serif;
-    background: #f5f7fa;
-    color: #12215E;
-}
-
-[data-theme="dark"] .preset-modal-body input {
-    background: #000d55;
-    border-color: #1C1FC2;
-    color: #BEE3FE;
-}
-
-.preset-modal-body input:focus {
-    outline: none;
-    border-color: #013CFF;
-}
-
-.preset-modal-footer {
-    display: flex;
-    gap: 12px;
-    padding: 16px 20px;
-    border-top: 1px solid #e0f2fe;
-}
-
-[data-theme="dark"] .preset-modal-footer {
-    border-top-color: #1C1FC2;
-}
-
-.preset-cancel-btn, .preset-confirm-btn {
-    flex: 1;
-    padding: 12px;
-    border: none;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.preset-cancel-btn {
-    background: #e0f2fe;
-    color: #12215E;
-}
-
-.preset-cancel-btn:hover {
-    background: #ccefff;
-}
-
-.preset-confirm-btn {
-    background: #013CFF;
-    color: white;
-}
-
-.preset-confirm-btn:hover {
-    background: #0033cc;
-}
-
-/* ===== ОСНОВНОЙ КОНТЕНТ ===== */
-.main-content {
-    flex: 1;
-    min-width: 0;
-}
-
-/* ===== АДАПТАЦИЯ ДЛЯ МОБИЛЬНЫХ ===== */
-@media (max-width: 768px) {
-    .container {
-        flex-direction: column;
-    }
-    
-    .presets-sidebar {
-        position: relative;
-        top: 0;
-        width: 100%;
-        margin-bottom: 20px;
-        order: 1;
-    }
-    
-    .presets-list {
-        max-height: 200px;
-    }
-    
-    .main-content {
-        order: 2;
-    }
-    
-    .profile-menu {
-        top: 10px;
-        right: 80px;
-    }
-}
-
-/* Анимация для уведомлений */
-@keyframes fadeInOut {
-    0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
-    15% { opacity: 1; transform: translateX(-50%) translateY(0); }
-    85% { opacity: 1; transform: translateX(-50%) translateY(0); }
-    100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
-}
-/* ===== БОКОВАЯ ПАНЕЛЬ ПРЕСЕТОВ ===== */
-.container {
-    display: flex;
-    gap: 30px;
+    background: #00FFEA;
     position: relative;
 }
 
-.presets-sidebar {
-    position: sticky;
-    top: 20px;
-    width: 260px;
-    height: fit-content;
-    background: #e0f7ff;
-    border: 3px solid #00ffea;
-    border-radius: 16px;
-    overflow: hidden;
-    flex-shrink: 0;
-}
-
-[data-theme="dark"] .presets-sidebar {
-    background: #000d55;
-    border-color: #1C1FC2;
-}
-
-.presets-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    background: #CEFFF7;
-    border-bottom: 2px solid #00ffea;
-}
-
-[data-theme="dark"] .presets-header {
-    background: #1C1FC2;
-    border-bottom-color: #BEE3FE;
-}
-
-.presets-header h3 {
-    font-size: 16px;
-    font-weight: 600;
-    color: #12215E;
-    margin: 0;
-}
-
-[data-theme="dark"] .presets-header h3 {
-    color: #BEE3FE;
-}
-
-.save-preset-btn {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    background: #013CFF;
-    color: white;
-    border: none;
-    font-size: 20px;
-    font-weight: bold;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-}
-
-.save-preset-btn:hover {
-    background: #0033cc;
-    transform: scale(1.05);
-}
-
-.presets-list {
-    max-height: 400px;
-    overflow-y: auto;
-    padding: 10px;
-}
-
-.preset-empty {
-    text-align: center;
-    padding: 30px 15px;
-    color: #12215E;
-    font-size: 13px;
-    opacity: 0.7;
-}
-
-.preset-item {
-    background: #ffffff;
-    border: 2px solid #00ffea;
-    border-radius: 12px;
-    padding: 12px;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: all 0.2s;
-}
-
-[data-theme="dark"] .preset-item {
-    background: #000d55;
-    border-color: #1C1FC2;
-}
-
-.preset-item:hover {
-    transform: translateX(-3px);
-    border-color: #013CFF;
-}
-
-.preset-info {
-    flex: 1;
-}
-
-.preset-name {
-    font-weight: 600;
-    font-size: 14px;
-    color: #12215E;
-    margin-bottom: 4px;
-    word-break: break-word;
-}
-
-[data-theme="dark"] .preset-name {
-    color: #BEE3FE;
-}
-
-.preset-mode {
-    font-size: 11px;
-    color: #013CFF;
-    opacity: 0.8;
-}
-
-.preset-actions {
-    display: flex;
-    gap: 8px;
-}
-
-.preset-apply, .preset-delete {
-    width: 32px;
-    height: 32px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.preset-apply {
-    background: #00D9FF;
-    color: white;
-}
-
-.preset-apply:hover {
-    background: #00b8d9;
-    transform: scale(1.05);
-}
-
-.preset-delete {
-    background: #ff6b6b;
-    color: white;
-}
-
-.preset-delete:hover {
-    background: #e74c3c;
-    transform: scale(1.05);
-}
-
-/* ===== МОДАЛКА ДЛЯ НАЗВАНИЯ ПРЕСЕТА ===== */
-.preset-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2500;
-    backdrop-filter: blur(4px);
-}
-
-.preset-modal-content {
-    background: #ffffff;
-    border-radius: 20px;
-    width: 90%;
-    max-width: 380px;
-    overflow: hidden;
-    animation: modalSlideIn 0.3s ease;
-}
-
-[data-theme="dark"] .preset-modal-content {
-    background: #000d55;
-}
-
-.preset-modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 20px;
-    border-bottom: 1px solid #e0f2fe;
-}
-
-[data-theme="dark"] .preset-modal-header {
-    border-bottom-color: #1C1FC2;
-}
-
-.preset-modal-header h3 {
-    margin: 0;
+.preset-apply::before {
+    content: "✓";
     font-size: 18px;
-    color: #12215E;
-}
-
-[data-theme="dark"] .preset-modal-header h3 {
-    color: #BEE3FE;
-}
-
-.preset-modal-body {
-    padding: 20px;
-}
-
-.preset-modal-body input {
-    width: 100%;
-    padding: 12px 16px;
-    border: 2px solid #e0f2fe;
-    border-radius: 12px;
-    font-size: 16px;
-    font-family: 'Inter', sans-serif;
-    background: #f5f7fa;
-    color: #12215E;
-}
-
-[data-theme="dark"] .preset-modal-body input {
-    background: #000d55;
-    border-color: #1C1FC2;
-    color: #BEE3FE;
-}
-
-.preset-modal-body input:focus {
-    outline: none;
-    border-color: #013CFF;
-}
-
-.preset-modal-footer {
-    display: flex;
-    gap: 12px;
-    padding: 16px 20px;
-    border-top: 1px solid #e0f2fe;
-}
-
-[data-theme="dark"] .preset-modal-footer {
-    border-top-color: #1C1FC2;
-}
-
-.preset-cancel-btn, .preset-confirm-btn {
-    flex: 1;
-    padding: 12px;
-    border: none;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.preset-cancel-btn {
-    background: #e0f2fe;
-    color: #12215E;
-}
-
-.preset-cancel-btn:hover {
-    background: #ccefff;
-}
-
-.preset-confirm-btn {
-    background: #013CFF;
-    color: white;
-}
-
-.preset-confirm-btn:hover {
-    background: #0033cc;
-}
-
-/* ===== ОСНОВНОЙ КОНТЕНТ ===== */
-.main-content {
-    flex: 1;
-    min-width: 0;
-}
-
-/* ===== АДАПТАЦИЯ ДЛЯ МОБИЛЬНЫХ ===== */
-@media (max-width: 768px) {
-    .container {
-        flex-direction: column;
-    }
-    
-    .presets-sidebar {
-        position: relative;
-        top: 0;
-        width: 100%;
-        margin-bottom: 20px;
-        order: 1;
-    }
-    
-    .presets-list {
-        max-height: 200px;
-    }
-    
-    .main-content {
-        order: 2;
-    }
-    
-    .profile-menu {
-        top: 10px;
-        right: 80px;
-    }
-}
-
-/* Анимация для уведомлений */
-@keyframes fadeInOut {
-    0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
-    15% { opacity: 1; transform: translateX(-50%) translateY(0); }
-    85% { opacity: 1; transform: translateX(-50%) translateY(0); }
-    100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
-}
-/* ===== БОКОВАЯ ПАНЕЛЬ ПРЕСЕТОВ ===== */
-.container {
-    display: flex;
-    gap: 30px;
-    position: relative;
-}
-
-.presets-sidebar {
-    position: sticky;
-    top: 20px;
-    width: 260px;
-    height: fit-content;
-    background: #e0f7ff;
-    border: 3px solid #00ffea;
-    border-radius: 16px;
-    overflow: hidden;
-    flex-shrink: 0;
-}
-
-[data-theme="dark"] .presets-sidebar {
-    background: #000d55;
-    border-color: #1C1FC2;
-}
-
-.presets-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    background: #CEFFF7;
-    border-bottom: 2px solid #00ffea;
-}
-
-[data-theme="dark"] .presets-header {
-    background: #1C1FC2;
-    border-bottom-color: #BEE3FE;
-}
-
-.presets-header h3 {
-    font-size: 16px;
-    font-weight: 600;
-    color: #12215E;
-    margin: 0;
-}
-
-[data-theme="dark"] .presets-header h3 {
-    color: #BEE3FE;
-}
-
-.save-preset-btn {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    background: #013CFF;
-    color: white;
-    border: none;
-    font-size: 20px;
     font-weight: bold;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-}
-
-.save-preset-btn:hover {
-    background: #0033cc;
-    transform: scale(1.05);
-}
-
-.presets-list {
-    max-height: 400px;
-    overflow-y: auto;
-    padding: 10px;
-}
-
-.preset-empty {
-    text-align: center;
-    padding: 30px 15px;
     color: #12215E;
-    font-size: 13px;
-    opacity: 0.7;
 }
 
-.preset-item {
-    background: #ffffff;
-    border: 2px solid #00ffea;
-    border-radius: 12px;
-    padding: 12px;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: all 0.2s;
+.preset-apply svg {
+    display: none;
 }
 
-[data-theme="dark"] .preset-item {
-    background: #000d55;
-    border-color: #1C1FC2;
+.preset-apply:hover::before {
+    transform: scale(1.1);
 }
 
-.preset-item:hover {
-    transform: translateX(-3px);
-    border-color: #013CFF;
-}
-
-.preset-info {
-    flex: 1;
-}
-
-.preset-name {
-    font-weight: 600;
-    font-size: 14px;
-    color: #12215E;
-    margin-bottom: 4px;
-    word-break: break-word;
-}
-
-[data-theme="dark"] .preset-name {
+[data-theme="dark"] .preset-apply::before {
     color: #BEE3FE;
 }
 
-.preset-mode {
-    font-size: 11px;
-    color: #013CFF;
-    opacity: 0.8;
-}
-
-.preset-actions {
-    display: flex;
-    gap: 8px;
-}
-
-.preset-apply, .preset-delete {
-    width: 32px;
-    height: 32px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.preset-apply {
-    background: #00D9FF;
-    color: white;
-}
-
-.preset-apply:hover {
-    background: #00b8d9;
-    transform: scale(1.05);
-}
-
-.preset-delete {
-    background: #ff6b6b;
-    color: white;
-}
-
-.preset-delete:hover {
-    background: #e74c3c;
-    transform: scale(1.05);
-}
-
-/* ===== МОДАЛКА ДЛЯ НАЗВАНИЯ ПРЕСЕТА ===== */
-.preset-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2500;
-    backdrop-filter: blur(4px);
-}
-
-.preset-modal-content {
-    background: #ffffff;
-    border-radius: 20px;
-    width: 90%;
-    max-width: 380px;
-    overflow: hidden;
-    animation: modalSlideIn 0.3s ease;
-}
-
-[data-theme="dark"] .preset-modal-content {
-    background: #000d55;
-}
-
-.preset-modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 20px;
-    border-bottom: 1px solid #e0f2fe;
-}
-
-[data-theme="dark"] .preset-modal-header {
-    border-bottom-color: #1C1FC2;
-}
-
-.preset-modal-header h3 {
-    margin: 0;
-    font-size: 18px;
-    color: #12215E;
-}
-
-[data-theme="dark"] .preset-modal-header h3 {
-    color: #BEE3FE;
-}
-
-.preset-modal-body {
-    padding: 20px;
-}
-
-.preset-modal-body input {
-    width: 100%;
-    padding: 12px 16px;
-    border: 2px solid #e0f2fe;
-    border-radius: 12px;
-    font-size: 16px;
-    font-family: 'Inter', sans-serif;
-    background: #f5f7fa;
-    color: #12215E;
-}
-
-[data-theme="dark"] .preset-modal-body input {
-    background: #000d55;
-    border-color: #1C1FC2;
-    color: #BEE3FE;
-}
-
-.preset-modal-body input:focus {
-    outline: none;
-    border-color: #013CFF;
-}
-
-.preset-modal-footer {
-    display: flex;
-    gap: 12px;
-    padding: 16px 20px;
-    border-top: 1px solid #e0f2fe;
-}
-
-[data-theme="dark"] .preset-modal-footer {
-    border-top-color: #1C1FC2;
-}
-
-.preset-cancel-btn, .preset-confirm-btn {
-    flex: 1;
-    padding: 12px;
-    border: none;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.preset-cancel-btn {
-    background: #e0f2fe;
-    color: #12215E;
-}
-
-.preset-cancel-btn:hover {
-    background: #ccefff;
-}
-
-.preset-confirm-btn {
-    background: #013CFF;
-    color: white;
-}
-
-.preset-confirm-btn:hover {
-    background: #0033cc;
-}
-
-/* ===== ОСНОВНОЙ КОНТЕНТ ===== */
-.main-content {
-    flex: 1;
-    min-width: 0;
-}
-
-/* ===== АДАПТАЦИЯ ДЛЯ МОБИЛЬНЫХ ===== */
-@media (max-width: 768px) {
-    .container {
-        flex-direction: column;
-    }
-    
-    .presets-sidebar {
-        position: relative;
-        top: 0;
-        width: 100%;
-        margin-bottom: 20px;
-        order: 1;
-    }
-    
-    .presets-list {
-        max-height: 200px;
-    }
-    
-    .main-content {
-        order: 2;
-    }
-    
-    .profile-menu {
-        top: 10px;
-        right: 80px;
-    }
-}
-
-/* Анимация для уведомлений */
-@keyframes fadeInOut {
-    0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
-    15% { opacity: 1; transform: translateX(-50%) translateY(0); }
-    85% { opacity: 1; transform: translateX(-50%) translateY(0); }
-    100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
-}
-
-/* ===== КНОПКИ ДЛЯ СОХРАНЕНИЯ ПАРОЛЕЙ ===== */
-.password-actions {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 20px;
-}
-
-.save-password-btn, .view-saved-btn {
-    flex: 1;
-    padding: 12px;
-    border: none;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-family: 'Inter', sans-serif;
-}
-
-.save-password-btn {
-    background: #00D9FF;
-    color: #12215E;
-}
-
-.save-password-btn:hover {
-    background: #00b8d9;
-    transform: translateY(-2px);
-}
-
-.view-saved-btn {
-    background: #013CFF;
-    color: white;
-}
-
-.view-saved-btn:hover {
-    background: #0033cc;
-    transform: translateY(-2px);
-}
-
-[data-theme="dark"] .save-password-btn {
-    background: #1C1FC2;
-    color: #BEE3FE;
-}
-
-[data-theme="dark"] .save-password-btn:hover {
-    background: #2528d9;
-}
-
-/* ===== МОДАЛКА СОХРАНЕНИЯ ПАРОЛЯ ===== */
-.save-password-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2500;
-    backdrop-filter: blur(4px);
-}
-
-.save-password-modal-content {
-    background: #ffffff;
-    border-radius: 20px;
-    width: 90%;
-    max-width: 450px;
-    overflow: hidden;
-    animation: modalSlideIn 0.3s ease;
-}
-
-[data-theme="dark"] .save-password-modal-content {
-    background: #000d55;
-}
-
-.save-password-modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 20px;
-    border-bottom: 1px solid #e0f2fe;
-}
-
-.save-password-modal-body {
-    padding: 20px;
-}
-
-.save-password-modal-body .form-group {
-    margin-bottom: 20px;
-}
-
-.save-password-modal-body .form-group label {
-    display: block;
-    font-size: 14px;
-    font-weight: 500;
-    margin-bottom: 8px;
-    color: #12215E;
-}
-
-[data-theme="dark"] .save-password-modal-body .form-group label {
-    color: #BEE3FE;
-}
-
-.save-password-modal-body .form-group input {
-    width: 100%;
-    padding: 12px 16px;
-    border: 2px solid #e0f2fe;
-    border-radius: 12px;
-    font-size: 14px;
-    font-family: 'Inter', sans-serif;
-    background: #f5f7fa;
-    color: #12215E;
-}
-
-[data-theme="dark"] .save-password-modal-body .form-group input {
-    background: #000d55;
-    border-color: #1C1FC2;
-    color: #BEE3FE;
-}
-
-.save-password-modal-body .form-group input:focus {
-    outline: none;
-    border-color: #013CFF;
-}
-
-.save-password-modal-footer {
-    display: flex;
-    gap: 12px;
-    padding: 16px 20px;
-    border-top: 1px solid #e0f2fe;
-}
-
-.cancel-save-btn, .confirm-save-btn {
-    flex: 1;
-    padding: 12px;
-    border: none;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.cancel-save-btn {
-    background: #e0f2fe;
-    color: #12215E;
-}
-
-.cancel-save-btn:hover {
-    background: #ccefff;
-}
-
-.confirm-save-btn {
-    background: #013CFF;
-    color: white;
-}
-
-.confirm-save-btn:hover {
-    background: #0033cc;
-}
-
-/* ===== МОДАЛКА СПИСКА СОХРАНЁННЫХ ПАРОЛЕЙ ===== */
-.saved-passwords-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2500;
-    backdrop-filter: blur(4px);
-}
-
-.saved-passwords-modal-content {
-    background: #ffffff;
-    border-radius: 20px;
-    width: 90%;
-    max-width: 550px;
-    max-height: 80vh;
-    overflow: hidden;
-    animation: modalSlideIn 0.3s ease;
-    display: flex;
-    flex-direction: column;
-}
-
-[data-theme="dark"] .saved-passwords-modal-content {
-    background: #000d55;
-}
-
-.saved-passwords-modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 20px;
-    border-bottom: 1px solid #e0f2fe;
-    flex-shrink: 0;
-}
-
-.saved-passwords-modal-body {
-    padding: 20px;
-    overflow-y: auto;
-    flex: 1;
-}
-
-.saved-passwords-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.saved-passwords-empty {
-    text-align: center;
-    padding: 40px;
-    color: #12215E;
-    opacity: 0.7;
-}
-
-.saved-password-item {
-    background: #e0f7ff;
-    border: 2px solid #00ffea;
-    border-radius: 12px;
-    padding: 12px 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 15px;
-}
-
-[data-theme="dark"] .saved-password-item {
-    background: #000d55;
-    border-color: #1C1FC2;
-}
-
-.saved-password-info {
-    flex: 1;
-}
-
-.saved-password-description {
-    font-weight: 600;
-    font-size: 14px;
-    color: #12215E;
-    margin-bottom: 5px;
-}
-
-[data-theme="dark"] .saved-password-description {
-    color: #BEE3FE;
-}
-
-.saved-password-value {
-    font-family: monospace;
-    font-size: 13px;
-    color: #013CFF;
-    word-break: break-all;
-}
-
-.saved-password-actions {
-    display: flex;
-    gap: 8px;
-}
-
-.saved-password-copy, .saved-password-delete {
-    width: 36px;
-    height: 36px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
+/* Стили для кнопки "Копировать" с галочкой в сохранённых паролях */
 .saved-password-copy {
-    background: #00D9FF;
-    color: white;
+    position: relative;
+}
+
+.saved-password-copy::before {
+    content: "📋";
+    font-size: 16px;
+}
+
+.saved-password-copy.copied::before {
+    content: "✓";
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.saved-password-copy svg {
+    display: none;
+}
+
+/* Анимация для кнопки "Применить" */
+.preset-apply.applied::before {
+    transform: scale(1.3);
+    color: #00ff00;
+}
+
+.preset-apply.applied {
+    background: #00ff00;
+    transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .preset-apply.applied::before {
+    color: #ffffff;
+}
+
+/* Стили для кнопок в сохранённых паролях */
+.saved-password-copy {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #00FFEA;
+    position: relative;
+}
+
+.saved-password-copy::before {
+    content: "✓";
+    font-size: 18px;
+    font-weight: bold;
+    color: #12215E;
 }
 
 .saved-password-copy:hover {
-    background: #00b8d9;
+    background: #00e6d4;
     transform: scale(1.05);
 }
 
-.saved-password-delete {
-    background: #ff6b6b;
-    color: white;
+.saved-password-copy.copied::before {
+    content: "✓";
+    animation: checkBounce 0.3s ease;
 }
 
-.saved-password-delete:hover {
-    background: #e74c3c;
-    transform: scale(1.05);
+@keyframes checkBounce {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
 }
 
-/* ===== МОДАЛКА ПОДТВЕРЖДЕНИЯ ===== */
-.confirm-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2600;
-    backdrop-filter: blur(4px);
+.saved-password-copy svg {
+    display: none;
 }
 
-.confirm-modal-content {
-    background: #ffffff;
-    border-radius: 20px;
-    width: 90%;
-    max-width: 350px;
-    overflow: hidden;
-    animation: modalSlideIn 0.3s ease;
-}
-
-[data-theme="dark"] .confirm-modal-content {
-    background: #000d55;
-}
-
-.confirm-modal-header {
-    padding: 16px 20px;
-    border-bottom: 1px solid #e0f2fe;
-}
-
-.confirm-modal-header h3 {
-    margin: 0;
-    font-size: 18px;
-    color: #12215E;
-}
-
-[data-theme="dark"] .confirm-modal-header h3 {
-    color: #BEE3FE;
-}
-
-.confirm-modal-body {
-    padding: 20px;
-    text-align: center;
-}
-
-.confirm-modal-body p {
-    color: #12215E;
-}
-
-[data-theme="dark"] .confirm-modal-body p {
-    color: #BEE3FE;
-}
-
-.confirm-modal-footer {
-    display: flex;
-    gap: 12px;
-    padding: 16px 20px;
-    border-top: 1px solid #e0f2fe;
-}
-
-.confirm-cancel-btn, .confirm-delete-btn {
-    flex: 1;
-    padding: 12px;
-    border: none;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.confirm-cancel-btn {
-    background: #e0f2fe;
-    color: #12215E;
-}
-
-.confirm-cancel-btn:hover {
-    background: #ccefff;
-}
-
-.confirm-delete-btn {
-    background: #e74c3c;
-    color: white;
-}
-
-.confirm-delete-btn:hover {
-    background: #c0392b;
-}
-
-@media (max-width: 768px) {
-    .password-actions {
-        flex-direction: column;
-    }
-    
-    .saved-password-item {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .saved-password-actions {
-        justify-content: center;
-    }
-}
-
-/* ===== КНОПКИ ДЛЯ СОХРАНЕНИЯ ПАРОЛЕЙ ===== */
-.password-actions {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 20px;
-}
-
-.save-password-btn, .view-saved-btn {
-    flex: 1;
-    padding: 12px;
-    border: none;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-family: 'Inter', sans-serif;
-}
-
-.save-password-btn {
-    background: #00D9FF;
-    color: #12215E;
-}
-
-.save-password-btn:hover {
-    background: #00b8d9;
-    transform: translateY(-2px);
-}
-
-.view-saved-btn {
-    background: #013CFF;
-    color: white;
-}
-
-.view-saved-btn:hover {
-    background: #0033cc;
-    transform: translateY(-2px);
-}
-
-[data-theme="dark"] .save-password-btn {
+[data-theme="dark"] .saved-password-copy {
     background: #1C1FC2;
+}
+
+[data-theme="dark"] .saved-password-copy::before {
     color: #BEE3FE;
 }
 
-[data-theme="dark"] .save-password-btn:hover {
+[data-theme="dark"] .saved-password-copy:hover {
     background: #2528d9;
 }
 
-/* ===== МОДАЛКА СОХРАНЕНИЯ ПАРОЛЯ ===== */
-.save-password-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2500;
-    backdrop-filter: blur(4px);
-}
-
-.save-password-modal-content {
-    background: #ffffff;
-    border-radius: 20px;
-    width: 90%;
-    max-width: 450px;
-    overflow: hidden;
-    animation: modalSlideIn 0.3s ease;
-}
-
-[data-theme="dark"] .save-password-modal-content {
-    background: #000d55;
-}
-
-.save-password-modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 20px;
-    border-bottom: 1px solid #e0f2fe;
-}
-
-.save-password-modal-body {
-    padding: 20px;
-}
-
-.save-password-modal-body .form-group {
-    margin-bottom: 20px;
-}
-
-.save-password-modal-body .form-group label {
-    display: block;
-    font-size: 14px;
-    font-weight: 500;
-    margin-bottom: 8px;
-    color: #12215E;
-}
-
-[data-theme="dark"] .save-password-modal-body .form-group label {
-    color: #BEE3FE;
-}
-
-.save-password-modal-body .form-group input {
-    width: 100%;
-    padding: 12px 16px;
-    border: 2px solid #e0f2fe;
-    border-radius: 12px;
-    font-size: 14px;
-    font-family: 'Inter', sans-serif;
-    background: #f5f7fa;
-    color: #12215E;
-}
-
-[data-theme="dark"] .save-password-modal-body .form-group input {
-    background: #000d55;
-    border-color: #1C1FC2;
-    color: #BEE3FE;
-}
-
-.save-password-modal-body .form-group input:focus {
-    outline: none;
-    border-color: #013CFF;
-}
-
-.save-password-modal-footer {
-    display: flex;
-    gap: 12px;
-    padding: 16px 20px;
-    border-top: 1px solid #e0f2fe;
-}
-
-.cancel-save-btn, .confirm-save-btn {
-    flex: 1;
-    padding: 12px;
-    border: none;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.cancel-save-btn {
-    background: #e0f2fe;
-    color: #12215E;
-}
-
-.cancel-save-btn:hover {
-    background: #ccefff;
-}
-
-.confirm-save-btn {
-    background: #013CFF;
-    color: white;
-}
-
-.confirm-save-btn:hover {
-    background: #0033cc;
-}
-
-/* ===== МОДАЛКА СПИСКА СОХРАНЁННЫХ ПАРОЛЕЙ ===== */
-.saved-passwords-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2500;
-    backdrop-filter: blur(4px);
-}
-
-.saved-passwords-modal-content {
-    background: #ffffff;
-    border-radius: 20px;
-    width: 90%;
-    max-width: 550px;
-    max-height: 80vh;
-    overflow: hidden;
-    animation: modalSlideIn 0.3s ease;
-    display: flex;
-    flex-direction: column;
-}
-
-[data-theme="dark"] .saved-passwords-modal-content {
-    background: #000d55;
-}
-
-.saved-passwords-modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 20px;
-    border-bottom: 1px solid #e0f2fe;
-    flex-shrink: 0;
-}
-
-.saved-passwords-modal-body {
-    padding: 20px;
-    overflow-y: auto;
-    flex: 1;
-}
-
-.saved-passwords-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.saved-passwords-empty {
-    text-align: center;
-    padding: 40px;
-    color: #12215E;
-    opacity: 0.7;
-}
-
-.saved-password-item {
-    background: #e0f7ff;
-    border: 2px solid #00ffea;
-    border-radius: 12px;
-    padding: 12px 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 15px;
-}
-
-[data-theme="dark"] .saved-password-item {
-    background: #000d55;
-    border-color: #1C1FC2;
-}
-
-.saved-password-info {
-    flex: 1;
-}
-
-.saved-password-description {
-    font-weight: 600;
-    font-size: 14px;
-    color: #12215E;
-    margin-bottom: 5px;
-}
-
-[data-theme="dark"] .saved-password-description {
-    color: #BEE3FE;
-}
-
-.saved-password-value {
-    font-family: monospace;
-    font-size: 13px;
-    color: #013CFF;
-    word-break: break-all;
-}
-
-.saved-password-actions {
-    display: flex;
-    gap: 8px;
-}
-
-.saved-password-copy, .saved-password-delete {
-    width: 36px;
-    height: 36px;
+/* Стили для кнопки "Применить" с галочкой */
+.preset-apply {
+    background: #00FFEA;
+    position: relative;
+    width: 32px;
+    height: 32px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    font-size: 16px;
-    transition: all 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.saved-password-copy {
-    background: #00D9FF;
-    color: white;
-}
-
-.saved-password-copy:hover {
-    background: #00b8d9;
-    transform: scale(1.05);
-}
-
-.saved-password-delete {
-    background: #ff6b6b;
-    color: white;
-}
-
-.saved-password-delete:hover {
-    background: #e74c3c;
-    transform: scale(1.05);
-}
-
-/* ===== МОДАЛКА ПОДТВЕРЖДЕНИЯ ===== */
-.confirm-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2600;
-    backdrop-filter: blur(4px);
-}
-
-.confirm-modal-content {
-    background: #ffffff;
-    border-radius: 20px;
-    width: 90%;
-    max-width: 350px;
-    overflow: hidden;
-    animation: modalSlideIn 0.3s ease;
-}
-
-[data-theme="dark"] .confirm-modal-content {
-    background: #000d55;
-}
-
-.confirm-modal-header {
-    padding: 16px 20px;
-    border-bottom: 1px solid #e0f2fe;
-}
-
-.confirm-modal-header h3 {
-    margin: 0;
+.preset-apply::before {
+    content: "✓";
     font-size: 18px;
+    font-weight: bold;
     color: #12215E;
 }
 
-[data-theme="dark"] .confirm-modal-header h3 {
+.preset-apply:hover {
+    background: #00e6d4;
+    transform: scale(1.05);
+}
+
+.preset-apply svg {
+    display: none;
+}
+
+[data-theme="dark"] .preset-apply::before {
     color: #BEE3FE;
 }
 
-.confirm-modal-body {
-    padding: 20px;
-    text-align: center;
+[data-theme="dark"] .preset-apply {
+    background: #1C1FC2;
 }
 
-.confirm-modal-body p {
-    color: #12215E;
-}
-
-[data-theme="dark"] .confirm-modal-body p {
-    color: #BEE3FE;
-}
-
-.confirm-modal-footer {
-    display: flex;
-    gap: 12px;
-    padding: 16px 20px;
-    border-top: 1px solid #e0f2fe;
-}
-
-.confirm-cancel-btn, .confirm-delete-btn {
-    flex: 1;
-    padding: 12px;
-    border: none;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.confirm-cancel-btn {
-    background: #e0f2fe;
-    color: #12215E;
-}
-
-.confirm-cancel-btn:hover {
-    background: #ccefff;
-}
-
-.confirm-delete-btn {
-    background: #e74c3c;
-    color: white;
-}
-
-.confirm-delete-btn:hover {
-    background: #c0392b;
-}
-
-@media (max-width: 768px) {
-    .password-actions {
-        flex-direction: column;
-    }
-    
-    .saved-password-item {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .saved-password-actions {
-        justify-content: center;
-    }
+[data-theme="dark"] .preset-apply:hover {
+    background: #2528d9;
 }
