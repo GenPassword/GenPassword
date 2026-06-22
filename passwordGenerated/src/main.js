@@ -195,17 +195,18 @@ const html = `
             <div id="password" class="password-text">Нажмите "генерировать"</div>
             <button class="copy-btn" id="copyBtn">Копировать</button>
         </div>
-        
+                <div class="strength-container">
+            <div class="strength-bar" id="strengthBar"></div>
+            <span class="strength-text" id="strengthText">-</span>
+        </div>
+        <div class="strength-percent" id="strengthPercent">Надежность: 0%</div>
         <div class="password-actions">
             <button id="savePasswordBtn" class="save-password-btn">Сохранить пароль</button>
             <button id="viewSavedPasswordsBtn" class="view-saved-btn">Мои пароли</button>
         </div>
         
-        <div class="strength-container">
-            <div class="strength-bar" id="strengthBar"></div>
-            <span class="strength-text" id="strengthText">-</span>
-        </div>
-        <div class="strength-percent" id="strengthPercent">Надежность: 0%</div>
+
+
 
         <div id="randomSettings" class="settings-section">
             <div class="custom-slider-wrapper">
