@@ -3089,7 +3089,7 @@ h1 {
     top: 0;
     left: 0;
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 15px; /* ← ТАКОЙ ЖЕ ОТСТУП КАК У .generation-menu */
     border-radius: 12px;
     order: 3;
   }
@@ -3119,6 +3119,7 @@ h1 {
   .generate-btn {
     font-size: 24px;
     padding: 14px;
+    margin-bottom: 15px; /* ← ТАКОЙ ЖЕ ОТСТУП КАК У .generation-menu И .presets-sidebar */
   }
   
   .setting-item {
@@ -3163,6 +3164,15 @@ h1 {
   
   .scroll-to-generate {
     display: flex;
+    bottom: 15px;
+    right: 15px;
+    width: 44px;
+    height: 44px;
+  }
+  
+  .scroll-to-generate svg {
+    width: 22px;
+    height: 22px;
   }
 }
 
@@ -3211,6 +3221,22 @@ h1 {
     margin-bottom: 12px;
   }
   .presets-sidebar {
-    margin-bottom: 15px;
+    margin-bottom: 12px; /* ← ТАКОЙ ЖЕ КАК У .generation-menu */
+  }
+  
+  .generate-btn {
+    margin-bottom: 12px; /* ← ТАКОЙ ЖЕ КАК У .generation-menu И .presets-sidebar */
+  }
+  
+  .scroll-to-generate {
+    bottom: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .scroll-to-generate svg {
+    width: 20px;
+    height: 20px;
   }
 }
