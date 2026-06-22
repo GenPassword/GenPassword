@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTUiIGhlaWdodD0iNTUiIHZpZXdCb3g9IjAgMCA1NSA1NSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjU1IiBoZWlnaHQ9IjU1IiBmaWxsPSIjMUMxRkMyIi8+CjxwYXRoIGQ9Ik0zNC4zNzUgMjAuNjI1TDI1LjIwODMgMjkuNzkxN0wyMC42MjUgMjUuMjA4M000NS44MzMzIDIzLjI5NDlDNDUuODMzMyAzOC4zNDcyIDM0LjQ0ODIgNDUuMDk1NiAyOS42MjE2IDQ3LjI4MDNMMjkuNjE1NSA0Ny4yODI5QzI5LjEwNzkgNDcuNTEyNyAyOC44NTM0IDQ3LjYyNzkgMjguMjc2NiA0Ny43MjY5QzI3LjkxMTMgNDcuNzg5NiAyNy4wOTEgNDcuNzg5NiAyNi43MjU3IDQ3LjcyNjlDMjYuMTQ2NiA0Ny42Mjc1IDI1Ljg4OTUgNDcuNTExOSAyNS4zNzc4IDQ3LjI4MDNDMjAuNTUxMiA0NS4wOTU2IDkuMTY2NjcgMzguMzQ3MSA5LjE2NjY3IDIzLjI5NDlWMTQuMjA4OEM5LjE2NjY3IDExLjY0MTkgOS4xNjY2NyAxMC4zNTc1IDkuNjY2MjMgOS4zNzcwM0MxMC4xMDU2IDguNTE0NjIgMTAuODA2MyA3LjgxMzk3IDExLjY2ODcgNy4zNzQ1NUMxMi42NDkxIDYuODc1IDEzLjkzMzUgNi44NzUgMTYuNTAwNSA2Ljg3NUgzOC41MDA1QzQxLjA2NzQgNi44NzUgNDIuMzQ5IDYuODc1IDQzLjMyOTUgNy4zNzQ1NUM0NC4xOTE5IDcuODEzOTcgNDQuODk0OSA4LjUxNDYyIDQ1LjMzNDMgOS4zNzcwM0M0NS44MzMzIDEwLjM1NjUgNDUuODMzMyAxMS42Mzk0IDQ1LjgzMzMgMTQuMjAxM1YyMy4yOTQ5WiIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Генератор паролей</title>
+    
+    <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self';
+      script-src 'self' 'unsafe-inline' 'unsafe-eval';
+      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+      style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com;
+      font-src 'self' https://fonts.gstatic.com;
+      img-src 'self' data: https:;
+      connect-src 'self' https://myproject24.ru;
+      base-uri 'self';
+      form-action 'self';
+    ">
+    
+    <meta name="csrf-token" content="">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+      @keyframes fadeInOut {
+        0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+        15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+        85% { opacity: 1; transform: translateX(-50%) translateY(0); }
+        100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+      }
+    </style>
+    <script type="module" crossorigin src="/GenPassword/assets/index-DKqYGD-2.js"></script>
+    <link rel="stylesheet" crossorigin href="/GenPassword/assets/index-suew_8qd.css">
+  </head>
+  <body>
+    <div id="app"></div>
+    
+    <script>
+      function generateCSRFToken() {
+        const token = Math.random().toString(36).substring(2) + Date.now().toString(36);
+        const metaTag = document.querySelector('meta[name="csrf-token"]');
+        if (metaTag) metaTag.setAttribute('content', token);
+        sessionStorage.setItem('csrfToken', token);
+        return token;
+      }
+      
+      if (!sessionStorage.getItem('csrfToken')) {
+        generateCSRFToken();
+      } else {
+        const metaTag = document.querySelector('meta[name="csrf-token"]');
+        if (metaTag) metaTag.setAttribute('content', sessionStorage.getItem('csrfToken'));
+      }
+      
+      (function protectFromConsole() {
+        const originalSetItem = localStorage.setItem;
+        localStorage.setItem = function(key, value) {
+          if (key === 'userPassword') {
+            console.warn('⚠️ Операция запрещена: попытка сохранить пароль в localStorage');
+            throw new Error('Сохранение пароля в localStorage запрещено');
+          }
+          return originalSetItem.call(this, key, value);
+        };
+        
+        window.eval = function() {
+          console.warn('⚠️ eval запрещён');
+          throw new Error('eval запрещён');
+        };
+        
+        const originalCreateElement = document.createElement;
+        document.createElement = function(tagName) {
+          if (tagName.toLowerCase() === 'script') {
+            console.warn('⚠️ Создание скриптов запрещено');
+            throw new Error('Создание скриптов запрещено');
+          }
+          return originalCreateElement.call(document, tagName);
+        };
+      })();
+      
+      console.log('🛡️ Защита активирована');
+    </script>
+  </body>
+</html>
